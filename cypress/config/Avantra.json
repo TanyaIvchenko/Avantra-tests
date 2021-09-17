@@ -1,0 +1,6 @@
+{
+    "baseUrl": "https://app.dev.avantra.com/xn/ui/",
+    "env": {
+        "name": "Tanya's tests"
+    }
+}
