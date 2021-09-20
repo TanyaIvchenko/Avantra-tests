@@ -1,1 +1,26 @@
+<<<<<<< HEAD
 {}
+=======
+{
+  "baseUrl": "http://www.webdriveruniversity.com/",
+  "chromeWebSecurity": false,
+  "defaultCommandTimeout": 10000,
+  "pageLoadTimeout": 30000,
+  "ignoreTestFiles": "**/other/*",
+  "videosFolder": "cypress/videos/testExecutionVideos",
+  "viewportHeight": 1080,
+  "viewportWidth": 1920,
+  "env": {
+    "RETRIES": 2,
+    "first_name": "sarah",
+    "webdriveruni_homepage": "http://www.webdriveruniversity.com"
+  },
+  "projectId": "xhef6e",
+
+    "reporter": "cypress-multi-reporters",
+    "reporterOptions": {
+      "configFile": "reporter-config.json"
+
+  }
+}
+//>>>>>>> Avantra-UI-only

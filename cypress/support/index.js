@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+require('cypress-plugin-retries')
+>>>>>>> Avantra-UI-only
 // ***********************************************************
 // This example support/index.js is processed and
 // loaded automatically before your test files.
@@ -12,9 +16,21 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
+<<<<<<< HEAD
+=======
+require('cypress-xpath')
+>>>>>>> Avantra-UI-only
 
 // Import commands.js using ES2015 syntax:
 import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+<<<<<<< HEAD
+=======
+Cypress.Server.defaults({
+  whitelist: (xhr) => {
+    return true;
+  }
+})
+>>>>>>> Avantra-UI-only
