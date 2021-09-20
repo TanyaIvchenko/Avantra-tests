@@ -5,6 +5,7 @@ describe("Log-in with Avantra", () => {
 
     beforeEach(() => {
         cy.visit("https://app.dev.avantra.com/xn/ui/");
+        
         //cy.log(Cypress.env("name"));
         //cy.navigateTo_Avantra_Login_page(); //check the baseUrl in config/Avantra.json file and command at support/commands.js file
   })
