@@ -9,3 +9,6 @@ fixtures
 automation-test-store
 other
 webdriver-uni
+config
+fixtures
+plugins
