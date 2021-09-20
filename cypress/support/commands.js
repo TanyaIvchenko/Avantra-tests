@@ -10,21 +10,6 @@
 //
 //
 // -- This is a parent command --
-<<<<<<< HEAD
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-=======
 // Cypress.Commands.add("login", (email, password) => { ... })
 //
 //
@@ -42,9 +27,6 @@ Cypress.Commands.add("navigateTo_WebdriverUni_Checkbox_Page", () => {
     cy.visit("/" + "/Dropdown-Checkboxes-RadioButtons/index.html")
 })
 
-Cypress.Commands.add("navigateTo_Avantra_Login_page", () => {
-    cy.visit("/")
-})
 
 Cypress.Commands.add("selectProduct", productName => {
     cy.get(".fixed_wrapper .prdocutname").each(($el, index, $list) => {
@@ -76,4 +58,3 @@ Cypress.Commands.add("webdriverUni_ContactForm_Submission", (firstName, lastName
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import 'cypress-file-upload';
->>>>>>> Avantra-UI-only
