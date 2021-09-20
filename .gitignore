@@ -1,14 +1,2 @@
 node_modules
-results
-screenshots
-videos
-mochawesome-report
-package-lock.json
-staging.json
-fixtures
-automation-test-store
-other
-webdriver-uni
-config
-fixtures
-plugins
+.gitignore

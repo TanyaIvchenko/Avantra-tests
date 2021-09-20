@@ -4,8 +4,9 @@
 describe("Log-in with Avantra", () => {  
 
     beforeEach(() => {
-        cy.log(Cypress.env("name"));
-        cy.navigateTo_Avantra_Login_page(); //check the baseUrl in config/Avantra.json file and command at support/commands.js file
+        cy.visit("https://app.dev.avantra.com/xn/ui/authentication/sign-in");
+        //cy.log(Cypress.env("name"));
+        //cy.navigateTo_Avantra_Login_page(); //check the baseUrl in config/Avantra.json file and command at support/commands.js file
   })
 
     it("Login with Avantra account with invalid login and password", () => {
