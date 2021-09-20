@@ -1,19 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "avantra-autotests",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Olha Sakhno",
-  "license": "ISC",
-  "devDependencies": {
-    "cypress": "^8.3.1",
-    "cypress-social-logins": "^1.11.3"
-  }
-=======
   "name": "cypress-automation-framework",
   "version": "1.0.0",
   "description": "Cypress Atomation Framework",
@@ -49,5 +34,4 @@
     "mochawesome-report-generator": "^5.2.0"
   },
   "dependencies": {}
->>>>>>> Avantra-UI-only
 }
