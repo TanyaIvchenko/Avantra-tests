@@ -27,9 +27,6 @@ Cypress.Commands.add("navigateTo_WebdriverUni_Checkbox_Page", () => {
     cy.visit("/" + "/Dropdown-Checkboxes-RadioButtons/index.html")
 })
 
-Cypress.Commands.add("navigateTo_Avantra_Login_page", () => {
-    cy.visit("/")
-})
 
 Cypress.Commands.add("selectProduct", productName => {
     cy.get(".fixed_wrapper .prdocutname").each(($el, index, $list) => {
