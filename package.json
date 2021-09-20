@@ -33,5 +33,13 @@
     "mochawesome-merge": "^4.2.0",
     "mochawesome-report-generator": "^5.2.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanyaIvchenko/cypress-automation-framework.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TanyaIvchenko/cypress-automation-framework/issues"
+  },
+  "homepage": "https://github.com/TanyaIvchenko/cypress-automation-framework#readme"
 }

@@ -1,4 +1,4 @@
-// <reference types="cypress" />
+/// <reference types="cypress" />
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -16,10 +16,10 @@
 const fs = require('fs-extra')
 const path = require('path')
 
-function getConfigurationByFile(file) {
+function getConfigurationByFile (file) {
   const pathToConfigFile = path.resolve('cypress', 'config', `${file}.json`)
 
-  if (!fs.existsSync(pathToConfigFile)) {
+  if(!fs.existsSync(pathToConfigFile)) {
     console.log('No custom config file found.')
     return {};
   }
@@ -30,10 +30,13 @@ function getConfigurationByFile(file) {
 // plugins file
 module.exports = (on, config) => {
   // accept a configFile value or use development by default
-  const file = config.env.configFile
+  const file = config.env.configFile //we will use no default value
 
   return getConfigurationByFile(file)
 }
+
+const cucumber = require('cypress-cucumber-preprocessor').default
+
 module.exports = (on, config) => {
-  require('cypress-plugin-retries/lib/plugin')(on)
+  on('file:preprocessor', cucumber())
 }
