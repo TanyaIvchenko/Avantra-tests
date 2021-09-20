@@ -7,3 +7,4 @@ automation-test-store
 mochawesome-report
 integration
 cypress/integration/automation-test-store/add-multiple-items-to-basket.js
+config
