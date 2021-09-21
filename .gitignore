@@ -1,4 +1,8 @@
 node_modules
 videos
 support
-plugins
+cypress/plugins
+pageObjects
+cypress/integration
+mochawesome-report
+package.json
