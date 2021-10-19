@@ -10,7 +10,7 @@ const password = "Olha1605";
 const incor_login = "Olha_incorrect";
 const incor_password = "Incorrect_pass";
 
-    it("Login UI without checkbox", () => {
+    it.only("Login UI without checkbox", () => {
 cy.get('#input-login-id').type(login)
 cy.get('#input-password-id').type(password)
 cy.get('#input-password-id').invoke('attr', 'type').should('contain', 'password')
