@@ -74,7 +74,7 @@ cy.get('[fieldid="input-password-id"]').should('have.class', 'ng-valid')
                     })
         console.log(postRequest)
     });
-    it.only("Response 400 for incorrect password", () => {
+    it("Response 400 for incorrect password", () => {
         cy.get('#input-login-id').type(login)
         cy.get('#input-password-id').type(incor_password)
         cy.get('.background-primary').contains("Login to Avantra").click()     
