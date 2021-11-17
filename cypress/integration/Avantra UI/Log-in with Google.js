@@ -1,40 +1,26 @@
 /// <reference types="Cypress" />
 
 describe("Google Login", () => {
-
-    /**
-     * 2nd param replaces the global config (cypress.json) only in the scope of the current .spec.
-     * Similar to: Cypress.config('baseUrl', 'https://accounts.google.com');
-     */
-    it('should input email and password', { baseUrl:  'https://accounts.google.com', chromeWebSecurity: false }, function() {
-      // Handling all errors and 'skipping' test to avoid global failure.
-      cy.on('chrome-error', (err, runnable) => {
-        console.error('Google Login -> chrome-error', err);
-        this.skip();
-      });
-  
-      cy.visit("https://app.dev.avantra.com/xn/ui/");
-      cy.get('.saml-sign-in').contains("Google").click({ force: true });
-      // Google Login Redirection: Email Input
-      cy.url().should('contain', 'accounts.google.com')
-        cy.get('#identifierId').type("tatyana.ivchenko@avantra.com")
-        cy.get('#identifierNext button').click().wait(3000);
-  
-      // Google Login Redirection: Password Input
-      cy.url().should('contain', 'accounts.google.com')
-        .get('input[type="password"]').type('IloveIncom1!')
-        .get('#passwordNext button').click().wait(1500);
+  /**
+   * 2nd param replaces the global config (cypress.json) only in the scope of the current .spec.
+   * Similar to: Cypress.config('baseUrl', 'https://accounts.google.com');
+   */
+  it('should input email and password', { baseUrl:  'https://accounts.google.com', chromeWebSecurity: false }, function() {
+    // Handling all errors and 'skipping' test to avoid global failure.
+    cy.on('chrome-error', (err, runnable) => {
+      console.error('Google Login -> chrome-error', err);
+      this.skip();
     });
 
-// describe("Testing login page", () => {  
+    cy.visit("https://app.dev.avantra.com/xn/ui/");
+    cy.get('.saml-sign-in').contains("Google").click({ force: true });
+  });
 
-//     beforeEach(() => {
-//         cy.visit("https://app.dev.avantra.com/xn/ui/");
-//         cy.get('.card-aligner')
-//   })
-
-//     it("Login with Google account", () => {
-//     cy.get('.saml-sign-in').contains("Google").invoke("removeAttr", "target").click()
-
-//     })
+  /* ==== Test Created with Cypress Studio ==== */
+  it.only('Tanya Google login', function() {
+    /* ==== Generated with Cypress Studio ==== */
+    cy.visit('https://app.dev.avantra.com/xn/ui/');
+    cy.get(':nth-child(3) > .content-block > .saml-sign-in > .saml-sign-in__button').click();
+    /* ==== End Cypress Studio ==== */
+  });
 })
