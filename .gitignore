@@ -1,8 +1,5 @@
 node_modules
 videos
-support
-cypress/plugins
 pageObjects
-cypress/integration
 mochawesome-report
 package.json
