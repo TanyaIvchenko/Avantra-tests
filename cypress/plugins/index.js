@@ -34,3 +34,8 @@ module.exports = (on, config) => {
 
   return getConfigurationByFile(file)
 }
+const cucumber = require('cypress-cucumber-preprocessor').default
+
+module.exports = (on, config) => {
+  on('file:preprocessor', cucumber())
+}
