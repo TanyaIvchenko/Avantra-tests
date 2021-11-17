@@ -35,6 +35,6 @@ describe("Testing login page", () => {
             cy.get('#input-login-id').type("Tanya admin");
             cy.get('#input-password-id').type("admin")
             cy.get('.content-block__button-sign-in').click();
-            cy.get('.mat-simple-snackbar > span').should('have.text', 'Bad credentials')
+            cy.get('.mat-simple-snackbar > span').should('have.text', 'The user name or password is not correct!')
     })
 })
