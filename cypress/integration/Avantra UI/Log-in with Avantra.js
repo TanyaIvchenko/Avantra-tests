@@ -4,7 +4,7 @@
 describe("Log-in with Avantra", () => {  
 
     beforeEach(() => {
-        cy.visit("https://app.dev.avantra.com/xn/ui/");
+        cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui");
         
         //cy.log(Cypress.env("name"));
         //cy.navigateTo_Avantra_Login_page(); //check the baseUrl in config/Avantra.json file and command at support/commands.js file
@@ -40,7 +40,3 @@ describe("Log-in with Avantra", () => {
         //cy.get('.kc-feedback-text').should('have.text', 'Invalid username or password.')
     })
 })
-
-
-//saml-sign-in
-//.cy.get(':nth-child(3) > .content-block > .saml-sign-in > .saml-sign-in__button').invoke("removeAttr", "target").click({ force: true });

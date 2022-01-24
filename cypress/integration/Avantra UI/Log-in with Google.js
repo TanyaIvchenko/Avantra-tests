@@ -12,15 +12,15 @@ describe("Google Login", () => {
       this.skip();
     });
 
-    cy.visit("https://app.dev.avantra.com/xn/ui/");
+    cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui");
     cy.get('.saml-sign-in').contains("Google").click({ force: true });
   });
 
   /* ==== Test Created with Cypress Studio ==== */
   it.only('Tanya Google login', function() {
     /* ==== Generated with Cypress Studio ==== */
-    cy.visit('https://app.dev.avantra.com/xn/ui/');
-    cy.get(':nth-child(3) > .content-block > .saml-sign-in > .saml-sign-in__button').click();
+    cy.visit('https://eiger.dev.gcp.avantra.net:8443/xn/ui');
+    cy.get(':nth-child(3) > .content-block > .saml-sign-in > .saml-sign-in__button').click(); //doesn't work now (24.01.22)
     /* ==== End Cypress Studio ==== */
   });
 })

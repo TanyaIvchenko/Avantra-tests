@@ -3,7 +3,7 @@
 
 describe("Login to Avantra", () => {
     beforeEach(() => {
-        cy.visit ("https://app.dev.avantra.com/xn/ui/")
+        cy.visit ("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
     })
 const login = "Olha_test";
 const password = "Olha1605";
@@ -19,10 +19,12 @@ cy.get('#input-password-id').invoke('attr', 'type').should('contain', 'text')
 cy.get('.background-primary').contains("Login to Avantra").click()
     });
 
-    it("Login and Password fields validation", () => {
+    it.only("Login and Password fields validation", () => {
 cy.get('.background-primary').contains("Login to Avantra").click()
 cy.wait(500)
-cy.get('[fieldid="input-login-id"]').invoke('attr', 'tooltip').should('contain', 'Login should not be empty')
+
+
+cy.get('#input-login-id').invoke('attr', 'tooltip').should('contain', 'Login should not be empty')
 cy.get('#input-login-id').should('have.class', 'ng-invalid')
 cy.get('[fieldid="input-password-id"]').invoke('attr', 'tooltip').should('contain', 'Password should not be empty')
 cy.get('#input-password-id').should('have.class', 'ng-invalid')

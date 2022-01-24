@@ -1,8 +1,8 @@
 describe("Password restore", () => {
     beforeEach(() => {
-        cy.visit ("https://app.dev.avantra.com/xn/ui/")
+        cy.visit ("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
     })
-    const login = "Olha_test";
+    const login = "Tanya admin";
     it("Send email for username", ()=> {
         cy.get('.content-block__button-forgot-password').click()
         cy.get('.section__title').contains("Restore Password")
@@ -17,7 +17,7 @@ describe("Password restore", () => {
         cy.get('.button-back').click()
     });
 
-    it.only("Send email for Email", ()=> {
+    it("Send email for Email", ()=> {
       cy.get('.content-block__button-forgot-password').click()
       cy.get('.section__title').contains("Restore Password")
       cy.get('#input-restore-login-id').invoke('attr', 'placeholder').should('contain', 'Username or Email')
@@ -28,10 +28,11 @@ describe("Password restore", () => {
       cy.get('.section__subtitle').contains("Please check your Email and follow the instructions")
       cy.get('.button-back').click()
   });
+
     it('Response data assertions', () => {
         cy.get('.content-block__button-forgot-password').click()     
         let postRequest
-        cy.request('POST', 'xn/api/auth/requestNewPassword', { name: 'testName' })
+        cy.request('POST', 'xn/api/auth/requestNewPassword', { name: 'Tanya admin' })
           .then( ({ body }) => {
             postRequest = body
           })
@@ -39,10 +40,9 @@ describe("Password restore", () => {
                     expect(response.status).to.eq(200)
                     expect(response).to.have.property('headers')
                     expect(response).property('body').to.contain({
-                        msg: 'An email with instructions to reset the password has been sent.'
-                      })
+                      msg: "If a user exists with the name 'Tanya admin' then a password-reset will be sent to the email address on file. Please check your email for further instructions. If you do not receive an email, please contact your system administrator."                    
                     })
         console.log(postRequest)
     }) 
 })
-//test
+})

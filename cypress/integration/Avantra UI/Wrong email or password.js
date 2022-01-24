@@ -4,7 +4,7 @@
 describe("Testing login page", () => {  
 
     beforeEach(() => {
-        cy.visit("https://app.dev.avantra.com/xn/ui/");
+        cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui");
         cy.get('.card-aligner')
   })
 
@@ -25,7 +25,7 @@ describe("Testing login page", () => {
     cy.get('[fieldid="input-password-id"]').should('have.class', 'ng-valid')
     })
     
-  it("Try wrong login name", () => {
+  it.only("Try wrong login name", () => {
         cy.get('#input-login-id').type("Tanya");
         cy.get('#input-password-id').type("Tanya")
         cy.get('.content-block__button-sign-in').click();
