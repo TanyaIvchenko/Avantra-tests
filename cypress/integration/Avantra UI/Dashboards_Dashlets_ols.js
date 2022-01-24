@@ -80,7 +80,35 @@ cy.contains('a', 'OLS3').should('not.exist')
                )
             })
             .should('deep.equal', ['Signed in Users', 'Check For Updates', 'Logbook Activities', 'Business Service Node'])
-     
+    //Verify the Dashlet description one by one
+                cy.get('.dashlet-selector-item__title').each(($el, index, $list) =>{
+                    if($el.text().includes('Signed in Users')){
+                        cy.get($el).parent().within(() =>{
+                            cy.get('.dashlet-selector-item__content--description-text').contains('Show number of users signed in to Avantra')
+                            .invoke('text').then(cy.log)
+                        })
+                    }
+                    else if($el.text().includes('Check For Updates')){
+                        cy.get($el).parent().within(() =>{
+                            cy.get('.dashlet-selector-item__content--description-text').contains('Show new Avantra updates which are available at syslink download site.')
+                            .invoke('text').then(cy.log)
+                        })
+                    }
+                    else if($el.text().includes('Logbook Activities')){
+                        cy.get($el).parent().within(() =>{
+                            cy.get('.dashlet-selector-item__content--description-text').contains('Show the number of Logbook activities')
+                            .invoke('text').then(cy.log)
+                        })
+                    }
+                    else {
+                        cy.get($el).parent().within(() =>{
+                            cy.get('.dashlet-selector-item__content--description-text').contains('Shows Result of a single node from a Business Service')
+                            .invoke('text').then(cy.log)
+                        })
+                    }
+    
+
+            })
         });
     
 
