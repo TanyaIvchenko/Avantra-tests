@@ -6,29 +6,27 @@ describe("Dashboards", () => {
     const password = "Tanya";
 
 
-    it.only("Log-in", () => {
+    it("Log-in", () => {
         cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui");
         cy.get('#input-login-id').type(login)
         cy.get('#input-password-id').type(password)
         cy.get('.input-field__password-visibility-switch').click();
         cy.get('#input-password-id').should('have.class', 'ng-touched')
-        cy.get('#input-password-id').invoke('text').then ((txt) => {
-            cy.log(txt)
+        cy.get('#input-password-id').invoke('val').should('contain', password)
+        cy.get('.background-primary').contains("Login to Avantra").click()
+        let postRequest
+        cy.request('POST', 'xn/api/auth/login', { username: login, password: password, keepSignedIn: false })
+            .then(({ body }) => {
+                postRequest = body
             })
-        // cy.get('.background-primary').contains("Login to Avantra").click()
-        // let postRequest
-        // cy.request('POST', 'xn/api/auth/login', { username: login, password: password, keepSignedIn: false })
-        //     .then(({ body }) => {
-        //         postRequest = body
-        //     })
-        //     .should((response) => {
-        //         expect(response.status).to.eq(200)
-        //         expect(response).to.have.property('headers')
-        //         expect(response).property('body').to.contain({
-        //             username: 'Tanya admin'
-        //         })
-        //     })
-        // console.log(postRequest)
+            .should((response) => {
+                expect(response.status).to.eq(200)
+                expect(response).to.have.property('headers')
+                expect(response).property('body').to.contain({
+                    username: 'Tanya admin'
+                })
+            })
+        console.log(postRequest)
 
 
 

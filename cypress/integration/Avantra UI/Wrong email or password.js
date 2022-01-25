@@ -8,29 +8,31 @@ describe("Testing login page", () => {
         cy.get('.card-aligner')
   })
 
-  it.only("Login and Password fields validation", () => {
+  it("Login and Password fields validation", () => {
     cy.get('.background-primary').contains("Login to Avantra").click()
     cy.wait(500)
 
-    // cy.get('[fieldid="input-login-id"]').trigger('mouseover').should('contain', 'cdk-describedby-message-0')
-    // cy.get('#input-login-id').should('have.class', 'ng-invalid')
+    // cy.get('[fieldid="input-login-id"]').trigger('mouseover');
+
+
+    cy.get('#input-login-id').should('have.class', 'ng-invalid')
     // cy.get('[fieldid="input-password-id"]').invoke('attr', 'tooltip').should('contain', 'Password should not be empty')
-    // cy.get('#input-password-id').should('have.class', 'ng-invalid')
-    // cy.get('#input-login-id').type("testLogin")
-    // cy.get('body').click(0,0)
-    // cy.wait(500)
-    // cy.get('[fieldid="input-login-id"]').should('have.class', 'ng-valid')
-    // cy.get('#input-password-id').type("testPassword")
-    // cy.get('body').click(0,0)
-    // cy.wait(500)
-    // cy.get('[fieldid="input-password-id"]').should('have.class', 'ng-valid')
+    cy.get('#input-password-id').should('have.class', 'ng-invalid')
+    cy.get('#input-login-id').type("testLogin")
+    cy.get('body').click(0,0)
+    cy.wait(500)
+    cy.get('[fieldid="input-login-id"]').should('have.class', 'ng-valid')
+    cy.get('#input-password-id').type("testPassword")
+    cy.get('body').click(0,0)
+    cy.wait(500)
+    cy.get('[fieldid="input-password-id"]').should('have.class', 'ng-valid')
     })
     
   it("Try wrong login name", () => {
         cy.get('#input-login-id').type("Tanya");
         cy.get('#input-password-id').type("Tanya")
         cy.get('.content-block__button-sign-in').click();
-        cy.get('.mat-simple-snackbar > span').should('have.text', 'The user name or password is not correct!')
+        cy.get('.mat-snack-bar-container').should('have.text', 'The user name or password is not correct!') //doesn't work
     })
     it("Try wrong password", () => {
             cy.get('#input-login-id').type("Tanya admin");
