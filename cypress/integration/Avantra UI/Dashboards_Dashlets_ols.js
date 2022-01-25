@@ -59,42 +59,48 @@ it("Save the dashboard with dashlet added", () => {
 //Dashlets selecting
         it.only("Administrative Dashlets", () => {
             cy.get("@admDashJson").then((admDashJson) =>{
-            
+            for ( let i=0; i < admDashJson.length; i++ ){        
                 cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text','Dashboards')
                 cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
                 cy.get('.dashboard-modify__header-input').clear();
-                cy.get('.dashboard-modify__header-input').type(admDashJson[0].type[0]);
+                cy.get('.dashboard-modify__header-input').type(admDashJson[i].type);
                 cy.get('.dashboard-modify__add-dashlet').click();
                 cy.wait(600)
     //Log each element of dashlet categories
                 cy.get('[class="dashlet-selector-categories"]').within(() => {
                     cy.get('[class="dashlet-selector-categories__item ng-star-inserted"]').invoke('text').then ((txt) => {
-                        if (txt=admDashJson[0].type[0]) {
+                        if (txt=admDashJson[i].type) {
                             cy.log('Category name verified:', txt)
                         }
                         else {}
                     })
 
                 })
-                cy.contains(admDashJson[0].type[0]).click()
+                cy.contains(admDashJson[i].type).click()
 
     //verify the correct category entered
-                cy.get('.dashlet-selector__sub-title').should('have.text', admDashJson[0].type[0] +" Dashlets")
+                cy.get('.dashlet-selector__sub-title').should('have.text', admDashJson[i].type +" Dashlets")
             
     //Verify the number of items
-                cy.get('.dashlet-selector-item__title').should('have.length', 4)
+                cy.get('.dashlet-selector-item__title').should('have.length', admDashJson[i].name.length)
 
     //Verify the list of dashlet names and descriptions
             //JSON FILE!!!!
         
                 cy.get('.dashlet-selector-item__title').each((item,index) => {
-                    cy.wrap(item).should('contain.text', admDashJson[0].name[index]).parent()
-                    .should('contain.text', admDashJson[0].descr[index])
-                    cy.wrap(item).should('contain.text', admDashJson[0].name[index]).siblings('.dashlet-selector-item__content').invoke('text').then(cy.log)
+                    cy.wrap(item).should('contain.text', admDashJson[i].name[index]).siblings('.dashlet-selector-item__content')
+                    .should('contain.text', admDashJson[i].descr[index])
+                    cy.wrap(item).should('contain.text', admDashJson[i].name[index]).siblings('.dashlet-selector-item__content').invoke('text').then(cy.log)
                 })
+                
     
-            })
+            
+                cy.get('.header__edit-block > .btn-group__item > .icon-button > .background-undefined').click({force:true})
+                cy.wait(500)
+                cy.get('.btn-group > [iconpath="assets/media/icons/shared/menu-close.svg"] > .icon-button > .background-undefined').click()
 
+            }
+            })
         });
     
 
