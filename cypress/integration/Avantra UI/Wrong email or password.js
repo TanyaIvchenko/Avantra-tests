@@ -8,10 +8,11 @@ describe("Testing login page", () => {
         cy.get('.card-aligner')
   })
 
-  it("Login and Password fields validation", () => {
+  it.only("Login and Password fields validation", () => {
     cy.get('.background-primary').contains("Login to Avantra").click()
     cy.wait(500)
-    cy.get('[fieldid="input-login-id"]').invoke('attr', 'tooltip').should('contain', 'Login should not be empty')
+
+    cy.get('[fieldid="input-login-id"]').trigger('mouseover').should('contain', 'cdk-describedby-message-0')
     cy.get('#input-login-id').should('have.class', 'ng-invalid')
     cy.get('[fieldid="input-password-id"]').invoke('attr', 'tooltip').should('contain', 'Password should not be empty')
     cy.get('#input-password-id').should('have.class', 'ng-invalid')
@@ -25,7 +26,7 @@ describe("Testing login page", () => {
     cy.get('[fieldid="input-password-id"]').should('have.class', 'ng-valid')
     })
     
-  it.only("Try wrong login name", () => {
+  it("Try wrong login name", () => {
         cy.get('#input-login-id').type("Tanya");
         cy.get('#input-password-id').type("Tanya")
         cy.get('.content-block__button-sign-in').click();
