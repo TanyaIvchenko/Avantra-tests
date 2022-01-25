@@ -5,14 +5,14 @@ videos
 mochawesome-report
 package-lock.json
 staging.json
-fixtures
 automation-test-store
 other
 webdriver-uni
 config
-fixtures
 plugins
 1-getting-started
 2-advanced-examples
 .gitignore
 package.json
+package.json
+WORKFILES
