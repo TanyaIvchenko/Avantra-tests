@@ -6,13 +6,14 @@ describe("Dashboards", () => {
     const password = "Tanya";
 
 
-    it("Log-in", () => {
+    it("Log-in with keep me signed in check-box", () => {
         cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui");
         cy.get('#input-login-id').type(login)
         cy.get('#input-password-id').type(password)
         cy.get('.input-field__password-visibility-switch').click();
         cy.get('#input-password-id').should('have.class', 'ng-touched')
         cy.get('#input-password-id').invoke('val').should('contain', password)
+        cy.get('.custom-checkbox__checkmark').click();
         cy.get('.background-primary').contains("Login to Avantra").click()
         let postRequest
         cy.request('POST', 'xn/api/auth/login', { username: login, password: password, keepSignedIn: false })
@@ -27,8 +28,6 @@ describe("Dashboards", () => {
                 })
             })
         console.log(postRequest)
-
-
 
     });
 
