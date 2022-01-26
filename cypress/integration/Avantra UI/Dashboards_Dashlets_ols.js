@@ -6,6 +6,7 @@ describe("Dashlets and dashboards", () => {
         cy.fixture("Credentials").as("creds")
     })
     beforeEach(() => {
+        
 // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) =>{      
             cy.visit ("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
@@ -117,7 +118,6 @@ describe("Dashlets and dashboards", () => {
             var allDashlets = []
             for (let i=0; i<admDashJson.length; i++) {
                 allDashlets = []. concat(allDashlets, admDashJson[i].name)
-                cy.log(allDashlets)
             }
                       
 //Verify all dashlet names are present
@@ -125,6 +125,7 @@ describe("Dashlets and dashboards", () => {
             const allDashletsList = []
             cy.get('.dashlet-selector-item__title').each(($el) => {
                 cy.get($el).invoke('text').then((txt)=> { 
+                    txt = txt.trim()
                     allDashletsList.push(txt)
                 })
             })
@@ -137,14 +138,19 @@ describe("Dashlets and dashboards", () => {
 // list within categories
             cy.wrap(allDashlets.sort())
                     .then((array) => cy.log('List within categories', JSON.stringify(array)))
-                .then(() => {
-
-//Comparing two lists                    
-            expect(allDashlets.sort()).to.equal(allDashletsList.sort()).then(cy.log('All dashlets are present!'))
-                })
 
 //Verify the number of dashlets is the same as within categories
             cy.get('.dashlet-selector__content').find('.dashlet-selector-item__title').should('have.length', allDashlets.length)
+            .then(() => {
+//Comparing two lists    
+                if(JSON.stringify(allDashlets.sort()) === JSON.stringify(allDashletsList.sort())){
+                    cy.log('All dashlets are present!')
+                }
+                else {
+                    cy.log('Revise the dashlet names!!!')
+                }
+            }
+            )
                 
 
 

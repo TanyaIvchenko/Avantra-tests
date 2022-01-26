@@ -1,7 +1,7 @@
 [
     {
     "type": "Administrative",
-    "name": ["Signed in User", "Check For Updates", "Logbook Activities", "Business Service Node"],
+    "name": ["Signed in Users", "Check For Updates", "Logbook Activities", "Business Service Node"],
     "descr":["Show number of users signed in to Avantra","Show new Avantra updates which are available at syslink download site.",
             "Show the number of Logbook activities", "Shows Result of a single node from a Business Service"]
 },
