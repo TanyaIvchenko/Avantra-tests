@@ -9,9 +9,10 @@ automation-test-store
 other
 webdriver-uni
 config
-fixtures
 plugins
 1-getting-started
 2-advanced-examples
 .gitignore
 package.json
+package.json
+WORKFILES

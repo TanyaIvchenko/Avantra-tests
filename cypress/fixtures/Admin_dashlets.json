@@ -1,11 +1,16 @@
 [
     {
-    "type":["Administrative"],
+    "type": "Administrative",
     "name": ["Signed in User", "Check For Updates", "Logbook Activities", "Business Service Node"],
     "descr":["Show number of users signed in to Avantra","Show new Avantra updates which are available at syslink download site.",
             "Show the number of Logbook activities", "Shows Result of a single node from a Business Service"]
+},
+{
+    "type":"Changes",
+    "name": ["Changes", "Unassigned Changes", "Unassigned Changes List"],
+    "descr":["Show number of changes of selected systems. This dashlet shows the number of changes per current and previous month.",
+        "Show number of unassigned changes", "Show all unassigned changes as list"]
 }
-
 ]
 
 
