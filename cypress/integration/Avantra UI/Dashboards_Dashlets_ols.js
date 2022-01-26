@@ -15,7 +15,7 @@ describe("Dashlets and dashboards", () => {
         })
     })
 
-it("Save the dashboard with dashlet added", () => {
+    it("Save the dashboard with dashlet added", () => {
     cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text','Dashboards')
     cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
     cy.get('.dashboard-modify__header-input').clear();
@@ -25,10 +25,10 @@ it("Save the dashboard with dashlet added", () => {
     cy.get('.header__edit-block > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
     cy.wait(3000)
     //get element within another element
-    cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').within(() => {
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').within(() => {
         cy.get('[type="button"]').click()
-    })
-});
+        })
+    });
 
 
     it("Cancel delete and submit delete of the dashboard", () => {
@@ -57,7 +57,7 @@ it("Save the dashboard with dashlet added", () => {
         });
 
 //Dashlets selecting
-        it.only("Administrative Dashlets", () => {
+        it("Dashlets Categories", () => {
             cy.get("@admDashJson").then((admDashJson) =>{
             for ( let i=0; i < admDashJson.length; i++ ){        
                 cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text','Dashboards')
@@ -66,7 +66,7 @@ it("Save the dashboard with dashlet added", () => {
                 cy.get('.dashboard-modify__header-input').type(admDashJson[i].type);
                 cy.get('.dashboard-modify__add-dashlet').click();
                 cy.wait(600)
-    //Log each element of dashlet categories
+    //Verify the names of Categories
                 cy.get('[class="dashlet-selector-categories"]').within(() => {
                     cy.get('[class="dashlet-selector-categories__item ng-star-inserted"]').invoke('text').then ((txt) => {
                         if (txt=admDashJson[i].type) {
@@ -94,7 +94,7 @@ it("Save the dashboard with dashlet added", () => {
                 })
                 
     
-            
+        //Go back to Dashboards
                 cy.get('.header__edit-block > .btn-group__item > .icon-button > .background-undefined').click({force:true})
                 cy.wait(500)
                 cy.get('.btn-group > [iconpath="assets/media/icons/shared/menu-close.svg"] > .icon-button > .background-undefined').click()
@@ -102,7 +102,52 @@ it("Save the dashboard with dashlet added", () => {
             }
             })
         });
-    
+
+        it.only("ALL Dashlets Categories", () => {
+            cy.get("@admDashJson").then((admDashJson) =>{
+                cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text','Dashboards')
+                cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
+                cy.get('.dashboard-modify__header-input').clear();
+                cy.get('.dashboard-modify__header-input').type("ALL_Dashlets");
+                cy.get('.dashboard-modify__add-dashlet').click();
+                cy.wait(600)
+
+// Make one array of ALL dashlet names
+
+            var allDashlets = []
+            for (let i=0; i<admDashJson.length; i++) {
+                allDashlets = []. concat(allDashlets, admDashJson[i].name)
+                cy.log(allDashlets)
+            }
+                      
+//Verify all dashlet names are present
+ 
+            const allDashletsList = []
+            cy.get('.dashlet-selector-item__title').each(($el) => {
+                cy.get($el).invoke('text').then((txt)=> { 
+                    allDashletsList.push(txt)
+                })
+            })
+                .then((array) => cy.get(allDashletsList.sort()))
+
+// list on ALL tab
+            cy.wrap(allDashletsList)
+                    .then((array) => cy.log('List on page', JSON.stringify(array)))
+
+// list within categories
+            cy.wrap(allDashlets.sort())
+                    .then((array) => cy.log('List within categories', JSON.stringify(array)))
+                .then(() => {
+
+//Comparing two lists                    
+            expect(allDashlets.sort()).to.equal(allDashletsList.sort()).then(cy.log('All dashlets are present!'))
+                })
+
+//Verify the number of dashlets is the same as within categories
+            cy.get('.dashlet-selector__content').find('.dashlet-selector-item__title').should('have.length', allDashlets.length)
+                
 
 
+            })
+        })
 })

@@ -10,6 +10,56 @@
     "name": ["Changes", "Unassigned Changes", "Unassigned Changes List"],
     "descr":["Show number of changes of selected systems. This dashlet shows the number of changes per current and previous month.",
         "Show number of unassigned changes", "Show all unassigned changes as list"]
+},
+{
+    "type":"Checks",
+    "name": ["RTM Check", "Multi RTM Status", "Critical and Warning Checks", "Check List"],
+    "descr":["Shows the Real Time Monitoring (RTM) status and message of a specific check",
+        "Show the number of critical, warning and ok checks for a specific system selection", 
+        "Show all Critical and all Warning checks in a list", "Show checks selected by a check selector"]
+},
+{
+    "type":"Compliance",
+    "name": ["Unplanned Downtime", "SLA Violations"],
+    "descr":["Show how many hours systems were down for a specific system selection",
+        "Show number of systems violating the SLA in current and previous month"]
+},
+{
+    "type":"General",
+    "name": ["Current Time", "Web Site", "Logo", "Symbol", "Text", "Empty", "SAP HotNews", "Automation", "Start/Stop"],
+    "descr":["Show the current time","Show content of a arbitrary web site",
+        "Show a logo of your organization", "Show a  symbol (Font Awesome icon) in dashlet", 
+        "Shows a configurable text", "", "Show SAP HotNews downloaded from SAP Backbone and SAP systems affected by the HotNews", 
+        "Execute an automation job (e.g. start or stop an SAP landscape).", "Executes a start/stop command for a specific system."]
+},
+{
+    "type":"Performance",
+    "name": ["Charts", "System Count Chart", "Performance Value", "E2E Response Times Chart", "Predictive Resource Planning"],
+    "descr":["Show performance data chart of a system. An optional forecast of the performance chart data can be activated.", 
+        "Show systems count. This dashlet shows the number of systems defined in Avantrea over a specific time.",
+        "Show a specific real time performance value of a specific system", 
+        "Shows end to end reponse times for a SAP system in a chart", 
+        "Predict required resources (disk space) for selected systems. The prediction is calculated with historical performance data."]
+},
+{
+    "type":"Systems",
+    "name": ["System Status", "Business Service Status", "Business Service Details", "Multi System Status", "System Count Overview", 
+        "Number of Systems", "Multiple System Overview", "RTM Overview", "Monitoring Off Systems", "Daily Check Overview",
+        "System Availability"],
+    "descr":["Show the current status of a specific system",  "Show the status of a specific business service",
+        "Show the status of a business service and the status of the top level nodes", 
+        "Show the number of critical, warning and ok systems for a specific system selection", 
+        "Show the number of systems and the growth",
+        "Show the number of systems for a specific system selection",
+        "Show all systems of a given selection in an overview", "RTM Overview", "Show all Systems which are not monitoring", 
+        "Daily Check Overview",
+        "Show availability of a specific system"]
+},
+{
+    "type":"Tickets",
+    "name": ["Tickets", "Tickets - Caller Logs", "Unassigned Tickets"],
+    "descr":["Show how many tickets are unassigned, in processing and fixed (not yet closed)", "Show all Tickets which have the last log from a caller",
+        "Show all Tickets which are not yet assigned"]
 }
 ]
 
