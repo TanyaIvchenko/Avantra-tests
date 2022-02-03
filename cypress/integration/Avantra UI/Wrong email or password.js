@@ -11,12 +11,11 @@ describe("Testing login page", () => {
   it("Login and Password fields validation", () => {
     cy.get('.background-primary').contains("Login to Avantra").click()
     cy.wait(500)
-
-    // cy.get('[fieldid="input-login-id"]').trigger('mouseover');
-
-
+    cy.get('#input-login-id').trigger('mouseover')
+    cy.get('#cdk-describedby-message-0').should('contain', 'Login should not be empty')
     cy.get('#input-login-id').should('have.class', 'ng-invalid')
-    // cy.get('[fieldid="input-password-id"]').invoke('attr', 'tooltip').should('contain', 'Password should not be empty')
+    cy.get('#input-password-id').trigger('mouseover')
+    cy.get('#cdk-describedby-message-1').should('contain', 'Password should not be empty')
     cy.get('#input-password-id').should('have.class', 'ng-invalid')
     cy.get('#input-login-id').type("testLogin")
     cy.get('body').click(0,0)
@@ -32,12 +31,17 @@ describe("Testing login page", () => {
         cy.get('#input-login-id').type("Tanya");
         cy.get('#input-password-id').type("Tanya")
         cy.get('.content-block__button-sign-in').click();
-        cy.get('.mat-snack-bar-container').should('have.text', 'The user name or password is not correct!') //doesn't work
+        //cy.get('.mat-snack-bar-container').should('have.text', 'The user name or password is not correct!')
+        cy.get('#input-login-id').trigger('mouseover')
+        cy.get('#cdk-describedby-message-2').should('contain', 'The user name or password is not correct!')
+        
     })
     it("Try wrong password", () => {
             cy.get('#input-login-id').type("Tanya admin");
             cy.get('#input-password-id').type("admin")
             cy.get('.content-block__button-sign-in').click();
-            cy.get('.mat-simple-snackbar > span').should('have.text', 'The user name or password is not correct!')
+            //cy.get('.mat-simple-snackbar > span').should('have.text', 'The user name or password is not correct!')
+            cy.get('#input-password-id').trigger('mouseover')
+            cy.get('#cdk-describedby-message-2').should('contain', 'The user name or password is not correct!')
     })
 })
