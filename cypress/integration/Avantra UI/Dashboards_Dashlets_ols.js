@@ -57,7 +57,7 @@ describe("Dashlets and dashboards", () => {
         });
 
 //Dashlets selecting
-        it("Dashlets Categories", () => {
+        it.only("Dashlets Categories", () => {
             cy.get("@admDashJson").then((admDashJson) =>{
             for ( let i=0; i < admDashJson.length; i++ ){        
                 cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text','Dashboards')
@@ -68,14 +68,14 @@ describe("Dashlets and dashboards", () => {
                 cy.wait(600)
     //Verify the names of Categories
                 cy.get('[class="dashlet-selector-categories"]').within(() => {
-                    cy.get('[class="dashlet-selector-categories__item ng-star-inserted"]').invoke('text').then ((txt) => {
+                    cy.get('[class="dashlet-selector-categories__item ng-star-inserted"]').invoke('text').then ((txt) => 
+                    // +text.replace(' ', '').trim());
+                    {
                         if (txt=admDashJson[i].type) {
                             cy.log('Category name verified:', txt)
                         }
                         else {}
                     })
-
-                })
                 cy.contains(admDashJson[i].type).click()
 
     //verify the correct category entered

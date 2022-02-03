@@ -21,15 +21,14 @@ cy.get('.background-primary').contains("Login to Avantra").click()
     });
 
 //Tooltips
-    it("Login and Password fields validation", () => {
+    it.only("Login and Password fields validation", () => {
 cy.get('.background-primary').contains("Login to Avantra").click()
 cy.wait(500)
-// cy.trigger('mouseover', '[fieldid="input-login-id"]')
-// cy.get('[fieldid="input-login-id"]').should('contain', 'Login should not be empty')
-// realHover()
-
-  // cy.get('#input-login-id').should('have.class', 'ng-invalid')
-// cy.get('[fieldid="input-password-id"]').invoke('attr', 'tooltip').should('contain', 'Password should not be empty')
+cy.get('#input-login-id').trigger('mouseover')
+cy.get('#cdk-describedby-message-0').should('contain', 'Login should not be empty')
+cy.get('#input-login-id').should('have.class', 'ng-invalid')
+cy.get('#input-password-id').trigger('mouseover')
+cy.get('#cdk-describedby-message-1').should('contain', 'Password should not be empty')
 cy.get('#input-password-id').should('have.class', 'ng-invalid')
 cy.get('#input-login-id').type("testLogin")
 cy.get('body').click(0,0)
@@ -123,7 +122,7 @@ const password = "Olha1605";
         cy.get('.button-back').click()
     });
     
-    it.only('Response data assertions', () => {
+    it('Response data assertions', () => {
         cy.get('.content-block__button-forgot-password').click()     
         let postRequest
         cy.request('POST', 'xn/api/auth/requestNewPassword', { name: 'testName' })
