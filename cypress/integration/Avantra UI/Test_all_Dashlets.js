@@ -22,9 +22,8 @@ describe("Test All dashlets", () => {
     it("Business Service Node", () => {
         cy.get(':nth-child(2) > app-gridster.ng-star-inserted > .gridster-component > .scrollHorizontal > [style="z-index: 1; display: block; transform: translate3d(0px, 0px, 0px); width: 325px; height: 217.5px;"] > .gridster-item__content > app-dashlet-selector-item.ng-star-inserted > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get(':nth-child(1) > app-select.ng-untouched > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
-        cy.get(':nth-child(1) > app-select.ng-untouched > .select > #undefined > .ng-select-container > .ng-value-container > .ng-input').click();
-        cy.get(':nth-child(1) > .ng-untouched > .select > #undefined > .ng-select-container > .ng-value-container > .ng-input').click()
-        cy.get('#a43d7e29b9ab-6').click().should('have.value', 'BS_REL_8')
-
+        cy.get('.ng-dropdown-panel-items').within(() => {
+            cy.get('.ng-option-label').contains('BS_REL_8').click()
+        })
     })
 })
