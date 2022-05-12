@@ -14,16 +14,35 @@ describe("Test All dashlets", () => {
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
             cy.get(':nth-child(9) > .sidebar-list-item > .sidebar-list-item__text').click();
-            cy.get('.header__edit-block > .mat-tooltip-trigger > .icon-button > .background-undefined > svg').click();
-            cy.get('.dashboard-modify__add-dashlet').click();
+            cy.get('[fxlayoutalign="row"] > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+            cy.get('avantra-dashboards-details-edit.ng-star-inserted > .mat-tooltip-trigger').click();
         })
     })
 
-    it("Business Service Node", () => {
-        cy.get(':nth-child(2) > app-gridster.ng-star-inserted > .gridster-component > .scrollHorizontal > [style="z-index: 1; display: block; transform: translate3d(0px, 0px, 0px); width: 325px; height: 217.5px;"] > .gridster-item__content > app-dashlet-selector-item.ng-star-inserted > .dashlet-selector-item > .dashlet-selector-item__button').click();
-        cy.get(':nth-child(1) > app-select.ng-untouched > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
+    it.only("Business Service Node", () => {
+        cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
+        cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
         cy.get('.ng-dropdown-panel-items').within(() => {
-            cy.get('.ng-option-label').contains('BS_REL_8').click()
+            cy.get('.ng-option').contains('BS_REL_8').click()
+            cy.get('.header__edit-block > .mat-tooltip-trigger.ng-star-inserted > .icon-button > .background-primary').click()
         })
     })
+
+    it("Logbook Activities", () => {
+        cy.get('.dashlet-selector-item__title').contains('Logbook Activities').parent()
+        .within (() =>{
+            cy.get('.dashlet-selector-item__button').click()
+        })
+        cy.get('[placeholder="Logbook Activities"]').type("Tanya test")
+        cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest")
+        cy.wait(600)
+        cy.get('.dashlet-add__stepper').within(() => {
+            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+        })
+        cy.get('#input-dashboard-name-id').type("Logbook_act_dash_test")
+        cy.wait(300)
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+        cy.wait(300)
+    })
+
 })
