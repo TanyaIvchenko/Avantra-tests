@@ -18,10 +18,10 @@
     "cypress-regression-pack": "npm run delete-results && npm run delete-mochawesome-report && npm run triggerAllTests-headless && npm run mochawesome-merge",
     "triggerAllTests-staging": "npx cypress run --env configFile=staging"
   },
-  "author": "Tanya",
+  "author": "Olha",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^9.3.1",
+    "cypress": "^9.6.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^1.5.0",
     "cypress-plugin-retries": "^1.5.2",
@@ -33,5 +33,7 @@
     "mochawesome-merge": "^4.2.0",
     "mochawesome-report-generator": "^5.2.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "jasmine": "^4.0.2"
+  }
 }
