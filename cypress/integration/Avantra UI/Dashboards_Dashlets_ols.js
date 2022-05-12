@@ -16,20 +16,28 @@ describe("Dashlets and dashboards", () => {
         })
     })
 
-    it("Save the dashboard with dashlet added", () => {
+    it.only("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
+        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
         cy.get('.dashboard-modify__header-input').type('OLS4');
         cy.get('.dashboard-modify__add-dashlet').click();
-        cy.get(':nth-child(1) > app-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
-        cy.get('.header__edit-block > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
+        cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
+        cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
+        cy.get('.ng-dropdown-panel-items').within(() => {
+            cy.get('.ng-option').contains('BS_REL_8').click()
+        // cy.get(':nth-child(1) > app-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
+        // cy.get('.header__edit-block > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
+        
+        // cy.get(':nth-child(1) > app-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
+        // cy.get('.header__edit-block > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
         cy.wait(3000)
         //get element within another element
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').within(() => {
             cy.get('[type="button"]').click()
         })
     });
+})
 
 
     it("Cancel delete and submit delete of the dashboard", () => {
@@ -58,7 +66,7 @@ describe("Dashlets and dashboards", () => {
     });
 
     //Dashlets selecting
-    it.only("Dashlets Categories", () => {
+    it("Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             for (let i = 0; i < admDashJson.length; i++) {
                 cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
