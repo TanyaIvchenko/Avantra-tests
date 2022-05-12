@@ -10,7 +10,7 @@ describe("Dashboards", () => {
         cy.get('.button').click()
     })
 
-    it("Create and save Dashboard", () => {
+    it.only("Create and save Dashboard", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
         cy.get('.dashboard-modify__header-input').clear();
