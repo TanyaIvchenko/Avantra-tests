@@ -10,6 +10,7 @@ describe("Dashlets and dashboards", () => {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
+            cy.wait (5000)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
@@ -20,21 +21,21 @@ describe("Dashlets and dashboards", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
-        cy.get('.dashboard-modify__header-input').type('OLS4');
+        cy.get('.dashboard-modify__header-input').type('OLS11');
         cy.get('.dashboard-modify__add-dashlet').click();
         cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
         cy.get('.ng-dropdown-panel-items').within(() => {
             cy.get('.ng-option').contains('BS_REL_8').click()
-        // cy.get(':nth-child(1) > app-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
-        // cy.get('.header__edit-block > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
-        
-        // cy.get(':nth-child(1) > app-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
-        // cy.get('.header__edit-block > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
+        })
         cy.wait(3000)
         //get element within another element
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').within(() => {
-            cy.get('[type="button"]').click()
+        cy.get('.dashlet-add__stepper').within(() => {
+            cy.get('[mattooltip="Save"]')
+            .within(() => {
+                cy.get('.icon-button__text')
+                .click({force:true})
+            })
         })
     });
 })
