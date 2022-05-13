@@ -50,9 +50,20 @@ describe("Dashlets and dashboards", () => {
 
         })
     })
+    //test under construction
+    it.only("Cancel delete and submit delete of the dashboard", () => {
+        cy.contains('a', 'OLS11').parent('[class="sidebar-list-item"]').within(() => {
+        cy.get('.menu-button__icon').click({ force: true })
+        cy.get('.mat-menu-content > :nth-child(2)').click();//failed yet
+        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').click();
+        cy.get(':nth-child(31) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click();
+        cy.get(':nth-child(2) > span[_ngcontent-acn-c156=""]').click();
+        cy.get('.background-action > .button__text').click();
+    })
+})
 
 //test under construction
-    it.only("Cancel delete and submit delete of the dashboard", () => {
+    it("Cancel delete and submit delete of the dashboard", () => {
         //Cancel
         cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
             cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
