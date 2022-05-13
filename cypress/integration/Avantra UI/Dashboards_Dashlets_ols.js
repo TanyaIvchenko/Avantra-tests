@@ -17,7 +17,8 @@ describe("Dashlets and dashboards", () => {
         })
     })
 
-    it.only("Save the dashboard with dashlet added", () => {
+    //test works
+    it("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
@@ -25,8 +26,10 @@ describe("Dashlets and dashboards", () => {
         cy.get('.dashboard-modify__add-dashlet').click();
         cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
+        cy.wait(3000)
         cy.get('.ng-dropdown-panel-items').within(() => {
             cy.get('.ng-option').contains('BS_REL_8').click()
+
         })
         cy.wait(3000)
         //get element within another element
@@ -37,11 +40,19 @@ describe("Dashlets and dashboards", () => {
                 .click({force:true})
             })
         })
-    });
-})
+        cy.wait(5000)
+        cy.get('.sub-header').within(() => {
+            cy.get('[mattooltip="Save"]')
+            .within(() => {
+                cy.get('.icon-button__text')
+                .click({force:true})
+            })
 
+        })
+    })
 
-    it("Cancel delete and submit delete of the dashboard", () => {
+//test under construction
+    it.only("Cancel delete and submit delete of the dashboard", () => {
         //Cancel
         cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
             cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
