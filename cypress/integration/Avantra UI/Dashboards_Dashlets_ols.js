@@ -18,7 +18,7 @@ describe("Dashlets and dashboards", () => {
     })
 
     //test works
-    it("Save the dashboard with dashlet added", () => {
+    it.only("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
@@ -50,19 +50,22 @@ describe("Dashlets and dashboards", () => {
 
         })
     })
-    //test under construction
-    it.only("Cancel delete and submit delete of the dashboard", () => {
-        cy.contains('a', 'OLS11').parent('[class="sidebar-list-item"]').within(() => {
-        cy.get('.menu-button__icon').click({ force: true })
-        cy.get('.mat-menu-content > :nth-child(2)').click();//failed yet
+    //test works!
+    it('Deleting cancel and ok', function() {
+        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
+        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
+        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
         cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').click();
-        cy.get(':nth-child(31) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click();
-        cy.get(':nth-child(2) > span[_ngcontent-acn-c156=""]').click();
-        cy.get('.background-action > .button__text').click();
-    })
-})
+        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').contains('No').click({ force: true });
+        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
+        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
+        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
+        cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
+        cy.contains('a', 'OLS11').should('not.exist')
+     });
 
-//test under construction
+
+    //the draft of previous test
     it("Cancel delete and submit delete of the dashboard", () => {
         //Cancel
         cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
@@ -187,4 +190,16 @@ describe("Dashlets and dashboards", () => {
 
         })
     })
+
+    /* ==== Test Created with Cypress Studio ==== */
+    it('Deleting cancel and ok', function() {
+        /* ==== Generated with Cypress Studio ==== */
+        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click();
+        cy.get(':nth-child(2) > span[_ngcontent-meo-c156=""]').click();
+        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').click();
+        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click();
+        cy.get('.mat-menu-content > :nth-child(2)').click();
+        cy.get('.background-action > .button__text').click();
+        /* ==== End Cypress Studio ==== */
+    });
 })
