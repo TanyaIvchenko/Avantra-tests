@@ -75,3 +75,4 @@ describe("Test All dashlets", () => {
             cy.wait(300)
     })
 })
+})

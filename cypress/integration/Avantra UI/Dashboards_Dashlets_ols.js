@@ -10,7 +10,7 @@ describe("Dashlets and dashboards", () => {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
-            cy.wait (5000)
+            cy.wait(5000)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
@@ -18,7 +18,7 @@ describe("Dashlets and dashboards", () => {
     })
 
     //test works
-    it.only("Save the dashboard with dashlet added", () => {
+    it("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
@@ -35,64 +35,50 @@ describe("Dashlets and dashboards", () => {
         //get element within another element
         cy.get('.dashlet-add__stepper').within(() => {
             cy.get('[mattooltip="Save"]')
-            .within(() => {
-                cy.get('.icon-button__text')
-                .click({force:true})
-            })
+                .within(() => {
+                    cy.get('.icon-button__text')
+                        .click({ force: true })
+                })
         })
         cy.wait(5000)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]')
-            .within(() => {
-                cy.get('.icon-button__text')
-                .click({force:true})
-            })
+                .within(() => {
+                    cy.get('.icon-button__text')
+                        .click({ force: true })
+                })
 
         })
     })
-    //test works!
-    it('Deleting cancel and ok', function() {
-        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
-        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
-        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
-        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').click();
-        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').contains('No').click({ force: true });
-        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
-        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
-        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
-        cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
-        cy.contains('a', 'OLS11').should('not.exist')
-     });
 
-
-    //the draft of previous test
-    it("Cancel delete and submit delete of the dashboard", () => {
-        //Cancel
-        cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
-            cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
-        })
-        //click Delete on menu appered
-        cy.get('[iconpath="assets/media/icons/shared/menu-remove.svg"]').click()
-        //pop-up confirmation: cancel
-        cy.get('[class="confirmation-modal"]').within(() => {
-            cy.contains('No').click()
-        })
-        //Delete
-        cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
-            cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
-        })
-        //click Delete on menu appered
-        cy.get('[iconpath="assets/media/icons/shared/menu-remove.svg"]').click()
-        //pop-up confirmation: confirm deletion
-        cy.get('[class="confirmation-modal"]').within(() => {
-            cy.contains('Yes').click()
-        })
-        //Verify the dashboard is deleted
-        cy.contains('a', 'OLS3').should('not.exist')
-    });
+    //the draft of deleting test
+    // it("Cancel delete and submit delete of the dashboard", () => {
+    //     //Cancel
+    //     cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
+    //         cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
+    //     })
+    //     //click Delete on menu appered
+    //     cy.get('[iconpath="assets/media/icons/shared/menu-remove.svg"]').click()
+    //     //pop-up confirmation: cancel
+    //     cy.get('[class="confirmation-modal"]').within(() => {
+    //         cy.contains('No').click()
+    //     })
+    //     //Delete
+    //     cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
+    //         cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
+    //     })
+    //     //click Delete on menu appered
+    //     cy.get('[iconpath="assets/media/icons/shared/menu-remove.svg"]').click()
+    //     //pop-up confirmation: confirm deletion
+    //     cy.get('[class="confirmation-modal"]').within(() => {
+    //         cy.contains('Yes').click()
+    //     })
+    //     //Verify the dashboard is deleted
+    //     cy.contains('a', 'OLS3').should('not.exist')
+    // });
 
     //Dashlets selecting
-    it("Dashlets Categories", () => {
+    it.only("Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             for (let i = 0; i < admDashJson.length; i++) {
                 cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
@@ -102,7 +88,7 @@ describe("Dashlets and dashboards", () => {
                 cy.get('.dashboard-modify__add-dashlet').click();
                 cy.wait(600)
 
-    //Verify the names of Categories
+                //Verify the names of Categories
                 cy.get('[class="dashlet-selector-categories"]').within(() => {
                     cy.get('[class="dashlet-selector-categories__item ng-star-inserted"]').invoke('text').then((txt) => {
                         if (txt = admDashJson[i].type) {
@@ -113,14 +99,14 @@ describe("Dashlets and dashboards", () => {
                 })
                 cy.contains(admDashJson[i].type).click()
 
-    //verify the correct category entered
+                //verify the correct category entered
                 cy.get('.dashlet-selector__sub-title').should('have.text', admDashJson[i].type + " Dashlets")
 
-    //Verify the number of items
+                //Verify the number of items
                 cy.get('.dashlet-selector-item__title').should('have.length', admDashJson[i].name.length)
 
-    //Verify the list of dashlet names and descriptions
-    //JSON FILE!!!!
+                //Verify the list of dashlet names and descriptions
+                //JSON FILE!!!!
 
                 cy.get('.dashlet-selector-item__title').each((item, index) => {
                     cy.wrap(item).should('contain.text', admDashJson[i].name[index]).siblings('.dashlet-selector-item__content')
@@ -183,23 +169,21 @@ describe("Dashlets and dashboards", () => {
                     else {
                         cy.log('Revise the dashlet names!!!')
                     }
-                }
-                )
-
-
-
+                })
         })
     })
 
-    /* ==== Test Created with Cypress Studio ==== */
-    it('Deleting cancel and ok', function() {
-        /* ==== Generated with Cypress Studio ==== */
-        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click();
-        cy.get(':nth-child(2) > span[_ngcontent-meo-c156=""]').click();
+    //test works!
+    it('Deleting cancel and ok', function () {
+        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
+        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
+        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
         cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').click();
-        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click();
-        cy.get('.mat-menu-content > :nth-child(2)').click();
-        cy.get('.background-action > .button__text').click();
-        /* ==== End Cypress Studio ==== */
+        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').contains('No').click({ force: true });
+        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
+        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
+        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
+        cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
+        cy.contains('a', 'OLS11').should('not.exist')
     });
 })
