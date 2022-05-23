@@ -77,13 +77,13 @@ describe("Dashlets and dashboards", () => {
     //     cy.contains('a', 'OLS3').should('not.exist')
     // });
 
+    //test doesn't work
     //Dashlets selecting
-    it.only("Dashlets Categories", () => {
-        cy.get("@admDashJson").then((admDashJson) => {
-            for (let i = 0; i < admDashJson.length; i++) {
-                cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-                cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
-                cy.get('.dashboard-modify__header-input').clear();
+    it("Dashlets Categories", () => {
+                cy.get('.sidebar-list__header').should('have.text', 'Dashboards')
+                cy.wait(5000)
+                cy.get('.sidebar-list__list').contains('OLS11').click();
+                cy.get('.avantra-page__header-title').clear();
                 cy.get('.dashboard-modify__header-input').type(admDashJson[i].type);
                 cy.get('.dashboard-modify__add-dashlet').click();
                 cy.wait(600)
@@ -119,12 +119,10 @@ describe("Dashlets and dashboards", () => {
                 cy.get('.header__edit-block > .btn-group__item > .icon-button > .background-undefined').click({ force: true })
                 cy.wait(500)
                 cy.get('.btn-group > [iconpath="assets/media/icons/shared/menu-close.svg"] > .icon-button > .background-undefined').click()
+            })
 
-            }
-        })
-    });
-
-    it("ALL Dashlets Categories", () => {
+        //test under construction
+    it.only("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
             cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
@@ -172,6 +170,7 @@ describe("Dashlets and dashboards", () => {
                 })
         })
     })
+})
 
     //test works!
     it('Deleting cancel and ok', function () {
@@ -186,4 +185,3 @@ describe("Dashlets and dashboards", () => {
         cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
         cy.contains('a', 'OLS11').should('not.exist')
     });
-})
