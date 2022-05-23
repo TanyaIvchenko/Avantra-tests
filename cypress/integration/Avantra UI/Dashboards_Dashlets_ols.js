@@ -78,7 +78,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
 
     //test doesn't work
     //Dashlets selecting
-    it("Dashlets Categories", () => {
+    it.only("Dashlets Categories", () => {
                 cy.get('.sidebar-list__header').should('have.text', 'Dashboards')
                 cy.wait(5000)
                 cy.get('.sidebar-list__list').contains('OLS11').click();
@@ -121,7 +121,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             })
 
         //test under construction
-    it.only("ALL Dashlets Categories", () => {
+    it("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
             cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
