@@ -23,7 +23,9 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
         cy.get('.ng-dropdown-panel-items').within(() => {
             cy.get('.ng-option').contains('BS_REL_8').click()
-            cy.get('.header__edit-block > .mat-tooltip-trigger.ng-star-inserted > .icon-button > .background-primary').click()
+        //cy.get('.header__edit-block > .mat-tooltip-trigger.ng-star-inserted > .icon-button > .background-primary').click()
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').within(() => {
+            cy.get('[type="button"]').click()
         })
     })
 //
@@ -85,4 +87,5 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             })
             cy.wait(300)
     })
+})
 })

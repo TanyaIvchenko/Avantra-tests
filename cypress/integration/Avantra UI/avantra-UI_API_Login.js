@@ -23,7 +23,7 @@ describe("Login tests", () => {
             cy.log(response.body)
         })
     })
-    it.only("Login using Token (set to Cookie from POST request)", () => {
+    it("Login using Token (set to Cookie from POST request)", () => {
         cy.request({
             method: "POST",
             url: "https://eiger.dev.gcp.avantra.net:8443/xn/api/auth/login",
