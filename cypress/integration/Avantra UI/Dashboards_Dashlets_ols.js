@@ -28,7 +28,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
         cy.get('.ng-dropdown-panel').within(() => {
             // cy.get('#ad267ff583a0-6')
-            cy.get('.ng-star-inserted').contains('BS_REL_8').click({force:true})
+            cy.get('.ng-star-inserted').contains('BS_REL_8').click({ force:true })
         })
         cy.wait(3000)
         //get element within another element
@@ -36,7 +36,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('[mattooltip="Save"]')
                 .within(() => {
                     cy.get('.icon-button__text')
-                        .click({ force: true })
+                        .click({ force:true })
                 })
         })
         cy.wait(5000)
@@ -44,7 +44,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('[mattooltip="Save"]')
                 .within(() => {
                     cy.get('.icon-button__text')
-                        .click({ force: true })
+                        .click({ force:true })
                 })
 
         })
@@ -169,7 +169,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                 })
         })
     })
-})
+
 
     //test works!
     it('Deleting cancel and ok', function () {
@@ -184,3 +184,4 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
         cy.contains('a', 'OLS11').should('not.exist')
     });
+})
