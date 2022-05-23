@@ -28,6 +28,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             cy.get('[type="button"]').click()
         })
     })
+})
 //
     it("Logbook Activities", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
@@ -74,13 +75,13 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             cy.get('[placeholder="Logbook Activities"]').type("Logbook_ols_1")
             cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest1")
             cy.wait(600)
-            cy.get('.dashlet-settings__param').contains("Refresh Interval").children('[role="combobox"]').click()
-            cy.get('.ng-dropdown-panel-items scroll-host'). within(() => {
+            cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
+            cy.get('[role="listbox"]'). within(() => {
                 cy.get('.ng-star-inserted').contains('10 minutes').click()
             })
-            cy.get('.dashlet-add__stepper').within(() => {
-                cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-            })
+            // cy.get('.dashlet-add__stepper').within(() => {
+            //     cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+            // })
             cy.wait(300)
             cy.get('.sub-header').within(() => {
                 cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
@@ -88,4 +89,4 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             cy.wait(300)
     })
 })
-})
+

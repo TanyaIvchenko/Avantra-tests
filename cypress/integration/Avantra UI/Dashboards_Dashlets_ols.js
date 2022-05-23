@@ -124,7 +124,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     it("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-            cy.get('.sidebar-list__header > app-button.ng-star-inserted > .icon-button > .icon-button__control > svg').click();
+            cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
             cy.get('.dashboard-modify__header-input').clear();
             cy.get('.dashboard-modify__header-input').type("ALL_Dashlets");
             cy.get('.dashboard-modify__add-dashlet').click();
