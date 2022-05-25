@@ -1,12 +1,9 @@
 /// <reference types="cypress" />
 
 describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
-    before(function () {
+    beforeEach(() => {
         cy.fixture("Admin_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
-    })
-    beforeEach(() => {
-
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
@@ -53,9 +50,10 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     })
 
 
+
     //TEST WORKS!
     //Dashlets selecting
-    it.only("Dashlets Categories", () => {
+    it("Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             for (let i = 0; i < admDashJson.length; i++) {
                 
@@ -101,7 +99,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             }
             })
         })
-        //test under construction
+        //TEST WORKS!
     it("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
