@@ -17,7 +17,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         })
     })
 
-    //test works
+    //TEST WORKS
     it("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
@@ -50,35 +50,10 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         })
     })
 
-    //the draft of deleting test
-    // it("Cancel delete and submit delete of the dashboard", () => {
-    //     //Cancel
-    //     cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
-    //         cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
-    //     })
-    //     //click Delete on menu appered
-    //     cy.get('[iconpath="assets/media/icons/shared/menu-remove.svg"]').click()
-    //     //pop-up confirmation: cancel
-    //     cy.get('[class="confirmation-modal"]').within(() => {
-    //         cy.contains('No').click()
-    //     })
-    //     //Delete
-    //     cy.contains('a', 'OLS3').parent('[class="sidebar-list-item"]').within(() => {
-    //         cy.get('[class="mat-menu-trigger sidebar-list-item__menu-button ng-star-inserted"]').click({ force: true })
-    //     })
-    //     //click Delete on menu appered
-    //     cy.get('[iconpath="assets/media/icons/shared/menu-remove.svg"]').click()
-    //     //pop-up confirmation: confirm deletion
-    //     cy.get('[class="confirmation-modal"]').within(() => {
-    //         cy.contains('Yes').click()
-    //     })
-    //     //Verify the dashboard is deleted
-    //     cy.contains('a', 'OLS3').should('not.exist')
-    // });
 
-    //test doesn't work
+    //TEST WORKS!
     //Dashlets selecting
-    it.only("Dashlets Categories", () => {
+    it("Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             for (let i = 0; i < admDashJson.length; i++) {
                 
@@ -102,7 +77,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                     cy.get('.wrapper__item').contains(admDashJson[i].type).click()
                 })
                 //verify the correct category entered
-                cy.get('.dashlet-selector__sub-title').should('have.text', admDashJson[i].type + " Dashlets")
+                cy.get('.dashlet-selector__sub-title').should('have.text', " " + admDashJson[i].type + " Dashlets")
 
                 //Verify the number of items
                 cy.get('.dashlet-selector-item__title').should('have.length', admDashJson[i].name.length)
@@ -118,9 +93,9 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
 
 
                 //Go back to Dashboards
-                cy.get('.header__edit-block > .btn-group__item > .icon-button > .background-undefined').click({ force: true })
+                cy.get('.header__edit-block > .mat-tooltip-trigger > .icon-button > .background-secondary > svg').click({ force: true })
                 cy.wait(500)
-                cy.get('.btn-group > [iconpath="assets/media/icons/shared/menu-close.svg"] > .icon-button > .background-undefined').click()
+                cy.get('.background-secondary > svg').click()
             }
             })
         })

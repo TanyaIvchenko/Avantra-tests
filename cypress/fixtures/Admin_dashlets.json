@@ -1,9 +1,9 @@
 [
     {
     "type": "Administrative",
-    "name": ["Signed in Users", "Check For Updates", "Logbook Activities", "Business Service Node"],
-    "descr":["Show number of users signed in to Avantra","Show new Avantra updates which are available at syslink download site.",
-            "Show the number of Logbook activities", "Shows Result of a single node from a Business Service"]
+    "name": ["Business Service Node", "Check For Updates", "Logbook Activities", "Signed in Users"],
+    "descr":["Shows Result of a single node from a Business Service", "Show new Avantra updates which are available at Avantra download site.",
+            "Show the number of Logbook activities", "Show number of users signed in to Avantra"]
 },
 {
     "type":"Changes",
@@ -13,47 +13,45 @@
 },
 {
     "type":"Checks",
-    "name": ["RTM Check", "Multi RTM Status", "Critical and Warning Checks", "Check List"],
-    "descr":["Shows the Real Time Monitoring (RTM) status and message of a specific check",
-        "Show the number of critical, warning and ok checks for a specific system selection", 
-        "Show all Critical and all Warning checks in a list", "Show checks selected by a check selector"]
+    "name": ["Check List", "Critical and Warning Checks", "Multi RTM Status", "RTM Check"],
+    "descr":["Show checks selected by a check selector", "Show all Critical and all Warning checks in a list", "Show the number of critical, warning and ok checks for a specific system selection", "Shows the Real Time Monitoring (RTM) status and message of a specific check"]
 },
 {
     "type":"Compliance",
-    "name": ["Unplanned Downtime", "SLA Violations"],
-    "descr":["Show how many hours systems were down for a specific system selection",
-        "Show number of systems violating the SLA in current and previous month"]
+    "name": ["SLA Violations", "Unplanned Downtime"],
+    "descr":["Show number of systems violating the SLA in current and previous month", "Show how many hours systems were down for a specific system selection"]
 },
 {
     "type":"General",
-    "name": ["Current Time", "Web Site", "Logo", "Symbol", "Text", "Empty", "SAP HotNews", "Automation", "Start/Stop"],
-    "descr":["Show the current time","Show content of a arbitrary web site",
-        "Show a logo of your organization", "Show a  symbol (Font Awesome icon) in dashlet", 
-        "Shows a configurable text", "", "Show SAP HotNews downloaded from SAP Backbone and SAP systems affected by the HotNews", 
-        "Execute an automation job (e.g. start or stop an SAP landscape).", "Executes a start/stop command for a specific system."]
+    "name": ["Automation", "Current Time", "Empty", "Logo", "SAP HotNews", "Start/Stop", "Symbol", "Text", "Web Site"],
+    "descr":["Execute an automation job (e.g. start or stop an SAP landscape).","Show the current time",""
+        , "Show a logo of your organization", "Show SAP HotNews downloaded from SAP Backbone and SAP systems affected by the HotNews"
+        , "Executes a start/stop command for a specific system.", "Show a  symbol (Font Awesome icon) in dashlet", "Shows a configurable text", "Show content of a arbitrary web site"]
 },
 {
     "type":"Performance",
-    "name": ["Charts", "System Count Chart", "Performance Value", "E2E Response Times Chart", "Predictive Resource Planning"],
+    "name": ["Charts", "E2E Response Times Chart", "Performance Value", "Predictive Resource Planning", "System Count Chart"],
     "descr":["Show performance data chart of a system. An optional forecast of the performance chart data can be activated.", 
-        "Show systems count. This dashlet shows the number of systems defined in Avantrea over a specific time.",
-        "Show a specific real time performance value of a specific system", 
-        "Shows end to end reponse times for a SAP system in a chart", 
-        "Predict required resources (disk space) for selected systems. The prediction is calculated with historical performance data."]
+        "Shows end to end response times for a SAP system in a chart", "Show a specific real time performance value of a specific system", "Predict required resources (disk space) for selected systems. The prediction is calculated with historical performance data.", " Show systems count. This dashlet shows the number of systems defined in Avantra over a specific time."]
 },
 {
     "type":"Systems",
-    "name": ["System Status", "Business Service Status", "Business Service Details", "Multi System Status", "System Count Overview", 
-        "Number of Systems", "Multiple System Overview", "RTM Overview", "Monitoring Off Systems", "Daily Check Overview",
-        "System Availability"],
-    "descr":["Show the current status of a specific system",  "Show the status of a specific business service",
-        "Show the status of a business service and the status of the top level nodes", 
+    "name": ["Business Service Details", "Business Service Status", "Daily Check Overview", 
+        "Monitoring Off Systems", "System Status", "Multiple System Overview", "Number of Systems", 
+        "RTM Overview", "System Availability", "System Count Overview",
+        "System Status"],
+    "descr":["Show the status of a business service and the status of the top level nodes", 
+        "Show the status of a specific business service", 
+        "Daily Check Overview", 
+        "Show all Systems which are not monitoring", 
         "Show the number of critical, warning and ok systems for a specific system selection", 
-        "Show the number of systems and the growth",
-        "Show the number of systems for a specific system selection",
-        "Show all systems of a given selection in an overview", "RTM Overview", "Show all Systems which are not monitoring", 
-        "Daily Check Overview",
-        "Show availability of a specific system"]
+        "Show all systems of a given selection in an overview", 
+        "Show the number of systems for a specific system selection", 
+        "RTM Overview", 
+        "Show availability of a specific system", 
+        "Show the number of systems and the growth", 
+        "Show the current status of a specific system"
+        ]
 },
 {
     "type":"Tickets",
