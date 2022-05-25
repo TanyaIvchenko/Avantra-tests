@@ -8,7 +8,7 @@ describe("Dashlets and dashboards", () => {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
-            cy.wait (5000)
+            cy.wait(5000)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
@@ -33,19 +33,21 @@ describe("Dashlets and dashboards", () => {
         //get element within another element
         cy.get('.dashlet-add__stepper').within(() => {
             cy.get('[mattooltip="Save"]')
-            .within(() => {
-                cy.get('.icon-button__text')
-                .click({force:true})
-            })
+                .within(() => {
+                    cy.get('.icon-button__text')
+                        .click({ force: true })
+                })
         })
         cy.wait(5000)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]')
-            .within(() => {
-                cy.get('.icon-button__text')
-                .click({force:true})
-            })
+                .within(() => {
+                    cy.get('.icon-button__text')
+                        .click({ force: true })
+                })
 
         })
+        cy.wait(3000)
+        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
 })

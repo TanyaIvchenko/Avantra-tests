@@ -18,11 +18,11 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     })
 
     //TEST WORKS
-    it("Save the dashboard with dashlet added", () => {
+    it.only("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
-        cy.get('.dashboard-modify__header-input').type('OLS13');
+        cy.get('.dashboard-modify__header-input').type('OLS11');
         cy.get('.dashboard-modify__add-dashlet').click();
         cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
@@ -48,14 +48,14 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                 })
 
         })
-        cy.wait(300)
+        cy.wait(3000)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
 
 
     //TEST WORKS!
     //Dashlets selecting
-    it("Dashlets Categories", () => {
+    it.only("Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             for (let i = 0; i < admDashJson.length; i++) {
                 
