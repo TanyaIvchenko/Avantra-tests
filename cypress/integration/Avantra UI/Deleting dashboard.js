@@ -25,6 +25,7 @@ describe("Dashlets and dashboards", () => {
             cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
             cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
             cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
+            cy.wait(5000)
             cy.contains('a', 'OLS11').should('not.exist')
         })
     })

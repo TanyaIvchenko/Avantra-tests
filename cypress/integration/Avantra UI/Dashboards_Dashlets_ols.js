@@ -18,7 +18,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     })
 
     //TEST WORKS
-    it.only("Save the dashboard with dashlet added", () => {
+    it("Save the dashboard with dashlet added", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
