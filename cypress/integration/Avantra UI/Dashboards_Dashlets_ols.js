@@ -79,25 +79,28 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     //test doesn't work
     //Dashlets selecting
     it.only("Dashlets Categories", () => {
-                cy.get('.sidebar-list__header').should('have.text', 'Dashboards')
-                cy.wait(5000)
-                cy.get('.sidebar-list__list').contains('OLS11').click();
-                cy.get('.avantra-page__header-title').clear();
+        cy.get("@admDashJson").then((admDashJson) => {
+            for (let i = 0; i < admDashJson.length; i++) {
+                
+                cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
+                cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+                cy.get('.dashboard-modify__header-input').clear();
                 cy.get('.dashboard-modify__header-input').type(admDashJson[i].type);
-                cy.get('.dashboard-modify__add-dashlet').click();
+                cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
                 cy.wait(600)
 
                 //Verify the names of Categories
-                cy.get('[class="dashlet-selector-categories"]').within(() => {
-                    cy.get('[class="dashlet-selector-categories__item ng-star-inserted"]').invoke('text').then((txt) => {
+                cy.get('.dashlet-selector-categories').within(() => {
+                    cy.get('.wrapper__item').invoke('text').then((txt) => {
                         if (txt = admDashJson[i].type) {
                             cy.log('Category name verified:', txt)
                         }
                         else { }
                     })
                 })
-                cy.contains(admDashJson[i].type).click()
-
+                cy.get('.dashlet-selector-categories').within(() => {
+                    cy.get('.wrapper__item').contains(admDashJson[i].type).click()
+                })
                 //verify the correct category entered
                 cy.get('.dashlet-selector__sub-title').should('have.text', admDashJson[i].type + " Dashlets")
 
@@ -118,8 +121,9 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                 cy.get('.header__edit-block > .btn-group__item > .icon-button > .background-undefined').click({ force: true })
                 cy.wait(500)
                 cy.get('.btn-group > [iconpath="assets/media/icons/shared/menu-close.svg"] > .icon-button > .background-undefined').click()
+            }
             })
-
+        })
         //test under construction
     it("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
