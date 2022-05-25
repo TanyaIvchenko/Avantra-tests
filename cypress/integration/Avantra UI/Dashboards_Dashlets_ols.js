@@ -48,6 +48,8 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                 })
 
         })
+        cy.wait(300)
+        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
 
 
