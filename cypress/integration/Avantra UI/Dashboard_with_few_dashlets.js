@@ -55,8 +55,17 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     // })
     // }
     cy.get('.dashboard-modify__header-input').type('OLS_few_dashlets_added');
+    cy.wait(5000)
+    cy.get('.sub-header').within(() => {
+        cy.get('[mattooltip="Save"]')
+            .within(() => {
+                cy.get('.icon-button__text')
+                    .click({ force: true })
+            })
+        })
 // })
 
+//Edit dashboard
 
 
         //Business Service Node
