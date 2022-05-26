@@ -1,12 +1,10 @@
 /// <reference types="cypress" />
 
 describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
-    before(function () {
+
+    beforeEach(() => {
         cy.fixture("Admin_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
-    })
-    beforeEach(() => {
-
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
@@ -22,7 +20,6 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
 
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-        cy.get('.dashboard-modify__header-input').clear();
         cy.get('.dashboard-modify__header-input').type('Business_Service_Node_ols');
         cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
         cy.get('.dashlet-selector-item__title').contains('Business Service Node').parent()
@@ -45,13 +42,9 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
                 })
         })
         cy.wait(5000)
-        cy.get('.header__edit-block').within(() => {
-            cy.get('[mattooltip="Save"]')
-                //  .within(() => {
-                //      cy.get('.icon-button__text')
-                        .click({ multiple: true })
-                //  })
-            })
+        cy.get('.sub-header').within(() => {
+            cy.get('[mattooltip="Save"]').click()
+        })
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
     it("Business Service Node editing created", () => {
@@ -94,7 +87,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             
             cy.wait(300)
             cy.get('.sub-header').within(() => {
-                cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+                cy.get('[mattooltip="Save"]').click()
             })
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -118,7 +111,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         cy.get('#input-dashboard-name-id').type("Logbook_act_dash_test")
         cy.wait(300)
         cy.get('.sub-header').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+            cy.get('[mattooltip="Save"]').click()
         })
         cy.wait(300)
     })
@@ -149,7 +142,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             
             cy.wait(300)
             cy.get('.sub-header').within(() => {
-                cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+                cy.get('[mattooltip="Save"]').click()
             })
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -173,7 +166,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         cy.get('#input-dashboard-name-id').type("Check_For_Updates_test")
         cy.wait(300)
         cy.get('.sub-header').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+            cy.get('[mattooltip="Save"]').click()
         })
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -206,7 +199,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             
             cy.wait(300)
             cy.get('.sub-header').within(() => {
-                cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+                cy.get('[mattooltip="Save"]').click()
             })
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -231,7 +224,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         cy.get('#input-dashboard-name-id').type("Signed_in_Users_test")
         cy.wait(300)
         cy.get('.sub-header').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+            cy.get('[mattooltip="Save"]').click()
         })
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -249,7 +242,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         cy.get('.avantra-drawer__content').within (() =>{
                 cy.get('.avantra-dashlet__header')
             .within (() =>{
-            cy.get('[mattooltip="Dashlet Settings"]')
+                cy.get('[mattooltip="Save"]').click()
             .click()
             })
         })
@@ -264,7 +257,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             
             cy.wait(300)
             cy.get('.sub-header').within(() => {
-                cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+                cy.get('[mattooltip="Save"]').click()
             })
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -330,11 +323,18 @@ it("Multi RTM Status editing created", () => {
         cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
             cy.get('.ng-star-inserted').contains('All Servers').click()
         })
+        //radiobuttons
+        cy.get('.radio-button__label').contains('Predefined').siblings('.radio-button__input').should('be.checked')
+        cy.get('.radio-button__label').contains('Ad-Hoc (Classic UI)').siblings('.radio-button__input').should('not.be.checked')
+
         cy.get('.dashlet-settings__param--title').contains('No Data Status').siblings('.dashlet-settings__param--content').click()
         cy.get('.dashlet-settings__param--title').contains('No Data Status').parent('.dashlet-settings__param').within(() =>{
             cy.get('ng-dropdown-panel').contains('CRITICAL').click()
         })
+        //checkbox
         cy.get('label').contains('Include Unknown Checks').siblings('.custom-checkbox__checkmark').click()
+
+        cy.get('label').contains('Include Unknown Checks').siblings('input').should('be.checked')
 
         cy.get('.dashlet-settings__param--title').contains('Chart Type').siblings('.dashlet-settings__param--content').click()
         cy.get('.dashlet-settings__param--title').contains('Chart Type').parent('.dashlet-settings__param').within(() =>{
@@ -346,7 +346,7 @@ it("Multi RTM Status editing created", () => {
         })
         
         cy.get('.sub-header').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+            cy.get('[mattooltip="Save"]').click()
         })
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
@@ -375,13 +375,13 @@ it("RTM Check creation", () => {
     cy.get('#input-dashboard-name-id').type("RTM_Check_test")
     cy.wait(300)
     cy.get('.sub-header').within(() => {
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+        cy.get('[mattooltip="Save"]').click()
     })
     cy.wait(300)
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 
 })
-it.only("RTM Check editing created", () => {
+it("RTM Check editing created", () => {
     cy.wait(600)
     cy.get('.sidebar-list-item').contains('a', "RTM_Check_test")
     .wait(2000).click()
@@ -420,7 +420,7 @@ it.only("RTM Check editing created", () => {
         cy.get('.custom-checkbox__label').contains('Hide check result').siblings('.custom-checkbox__checkmark').click()
         cy.get('.custom-checkbox__label').contains('Show background color in status color').siblings('.custom-checkbox__checkmark').click()
         cy.get('.sub-header').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+            cy.get('[mattooltip="Save"]').click()
         })
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
