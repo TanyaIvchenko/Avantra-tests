@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Dashlets and dashboards", () => {
+describe("Creating and saving dashboard", () => {
     before(function () {
         cy.fixture("Admin_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
