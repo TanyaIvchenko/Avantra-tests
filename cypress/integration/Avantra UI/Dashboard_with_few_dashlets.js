@@ -19,45 +19,43 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
 // Delete the dashboard with the same name prior to name the current one
         //Creating list of the dashboard names
-        const allDashboardsList = []
-        cy.get('avantra-sidebar-list-item').each(($el) => {
-            cy.get($el).invoke('text').then((txt) => {
-                txt = txt.trim()
-                allDashboardsList.push(txt)
-            })
-        })
-            .then((array) => cy.get(allDashboardsList.sort()))
-        //Searching for the existing dashboard with the name we need
-        .then((allDashboardsList) => {
-        for (let i = 0; i < allDashboardsList.length; i++) { 
-            cy.get('avantra-sidebar-list-item').each(($el) => {
-                cy.get($el).invoke('text').then((txt) => {
-                    txt = txt.trim()
-                cy.log(txt)
-            if (txt == "OLS_few_dashlets_added") {
-                cy.log('Dashboard already exists, deleting old dashboard', txt)
-                cy.contains('a', txt).parent('.sidebar-list-item').trigger('mouseover')
-                cy.contains('a', txt).parent('.sidebar-list-item').within(() => {
-                    cy.get('button').click({ force: true })
-                })
-                //click Delete on menu appeared
-                cy.get('button').contains('Delete').parents('.mat-focus-indicator').click()
-                //pop-up confirmation: confirm deletion
-                cy.get('[class="confirmation-modal"]').within(() => {
-                    cy.contains('Yes').click()
-                })
-                //Verify the dashboard is deleted
-                cy.contains('a', 'OLS_few_dashlets_added').should('not.exist')
+    //     const allDashboardsList = []
+    //     cy.get('avantra-sidebar-list-item').each(($el) => {
+    //         cy.get($el).invoke('text').then((txt) => {
+    //             txt = txt.trim()
+    //             allDashboardsList.push(txt)
+    //         })
+    //     })
+    //         .then((array) => cy.get(allDashboardsList.sort()))
+    //     //Searching for the existing dashboard with the name we need
+    //     .then((allDashboardsList) => {
+    //     for (let i = 0; i < allDashboardsList.length; i++) { 
+    //         cy.get('avantra-sidebar-list-item').each(($el) => {
+    //             cy.get($el).invoke('text').then((txt) => {
+    //                 txt = txt.trim()
+    //             cy.log(txt)
+    //         if (txt == "OLS_few_dashlets_added") {
+    //             cy.log('Dashboard already exists, deleting old dashboard', txt)
+    //             cy.contains('a', txt).parent('.sidebar-list-item').trigger('mouseover')
+    //             cy.contains('a', txt).parent('.sidebar-list-item').within(() => {
+    //                 cy.get('button').click({ force: true })
+    //             })
+    //             //click Delete on menu appeared
+    //             cy.get('button').contains('Delete').parents('.mat-focus-indicator').click()
+    //             //pop-up confirmation: confirm deletion
+    //             cy.get('[class="confirmation-modal"]').within(() => {
+    //                 cy.contains('Yes').click()
+    //             })
+    //             //Verify the dashboard is deleted
+    //             cy.contains('a', 'OLS_few_dashlets_added').should('not.exist')
                 
-            }
-            else { 
-               
-            }
-        })
-    })
-    }
+    //         }
+    //         else { }
+    //     })
+    // })
+    // }
     cy.get('.dashboard-modify__header-input').type('OLS_few_dashlets_added');
-})
+// })
 
 
 
@@ -75,8 +73,8 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.get('.ng-star-inserted').contains('BS_ols').click({ force:true })
         })
         cy.wait(500)
-        cy.get('avantra-dashlet-settings-business-service-node').children().contains('Select Business Service Node').parent('.ng-value-container').click()
-        cy.get('avantra-dashlet-settings-business-service-node').children().contains('Select Business Service Node').parent('.ng-select-container').within(() =>{
+        cy.get('[placeholder="Select Business Service Node"]').click()
+        cy.get('[placeholder="Select Business Service Node"]').within(() =>{
             cy.get('.ng-option').contains('achvcc-sapiq').click()
         })
         cy.get('.dashlet-add__stepper').within(() => {
@@ -86,7 +84,6 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                         .click({ force:true })
                 })
         })
-        cy.wait(5000)
         //Logbook activities
         cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
         cy.get('.dashlet-selector-item__title').contains('Logbook Activities').parent()
