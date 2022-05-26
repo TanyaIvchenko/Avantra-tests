@@ -1,20 +1,19 @@
 /// <reference types="cypress" />
 
-describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
-
+describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
     beforeEach(() => {
         cy.fixture("Admin_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
-            cy.wait (500)
+            cy.wait(5000)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
-
         })
     })
+
 //ADMINISTRATIVE
     it("Business Service Node creation", () => {
 
@@ -47,7 +46,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         })
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
-    it("Business Service Node editing created", () => {
+    it.only("Business Service Node editing created", () => {
         cy.wait(5000)
         cy.get('.sidebar-list-item').contains('a', "Business_Service_Node_ols")
             .click()
@@ -55,10 +54,11 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
             .get('[mattooltip="Edit Dashboard"]')
                 .wait(2000)
                 .click() 
-                cy.wait(2000)
+                cy.wait(5000)
         cy.get('.avantra-drawer__content').within (() =>{
                 cy.get('.avantra-dashlet__header')
             .within (() =>{
+            cy.wait(2000)
             cy.get('[mattooltip="Dashlet Settings"]')
             .click()
             })
@@ -168,7 +168,7 @@ describe("Test All dashlets", { defaultCommandTimeout: 5000 },() => {
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]').click()
         })
-        cy.wait(300)
+        cy.wait(5000)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 
 })
