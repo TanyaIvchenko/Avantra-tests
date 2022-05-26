@@ -1,4 +1,4 @@
-describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
+describe("Dashboard_with_few_dashlets", { defaultCommandTimeout: 5000 },() => {
 
     before(() => {
         cy.fixture("Admin_dashlets").as("admDashJson")
@@ -148,16 +148,15 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.wait(300)
 
             
-            cy.get('avantra-dashlet-settings-check-selector').click()
-            cy.get('avantra-dashlet-settings-check-selector').within(() =>{
+            cy.get('.ng-placeholder').contains('Select Check Selector').parent('.ng-value-container').click()
+            cy.get('.ng-placeholder').contains('Select Check Selector').parents('.ng-select-searchable').within(() =>{
             cy.get('.ng-star-inserted').contains('ols-all').click()
             })
             cy.get('avantra-dashlet-settings-system-predefined').click()
             cy.wait(600)
             cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-                cy.wait(600)
                 cy.get('.ng-star-inserted').contains('All Servers')
-                cy.wait(600)
+                .wait(300)
                 .click()
             })
             //radiobuttons
