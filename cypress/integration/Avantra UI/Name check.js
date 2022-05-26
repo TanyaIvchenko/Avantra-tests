@@ -16,8 +16,50 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
 
     it("Save the dashboard with dashlets + edit Multi RTM Status", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click()
-        
+        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+
+        // Delete the dashboard with the same name prior to name the current one
+        //Creating list of the dashboard names
+    //     const allDashboardsList = []
+    //     cy.get('avantra-sidebar-list-item').each(($el) => {
+    //         cy.get($el).invoke('text').then((txt) => {
+    //             txt = txt.trim()
+    //             allDashboardsList.push(txt)
+    //         })
+    //     })
+    //         .then((array) => cy.get(allDashboardsList.sort()))
+    //     //Searching for the existing dashboard with the name we need
+    //     .then((allDashboardsList) => {
+    //     for (let i = 0; i < allDashboardsList.length; i++) { 
+    //         cy.get('avantra-sidebar-list-item').each(($el) => {
+    //             cy.get($el).invoke('text').then((txt) => {
+    //                 txt = txt.trim()
+    //             cy.log(txt)
+    //         if (txt == "OLS_few_dashlets_added") {
+    //             cy.log('Dashboard already exists, deleting old dashboard', txt)
+    //             cy.contains('a', txt).parent('.sidebar-list-item').trigger('mouseover')
+    //             cy.contains('a', txt).parent('.sidebar-list-item').within(() => {
+    //                 cy.get('button').click({ force: true })
+    //             })
+    //             //click Delete on menu appeared
+    //             cy.get('button').contains('Delete').parents('.mat-focus-indicator').click()
+    //             //pop-up confirmation: confirm deletion
+    //             cy.get('[class="confirmation-modal"]').within(() => {
+    //                 cy.contains('Yes').click()
+    //             })
+    //             //Verify the dashboard is deleted
+    //             cy.contains('a', 'OLS_few_dashlets_added').should('not.exist')
+                
+    //         }
+    //         else { }
+    //     })
+    // })
+    // }
+    
+// })
+
+
+
         //Business Service Node
         cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
         cy.get('.dashlet-selector-item__title').contains('Business Service Node').parent()
@@ -115,7 +157,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
     })
     cy.wait(300)
-    cy.get('.dashboard-modify__header-input').type('OLS_few_dashlets_added')
+    cy.get('.dashboard-modify__header-input').type('OLS_few_dashlets_added_test')
     cy.wait(300)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]')
