@@ -67,12 +67,14 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                 cy.wait(600)
 
                 //Verify the names of Categories
+                cy.get('avantra-sidebar-list-item').invoke('text').then
                 cy.get('.dashlet-selector-categories').within(() => {
                     cy.get('.wrapper__item').invoke('text').then((txt) => {
                         if (txt = admDashJson[i].type) {
                             cy.log('Category name verified:', txt)
                         }
-                        else { }
+                        else { 
+                        }
                     })
                 })
                 cy.get('.dashlet-selector-categories').within(() => {
