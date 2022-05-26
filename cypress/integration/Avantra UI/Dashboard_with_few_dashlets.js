@@ -115,7 +115,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
     })
     cy.wait(300)
-    cy.get('.dashboard-modify__header-input').type('OLS_few_dashlets_added')
+    cy.get('.dashboard-modify__header-input').type('_OLS_few_dashlets_added')
     cy.wait(300)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]')
@@ -153,8 +153,12 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('.ng-star-inserted').contains('ols-all').click()
             })
             cy.get('avantra-dashlet-settings-system-predefined').click()
+            cy.wait(600)
             cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-                cy.get('.ng-star-inserted').contains('All Servers').click()
+                cy.wait(600)
+                cy.get('.ng-star-inserted').contains('All Servers')
+                cy.wait(600)
+                .click()
             })
             //radiobuttons
             cy.get('.radio-button__label').contains('Predefined').siblings('.radio-button__input').should('be.checked')
