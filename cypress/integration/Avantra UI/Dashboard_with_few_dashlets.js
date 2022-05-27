@@ -148,10 +148,11 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.wait(300)
 
             
-            cy.get('avantra-dashlet-settings-check-selector').click()
-            cy.get('avantra-dashlet-settings-check-selector').within(() =>{
+            cy.get('.ng-placeholder').contains('Select Check Selector').parent('.ng-value-container').click()
+            cy.get('.ng-placeholder').contains('Select Check Selector').parents('.ng-select-searchable').within(() =>{
             cy.get('.ng-star-inserted').contains('ols-all').click()
             })
+
             cy.get('avantra-dashlet-settings-system-predefined').click()
             cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
                 cy.get('.ng-star-inserted').contains('All Servers').click()
@@ -177,7 +178,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('.dashlet-settings__param--title').contains('Check Confirmation').parent('.dashlet-settings__param').within(() =>{
                 cy.get('ng-dropdown-panel').contains('Not Confirmed').click()
             })
-            
+            cy.wait(300)
             cy.get('.sub-header').within(() => {
                 cy.get('[mattooltip="Save"]').click()
             })
