@@ -16,6 +16,7 @@ describe("check the name and delete if exists", { defaultCommandTimeout: 5000 },
 
     it("Save the dashboard: delete existing, save", () => {
         cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
+        cy.wait(5000)
         cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
 
         
@@ -45,6 +46,7 @@ describe("check the name and delete if exists", { defaultCommandTimeout: 5000 },
                         .click({ force:true })
                 })
         })
+        cy.wait(3000)
         // Delete the dashboard with the same name prior to name the current one
         // Creating list of the dashboard names
         const allDashboardsList = []
