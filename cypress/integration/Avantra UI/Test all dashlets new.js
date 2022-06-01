@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
+describe("Test all dashlets new", { defaultCommandTimeout: 5000 }, () => {
     beforeEach(() => {
         cy.fixture("Admin_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
@@ -119,16 +119,13 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
             })
             cy.get('[placeholder="Select Business Service Node"]').click()
             cy.get('.ng-dropdown-panel').within(() => {
-                cy.get('.ng-star-inserted').contains('RTM Checks').click({ force:true })
+                cy.get('.ng-dropdown-panel-items').contains('RTM Checks').click({ force:true })
                 cy.wait(300)
             })
             cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
             cy.get('[role="listbox"]'). within(() => {
                 cy.get('.ng-star-inserted').contains('5 minutes').click()
             })
-            
-            cy.wait(300)
-            cy.wait(5000)
             
             cy.wait(300)
             cy.get('.sub-header').within(() => {
@@ -146,7 +143,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
             .get('[mattooltip="Edit Dashboard"]')
                 .wait(2000)
                 .click() 
-                cy.wait(5000)
+                cy.wait(2000)
         cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
         cy.get('.dashlet-selector-item__title').contains('Logbook Activities').parent()
         .within (() =>{
@@ -158,11 +155,10 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
         cy.get('.dashlet-add__stepper').within(() => {
             cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
         })
-        cy.wait(300)
+        cy.wait(5000)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]').click()
         })
-        cy.wait(300)
     })
     it("Logbook Activities editing", () => {
         cy.get('.sidebar-list-item').contains('a', "OLS_name_check")
@@ -184,7 +180,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
         })
            
             cy.get('[placeholder="Logbook Activities"]').clear().type("Logbook_ols_edited")
-            cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest1")
+            cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest1")
             cy.wait(600)
             cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
             cy.get('[role="listbox"]'). within(() => {
@@ -218,7 +214,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
         cy.get('.dashlet-add__stepper').within(() => {
             cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
         })
-        cy.wait(300)
+        cy.wait(5000)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]').click()
         })
@@ -254,7 +250,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
                 cy.get('.ng-star-inserted').contains('1 hour').click()
             })
             
-            cy.wait(300)
+            cy.wait(5000)
             cy.get('.sub-header').within(() => {
                 cy.get('[mattooltip="Save"]').click()
             })
@@ -285,7 +281,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
         cy.get('.dashlet-add__stepper').within(() => {
             cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
         })
-        cy.wait(300)
+        cy.wait(5000)
         cy.get('.sub-header').within(() => {
             cy.get('[mattooltip="Save"]').click()
         })
@@ -321,7 +317,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
                 cy.get('.ng-star-inserted').contains('1 minute').click()
             })
             
-            cy.wait(300)
+            cy.wait(5000)
             cy.get('.sub-header').within(() => {
                 cy.get('[mattooltip="Save"]').click()
             })
@@ -352,8 +348,7 @@ it("Multi RTM Status creation", () => {
     cy.get('.dashlet-add__stepper').within(() => {
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
     })
-    cy.get('#input-dashboard-name-id').type("Multi_RTM_Status_test")
-    cy.wait(300)
+    cy.wait(5000)
     cy.get('.sub-header').within(() => {
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
     })
@@ -389,7 +384,6 @@ it("Multi RTM Status editing", () => {
             cy.get('.ng-star-inserted').contains('1 minute').click()
         })
         cy.wait(300)
-
         
         cy.get('avantra-dashlet-settings-check-selector.ng-untouched > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click()
         cy.get('avantra-dashlet-settings-check-selector').within(() =>{
@@ -427,7 +421,7 @@ it("Multi RTM Status editing", () => {
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
-it.only("RTM Check creation", () => {
+it("RTM Check creation", () => {
         //Finding the dashboard in the list
         cy.get('.sidebar-list-item').contains('a', "OLS_name_check")
             .click()
@@ -454,8 +448,7 @@ it.only("RTM Check creation", () => {
     cy.get('.dashlet-add__stepper').within(() => {
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
     })
-    cy.get('#input-dashboard-name-id').type("RTM_Check_test")
-    cy.wait(300)
+    cy.wait(5000)
     cy.get('.sub-header').within(() => {
         cy.get('[mattooltip="Save"]').click()
     })
@@ -463,22 +456,25 @@ it.only("RTM Check creation", () => {
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 
 })
-it("RTM Check editing created", () => {
-    cy.wait(600)
-    cy.get('.sidebar-list-item').contains('a', "RTM_Check_test")
-    .wait(2000).click()
-    cy.get('.header__edit-block')
-        .get('[mattooltip="Edit Dashboard"]')
-            .wait(5000)
-            .click() 
-        cy.wait(2000)
-    cy.get('.avantra-drawer__content').within (() =>{
-            cy.get('.avantra-dashlet__header')
+it("RTM Check editing", () => {
+            //Finding the dashboard in the list
+            cy.get('.sidebar-list-item').contains('a', "OLS_name_check")
+            .click()
+            cy.wait(5000)
+        cy.get('.header__edit-block')
+            .get('[mattooltip="Edit Dashboard"]')
+                .wait(2000)
+                .click() 
+                cy.wait(5000)
+
+        //Findind and clicking Dashlet Setting button on dashlet
+        cy.get('.ng-star-inserted').contains('RTM _check_ols').parents('.avantra-dashlet__header')
         .within (() =>{
-        cy.get('[mattooltip="Dashlet Settings"]')
-        .click()
+            cy.get('[mattooltip="Dashlet Settings"]')
+                .wait(2000)
+                .click()
+                cy.wait(5000)
         })
-    })
        
         cy.get('[placeholder="RTM Check"]').clear().type("RTM_Check_ols_edited")
         cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited")
