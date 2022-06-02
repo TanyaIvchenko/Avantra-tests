@@ -457,25 +457,21 @@ it("RTM Check creation", () => {
 
 })
 it("RTM Check editing", () => {
-
-            //Finding the dashboard in the list
-            cy.get('.sidebar-list-item').contains('a', "OLS_name_check")
-            .click()
-            cy.wait(5000)
-        cy.get('.header__edit-block')
-            .get('[mattooltip="Edit Dashboard"]')
-                .wait(2000)
-                .click() 
-                cy.wait(5000)
-
-        //Findind and clicking Dashlet Setting button on dashlet
-        cy.get('.ng-star-inserted').contains('Multi_RTM_Status_ols').parents('.avantra-dashlet__header')
+    cy.wait(600)
+    cy.get('.sidebar-list-item').contains('a', "RTM_Check_test")
+    .wait(2000).click()
+    cy.get('.header__edit-block')
+        .get('[mattooltip="Edit Dashboard"]')
+            .wait(5000)
+            .click() 
+        cy.wait(2000)
+    cy.get('.avantra-drawer__content').within (() =>{
+            cy.get('.avantra-dashlet__header')
         .within (() =>{
-            cy.get('[mattooltip="Dashlet Settings"]')
-                .wait(2000)
-                .click()
-                cy.wait(5000)
+        cy.get('[mattooltip="Dashlet Settings"]')
+        .click()
         })
+    })
        
         cy.get('[placeholder="RTM Check"]').clear().type("RTM_Check_ols_edited")
         cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited")
