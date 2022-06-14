@@ -1,18 +1,26 @@
 /// <reference types="cypress" />
 
 describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
-    beforeEach(() => {
+    before(() => {
         cy.fixture("Admin_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
             cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
-            cy.wait(5000)
+            cy.wait(500)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
+            cy.wait(5000)
         })
     })
+    beforeEach(() => {
+
+        // Preserve the Cookies
+        
+        Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
+        
+        })
 
 //ADMINISTRATIVE
     it("Business Service Node creation", () => {
@@ -46,7 +54,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
         })
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
-    it.only("Business Service Node editing created", () => {
+    it("Business Service Node editing created", () => {
         cy.wait(5000)
         cy.get('.sidebar-list-item').contains('a', "Business_Service_Node_ols")
             .click()
@@ -117,7 +125,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
     })
     it("Logbook Activities editing", () => {
         cy.wait(600)
-        cy.get('.sidebar-list-item').contains('a', " Logbook_act_dash_test ")
+        cy.get('.sidebar-list-item').contains('a', "Logbook_act_dash_test")
             .click()
         cy.get('.header__edit-block')
             .get('[mattooltip="Edit Dashboard"]')
@@ -425,12 +433,228 @@ it("RTM Check editing created", () => {
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
+// Multiple System Overview
+it("Multiple System Overview creation", () => {
 
+    cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
+    cy.wait(5000)
+    cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+    cy.get('.dashboard-modify__header-input').clear()
+    cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
+    cy.get('.dashlet-selector-item__title').contains('Multiple System Overview').parent()
+    .within (() =>{
+        cy.get('.dashlet-selector-item__button').wait(2000).click()
+    })
+    cy.get('[placeholder="Multiple System Overview"]').type("Multiple_System_Overview_ols")
+    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+    cy.wait(600)
+    cy.get('avantra-dashlet-settings-system-predefined').click()
+    cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
+        cy.get('.ng-star-inserted').contains('All Servers').click()
+    })
+    cy.wait(600)
+    cy.get('.dashlet-add__stepper').within(() => {
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+    })
+    cy.get('#input-dashboard-name-id').type("Multiple_System_Overview_test")
+    cy.wait(300)
+    cy.get('.sub-header').within(() => {
+        cy.get('[mattooltip="Save"]').click()
+    })
+    cy.wait(300)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 
+})
+it("Multiple System Overview editing created - 1- Category", () => {
+    cy.wait(600)
+    cy.get('.sidebar-list-item').contains('a', "Multiple_System_Overview_test")
+    .wait(5000).click()
+    cy.get('.header__edit-block')
+        .get('[mattooltip="Edit Dashboard"]')
+            .wait(5000)
+            .click() 
+        cy.wait(2000)
+    cy.get('.avantra-drawer__content').within (() =>{
+            cy.get('.avantra-dashlet__header')
+        .within (() =>{
+        cy.get('[mattooltip="Dashlet Settings"]')
+        .click()
+        })
+    })
+       
+        cy.get('[placeholder="Multiple System Overview"]').clear().type("Multiple_System_Overview_ols_edited_Category")
+        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited_Category")
+        cy.wait(600)
+        cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
+        cy.get('[role="listbox"]'). within(() => {
+            cy.get('.ng-star-inserted').contains('1 minute').click()
+        })
+        cy.wait(600)
+        cy.get('avantra-dashlet-settings-system-predefined').click()
+    cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
+        cy.get('.ng-star-inserted').contains('All DB Servers').click()
+    })
+        
+        cy.get('#showInstallationInfo').siblings('.custom-checkbox__checkmark').click()
+        cy.wait(300)
+        cy.get('#showInstallationInfo').should('be.checked')
 
-//Multiple System Overview
+        cy.get('#showVersionInfo').siblings('.custom-checkbox__checkmark').click()
+        cy.wait(300)
+        cy.get('#showVersionInfo').should('be.checked')
+
+        cy.get('#showInstanceDetails').siblings('.custom-checkbox__checkmark').click()
+        cy.wait(300)
+        cy.get('#showInstanceDetails').should('be.checked')
+//Select Check Types To Show
+        cy.get('#RTM').siblings('.custom-checkbox__checkmark').click()
+        cy.wait(300)
+        cy.get('#RTM').should('be.checked')
+
+        cy.get('#daily').siblings('.custom-checkbox__checkmark').click()
+        cy.wait(300)
+        cy.get('#daily').should('be.checked')
+
+        cy.get('#Server').siblings('.custom-checkbox__checkmark').click()
+        cy.wait(300)
+        cy.get('#Server').should('be.checked')
+
+        cy.get('.sub-header').within(() => {
+            cy.get('[mattooltip="Save"]').click()
+        })
+        cy.wait(300)
+        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+})
+it("Multiple System Overview editing created - 2 - Individual", () => {
+    cy.wait(600)
+    cy.get('.sidebar-list-item').contains('a', "Multiple_System_Overview_test")
+    .wait(5000).click()
+    cy.get('.header__edit-block')
+        .get('[mattooltip="Edit Dashboard"]')
+            .wait(5000)
+            .click() 
+        cy.wait(2000)
+    cy.get('.avantra-drawer__content').within (() =>{
+            cy.get('.avantra-dashlet__header')
+        .within (() =>{
+        cy.get('[mattooltip="Dashlet Settings"]')
+        .click()
+        })
+    })
+       
+        cy.get('[placeholder="Multiple System Overview"]').clear().type("Multiple_System_Overview_ols_edited_individual")
+        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited_individual")
+
+        cy.wait(600)
+        cy.get('avantra-dashlet-settings-system-predefined').click()
+        cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
+        cy.get('.ng-star-inserted').contains('All DB Servers').click()
+    })
+        cy.get('#individualCheck').siblings('.radio-button__checkmark').click()
+        cy.wait(300)
+        cy.get('#individualCheck').should('be.checked')
+
+        cy.get('.ng-placeholder').contains('Select individual Checks').parents('.ng-select-multiple').click()
+        cy.get('[placeholder="Select individual Checks"]').within(() =>{
+            cy.get('.ng-star-inserted').contains('FULLCHECK').click()
+        })
+        cy.get('#individualCheck').siblings('.radio-button__checkmark').click()
+        cy.wait(300)
+        cy.get('.ng-placeholder').contains('Select individual Checks').parents('.ng-select-container').within(() =>{
+        cy.get('.ng-arrow-wrapper').click()
+        })
+        cy.wait(300)
+        cy.get('[placeholder="Select individual Checks"]').within(() =>{
+            cy.get('.ng-star-inserted').contains('CPULOAD').click()
+        })
+
+        
+        cy.get('.sub-header').within(() => {
+            cy.get('[mattooltip="Save"]').click()
+        })
+        cy.wait(300)
+        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+})
+it("Multiple System Overview editing created - 3 - Check Selectors", () => {
+    cy.wait(600)
+    cy.get('.sidebar-list-item').contains('a', "Multiple_System_Overview_test")
+    .wait(5000).click()
+    cy.get('.header__edit-block')
+        .get('[mattooltip="Edit Dashboard"]')
+            .wait(5000)
+            .click() 
+        cy.wait(2000)
+    cy.get('.avantra-drawer__content').within (() =>{
+            cy.get('.avantra-dashlet__header')
+        .within (() =>{
+        cy.get('[mattooltip="Dashlet Settings"]')
+        .click()
+        })
+    })
+       
+        cy.get('[placeholder="Multiple System Overview"]').clear().type("Multiple_System_Overview_ols_edited_checksel")
+        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited_checksel")
+        cy.wait(600)
+        cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
+        cy.get('[role="listbox"]'). within(() => {
+            cy.get('.ng-star-inserted').contains('5 minutes').click()
+        })
+        cy.wait(600)
+        cy.get('avantra-dashlet-settings-system-predefined').click()
+        cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
+        cy.get('.ng-star-inserted').contains('All DB Servers').click()
+    })
+        cy.get('#checkSelectorId').siblings('.radio-button__checkmark').click()
+        cy.wait(300)
+        cy.get('#checkSelectorId').should('be.checked')
+
+        cy.get('.ng-placeholder').contains('Select check').parents('.ng-select-container').click()
+        cy.get('[placeholder="Select check"]').within(() =>{
+            cy.get('.ng-star-inserted').contains('Olha-one-check').click()
+        })
+                
+        cy.get('.sub-header').within(() => {
+            cy.get('[mattooltip="Save"]').click()
+        })
+        cy.wait(300)
+        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+})
 //SAP HotNews
+
+
 //Predictive Resource Planning
+it("Predictive Resource Planning creation", () => {
+
+    cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
+    cy.wait(5000)
+    cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+    cy.get('.dashboard-modify__header-input').clear()
+    cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
+    cy.get('.dashlet-selector-item__title').contains('Predictive Resource Planning').parent()
+    .within (() =>{
+        cy.get('.dashlet-selector-item__button').wait(2000).click()
+    })
+    cy.get('[placeholder="Predictive Resource Planning"]').type("Predictive_Resource_Planning_ols")
+    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+    cy.wait(600)
+    cy.get('avantra-dashlet-settings-system-predefined').click()
+    cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
+        cy.get('.ng-star-inserted').contains('All Servers').click()
+    })
+    cy.wait(600)
+    cy.get('.dashlet-add__stepper').within(() => {
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+    })
+    cy.get('#input-dashboard-name-id').type("Predictive_Resource_Planning_test")
+    cy.wait(300)
+    cy.get('.sub-header').within(() => {
+        cy.get('[mattooltip="Save"]').click()
+    })
+    cy.wait(300)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+
+})
+
 //Current Time
 
 })
