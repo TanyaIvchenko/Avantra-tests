@@ -718,17 +718,17 @@ it.only("SAP HotNews creation", () => {
         }
         })
     
-    // cy.wait(600)
-    // cy.get('.dashlet-add__stepper').within(() => {
-    //     cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-    // })
-    // cy.get('#input-dashboard-name-id').type("Predictive_Resource_Planning_test")
-    // cy.wait(300)
-    // cy.get('.sub-header').within(() => {
-    //     cy.get('[mattooltip="Save"]').click()
-    // })
-    // cy.wait(300)
-    // cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+    cy.wait(600)
+    cy.get('.dashlet-add__stepper').within(() => {
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+    })
+    cy.get('#input-dashboard-name-id').type("SAP HotNews")
+    cy.wait(300)
+    cy.get('.sub-header').within(() => {
+        cy.get('[mattooltip="Save"]').click()
+    })
+    cy.wait(300)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 
 })
 
