@@ -620,7 +620,117 @@ it("Multiple System Overview editing created - 3 - Check Selectors", () => {
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
 //SAP HotNews
+it.only("SAP HotNews creation", () => {
 
+    cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+    cy.wait(5000)
+    cy.get('.drawer__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+    cy.get('.dashboard-modify__header-input').clear()
+    cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
+    cy.get('[placeholder="Search Dashlet"]').within(() => {
+       cy.get('input').type('sap')
+    })
+    cy.get('.dashlet-selector-item__title').should('have.length', 1)
+    cy.get('.dashlet-selector-item__title').should('contain', 'SAP HotNews')
+    cy.get('.dashlet-selector-item__button').wait(2000).click()
+
+    cy.get('[placeholder="SAP HotNews"]').type("Hot_ols")
+    cy.get('[formcontrolname="subtitle"]').clear().type("Autotest")
+    cy.wait(2000)
+    cy.get('.mat-paginator-range-label').should('contain', 'Page 1 of')
+    cy.wait(10000)
+    //Get number of pages
+    cy.get('.mat-paginator-range-label').invoke('text')
+    .then(text => +text.replace('Page 1 of', '').trim()).then((text) =>{
+    cy.log('Number of pages is: ', text)
+    cy.wrap(text).as('pageNum')
+    })
+    cy.get('[aria-label="First page"]').should('have.class', 'mat-button-disabled')
+    cy.get('[aria-label="Previous page"]').should('have.class', 'mat-button-disabled')
+    //Length=26, because of tr for table header
+    cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 26)
+    //For pages more than 1
+    cy.get('@pageNum').then((pageNum) => {
+        if(pageNum>1){
+    //click once Next page
+    cy.get('[aria-label="Next page"]').click()
+    cy.get('.mat-paginator-range-label').wait(600).should('contain', 'Page 2 of')
+    cy.get('[aria-label="First page"]').should('not.have.class', 'mat-button-disabled')
+    cy.get('[aria-label="Previous page"]').should('not.have.class', 'mat-button-disabled')
+    //click Last page
+    cy.get('[aria-label="Last page"]').click()
+    cy.get('@pageNum').then((pageNum) => {
+    let newPageNum;
+    newPageNum = 'Page '+ pageNum;
+    cy.get('.mat-paginator-range-label').wait(600).invoke('text').should('contain', newPageNum);
+})
+//Counting pages for 50 per page
+    cy.get('.mat-paginator-page-size-select').wait(200).click()
+    cy.get('.mat-option-text').contains('50').parent('mat-option').click()
+    cy.then((pageNum) => {
+        let fiftyPageNum;
+       fiftyPageNum = 'Page '+ pageNum/2;
+        let fiftyMinusPageNum;
+        fiftyMinusPageNum = 'Page '+ ((pageNum/2)-1);
+        cy.get('.mat-paginator-range-label').wait(600).invoke('text').then((text) =>{
+            if(text.includes(fiftyPageNum)) {
+                cy.log('Number for 50 per page:', fiftyPageNum)
+            }
+            else if (text.includes(fiftyMinusPageNum)) {
+                cy.log('Number for 50 per page:', fiftyMinusPageNum)
+            }
+            else {
+                cy.log('Number for 50 per page: INCORRECT')
+            }
+        })
+        })
+         //Length=51, because of tr for table header
+    cy.get('[aria-label="First page"]').click()
+    cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 51)
+    //Counting pages for 100 per page
+        cy.get('.mat-paginator-page-size-select').wait(200).click()
+        cy.get('.mat-option-text').contains('100').parent('mat-option').click()
+        //Length=101, because of tr for table header
+        cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 101)
+        cy.then((pageNum) => {
+            let hundredPageNum;
+            hundredPageNum = 'Page '+ pageNum/4;
+            let hundredMinusPageNum;
+            hundredMinusPageNum = 'Page '+ ((pageNum/4)-1);
+            cy.get('.mat-paginator-range-label').wait(600).invoke('text').then((text) =>{
+                if(text.includes(hundredPageNum)) {
+                    cy.log('Number for 100 peк page:', hundredPageNum)
+                }
+                else if (text.includes(hundredMinusPageNum)) {
+                    cy.log('Number for 100 per page:', hundredMinusPageNum)
+                }
+                else{
+                    cy.log('Number for 100 per page: INCORRECT')
+                }
+            })
+            })
+        }
+    //For ONE page
+        else{
+            cy.get('[aria-label="Next page"]').should('not.have.class', 'mat-button-disabled')
+            cy.get('[aria-label="Last page"]').should('not.have.class', 'mat-button-disabled')
+            
+        }
+        })
+    
+    // cy.wait(600)
+    // cy.get('.dashlet-add__stepper').within(() => {
+    //     cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+    // })
+    // cy.get('#input-dashboard-name-id').type("Predictive_Resource_Planning_test")
+    // cy.wait(300)
+    // cy.get('.sub-header').within(() => {
+    //     cy.get('[mattooltip="Save"]').click()
+    // })
+    // cy.wait(300)
+    // cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+
+})
 
 //Predictive Resource Planning
 it("Predictive Resource Planning creation", () => {

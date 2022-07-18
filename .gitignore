@@ -16,4 +16,4 @@ C:\Users\tanya\Desktop\Avantra-tests\.gitignore
 package.json
 package.json
 WORKFILES
-Credentials.json
+/fixtures/Credentials.json

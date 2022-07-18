@@ -17,10 +17,11 @@ describe("Creating and saving dashboard", () => {
 
     //test works
     it("Save the dashboard with dashlet added", () => {
-        cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+        cy.wait(600)
+        cy.get('.drawer__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
         cy.get('.dashboard-modify__header-input').clear();
-        cy.get('.dashboard-modify__header-input').type('OLS11');
+        cy.get('.dashboard-modify__header-input').type('OLS_new_test');
         cy.get('.dashboard-modify__add-dashlet').click();
         cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
