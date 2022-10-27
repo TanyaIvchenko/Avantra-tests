@@ -619,7 +619,7 @@ it("Multiple System Overview editing created - 3 - Check Selectors", () => {
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
-//SAP HotNews
+//SAP HotNews. Not encountered: changing the SAP notes priority, pages number 1<...<4
 it.only("SAP HotNews creation", () => {
 
     cy.get('.drawer__header__title').should('have.text', 'Dashboards')

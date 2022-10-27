@@ -2,30 +2,36 @@
 
 describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     beforeEach(() => {
-        cy.fixture("Admin_dashlets").as("admDashJson")
+        cy.fixture("List_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
-            cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
-            cy.wait(5000)
+            cy.visit(creds.env)
+            cy.wait(2000)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
         })
     })
 
-    //TEST WORKS
+    //TEST WORKS:26.10
     it("Save the dashboard with dashlet added", () => {
-        cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+        cy.wait(2000)
+        cy.get('.drawer__header').children('.drawer__header__add-button').click();
+        cy.wait(1000)
         cy.get('.dashboard-modify__header-input').clear();
-        cy.get('.dashboard-modify__header-input').type('OLS11');
+        //timestamp dashboard name               
+                var stamp=Date.now();
+                const dashname = `OLS_bs_node${stamp}`
+        cy.get('.dashboard-modify__header-input').type(dashname)
+
         cy.get('.dashboard-modify__add-dashlet').click();
         cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
         cy.get('.ng-dropdown-panel').within(() => {
-            // cy.get('#ad267ff583a0-6')
-            cy.get('.ng-star-inserted').contains('BS_REL_8').click({ force:true })
+            
+            cy.get('.ng-dropdown-panel-items').contains('BS_RELEASE').click({ force:true })
         })
         cy.wait(3000)
         //get element within another element
@@ -47,26 +53,24 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         })
         cy.wait(3000)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.log(dashname)
     })
 
 
 
-    //TEST WORKS!
+    //TEST WORKS:26.10
     //Dashlets selecting
     it("Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
+            cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+            cy.get('.drawer__header').children('.drawer__header__add-button').wait(600).click();
+            cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
+            cy.wait(600)
             for (let i = 0; i < admDashJson.length; i++) {
                 
-                cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-                cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-                cy.get('.dashboard-modify__header-input').clear();
-                cy.get('.dashboard-modify__header-input').type(admDashJson[i].type);
-                cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
-                cy.wait(600)
-
                 //Verify the names of Categories
-                cy.get('avantra-sidebar-list-item').invoke('text').then
-                cy.get('.dashlet-selector-categories').within(() => {
+                cy.get('.dashlet-selector-categories').invoke('text').then
+                cy.get('.dashlet-selector-categories__wrapper').within(() => {
                     cy.get('.wrapper__item').invoke('text').then((txt) => {
                         if (txt = admDashJson[i].type) {
                             cy.log('Category name verified:', txt)
@@ -95,19 +99,24 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
 
 
                 //Go back to Dashboards
-                cy.get('.header__edit-block > .mat-tooltip-trigger > .icon-button > .background-secondary > svg').click({ force: true })
+                
+            }
+            cy.get('.header__edit-block > .mat-tooltip-trigger > .icon-button > .background-secondary > svg').click({ force: true })
                 cy.wait(500)
                 cy.get('.background-secondary > svg').click()
-            }
             })
         })
-        //TEST WORKS!
+        //TEST WORKS:26.10
     it("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
-            cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-            cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
+            cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+            cy.get('.drawer__header').children('.drawer__header__add-button').wait(600).click();
+            
             cy.get('.dashboard-modify__header-input').clear();
-            cy.get('.dashboard-modify__header-input').type("ALL_Dashlets");
+            const dashid = () => Cypress._.random(0, 1e6)
+                const did = dashid()
+                const alldashname = `OLS_bs_node${did}`
+            cy.get('.dashboard-modify__header-input').type(alldashname);
             cy.get('.dashboard-modify__add-dashlet').click();
             cy.wait(600)
 
@@ -153,16 +162,30 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
 
 
     //test works!
-    it('Deleting cancel and ok', function () {
-        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
-        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
-        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
-        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').click();
-        cy.get('.mat-dialog-actions > [backgroundcolor="primary"] > .background-primary > .button__text').contains('No').click({ force: true });
-        cy.get(':nth-child(32) > .sidebar-list-item > .sidebar-list-item__text').trigger('mouseover')
-        cy.get(':nth-child(32) > .sidebar-list-item > .mat-tooltip-trigger > .menu-button__icon').click({ force: true })
-        cy.get(':nth-child(2) > avantra-button > .icon-button > .background-undefined > svg').click();
-        cy.get('.background-action > .button__text').contains('Yes').click({ force: true });
-        cy.contains('a', 'OLS11').should('not.exist')
+    it.only('Deleting cancel and ok', function () {
+        cy.wait(5000)
+        cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377').invoke('show')
+        .trigger('mouseenter')
+        cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377')
+            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+            
+        cy.wait(1000)
+        cy.get('.mat-menu-panel').within(() => {
+            cy.get('.mat-menu-item').contains('Delete').click();
+        })
+        //cancelling
+        cy.get('.confirmation-modal__btn-group').children('[type="button"]').contains('Cancel').click();
+        cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377').invoke('show')
+        .trigger('mouseenter')
+        cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377')
+            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+            
+        cy.wait(1000)
+        cy.get('.mat-menu-panel').within(() => {
+            cy.get('.mat-menu-item').contains('Delete').click();
+        })
+        cy.get('.confirmation-modal__btn-group').children('[type="submit"]').contains('Delete').click();
+        cy.get('.mat-simple-snack-bar-content').should("have.text",'Successfully deleted')
+        cy.contains('a', 'copy-OLS_bs_node774377').should('not.exist')
     });
 })
