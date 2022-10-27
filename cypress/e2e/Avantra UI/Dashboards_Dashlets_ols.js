@@ -161,7 +161,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     })
 
 
-    //test works!
+    //test works: 27.10
     it.only('Deleting cancel and ok', function () {
         cy.wait(5000)
         cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377').invoke('show')
