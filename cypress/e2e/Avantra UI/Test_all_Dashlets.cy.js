@@ -2,146 +2,205 @@
 
 describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
     before(() => {
-        cy.fixture("Admin_dashlets").as("admDashJson")
+        cy.fixture("List_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.get("@creds").then((creds) => {
-            cy.visit("https://eiger.dev.gcp.avantra.net:8443/xn/ui")
-            cy.wait(500)
+            cy.visit(creds.env)
+            cy.wait(600)
             cy.get('#input-login-id').type(creds.login)
             cy.get('#input-password-id').type(creds.password)
             cy.get('.background-primary').contains("Login to Avantra").click()
-            cy.wait(5000)
+            cy.wait(600)
+            cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
+            cy.wait(600)
         })
     })
     beforeEach(() => {
 
         // Preserve the Cookies
         
-        Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
+   Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
         
         })
+// cy.wait(3000)
+//         // Delete the dashboard with the same name prior to name the current one
+//         // Creating list of the dashboard names
+//         const allDashboardsList = []
+//         cy.get('avantra-sidebar-list-item').each(($el) => {
+//             cy.get($el).invoke('text').then((txt) => {
+//                 txt = txt.trim()
+//                 allDashboardsList.push(txt)
+//             })
+//         })
+//              .then(() => {
+//         //Searching for the existing dashboard with the name we need
+
+//             if (allDashboardsList.includes('OLS_name_check')) {
+//                 cy.log('Dashboard already exists, deleting old dashboard: OLS_name_check')
+//                cy.get('avantra-sidebar-list-item').contains('OLS_name_check').trigger('mouseover')
+//                 cy.get('avantra-sidebar-list-item').contains('OLS_name_check').siblings('.sidebar-list-item__menu-button')
+//                 .click({ force: true })
+
+//                 //click Delete on menu appeared
+//                 cy.get('.mat-menu-item').contains('Delete').click()
+//                 //pop-up confirmation: confirm deletion
+//                 cy.get('[class="confirmation-modal"]').within(() => {
+//                     cy.contains('Yes').click()
+//                 })
+//                 //Verify the dashboard is deleted
+//                 cy.contains('a', 'OLS_name_check').should('not.exist')
+                
+//             }
+//             else { 
+//                 cy.contains('a', 'OLS_name_check').should('not.exist')
+//                  cy.log('Dashboard is not existing')
+//             }
+
+//              })
+//              cy.wait(300)
+//              cy.get('.dashboard-modify__header-input').type('OLS_name_check')
+//              cy.wait(3000)
+//         cy.get('.sub-header').within(() => {
+//             cy.get('[mattooltip="Save"]')
+//                 .within(() => {
+//                     cy.get('.icon-button__text')
+//                         .click({ force:true })
+//                 })
+
+//         })
+//         cy.wait(3000)
 
 //ADMINISTRATIVE
-    it("Business Service Node creation", () => {
-
-        cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-        cy.get('.dashboard-modify__header-input').type('Business_Service_Node_ols');
-        cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
-        cy.get('.dashlet-selector-item__title').contains('Business Service Node').parent()
-        .within (() =>{
-            cy.get('.dashlet-selector-item__button').wait(2000).click()
-        })
-        cy.get('[placeholder="Business Service Node"]').type("Business Service Node_ols")
-        cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest")
-        cy.wait(600)
-        cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
-        cy.get('.ng-dropdown-panel').within(() => {
-        cy.get('.ng-star-inserted').contains('BS_ols').click({ force:true })
-        })
-        cy.wait(5000)
-        cy.get('.dashlet-add__stepper').within(() => {
-            cy.get('[mattooltip="Save"]')
-                .within(() => {
-                    cy.get('.icon-button__text')
-                        .click({ force:true })
-                })
-        })
-        cy.wait(5000)
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-            cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+let dashboardName;
+//ADMINISTRATIVE
+// works:27.10
+xit("Dashboard creation and Business Service Node adding", () => {
+            cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+            cy.wait(2000)
+            cy.get('.drawer__header').children('.drawer__header__add-button').click();
+            cy.wait(1000)
+            cy.get('.dashboard-modify__header-input').clear();
+            //timestamp dashboard name               
+                    var stamp=Date.now();
+                    const dashname = `OLS_bs_node${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
+    
+            cy.get('.dashboard-modify__add-dashlet').click();
+            cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
+            cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
+            cy.get('.ng-dropdown-panel').within(() => {
+                
+                cy.get('.ng-dropdown-panel-items').contains('BS_RELEASE').click({ force:true })
+            })
+            cy.wait(600)
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+    cy.wait(800)
+    cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+cy.wait(800)
+cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+            cy.log(dashname)
+            .then(() => {
+                dashboardName = dashname;
+            })
+            
+        cy.get('.updated-at__time').wait(500).should('have.text', 'less than a minute ago')
 })
-    it("Business Service Node editing created", () => {
-        cy.wait(5000)
-        cy.get('.sidebar-list-item').contains('a', "Business_Service_Node_ols")
+// works 27.10
+xit("Business Service Node editing", () => {
+        cy.get('.navigation-list-item').contains('a', dashboardName)
             .click()
+            cy.wait(5000)
         cy.get('.header__edit-block')
             .get('[mattooltip="Edit Dashboard"]')
                 .wait(2000)
                 .click() 
                 cy.wait(5000)
-        cy.get('.avantra-drawer__content').within (() =>{
-                cy.get('.avantra-dashlet__header')
-            .within (() =>{
-            cy.wait(2000)
+        //Findind and clicking Dashlet Setting button on dashlet
+        cy.get('.ng-star-inserted').contains('Business Service Node').parents('.avantra-dashlet__header')
+        .within (() =>{
             cy.get('[mattooltip="Dashlet Settings"]')
-            .click()
-            })
+                .wait(2000)
+                .click()
+                cy.wait(5000)
         })
-        
-            cy.get('[placeholder="Business Service Node"]').clear().type("Business Service Node_ols_edited")
-            cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited")
+        //Editing dashlet settings
+            cy.get('[placeholder="Business Service Node"]').type(dashboardName + "_edited")
+            cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited")
             cy.wait(600)
             cy.get('[placeholder="Select Business Service"]').click()
             cy.get('.ng-dropdown-panel').within(() => {
-                cy.get('.ng-star-inserted').contains('BS_REL_8').click({ force:true })
+                cy.get('.ng-star-inserted').contains('BS_RELEASE - Copy').click({ force:true })
                 cy.wait(300)
             })
             cy.get('[placeholder="Select Business Service Node"]').click()
             cy.get('.ng-dropdown-panel').within(() => {
-                cy.get('.ng-star-inserted').contains('RTM Checks').click({ force:true })
+                cy.get('.ng-dropdown-panel-items').contains('Relevant Custom Checks').click({ force:true })
                 cy.wait(300)
             })
             cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
-            cy.get('[role="listbox"]'). within(() => {
-                cy.get('.ng-star-inserted').contains('5 minutes').click()
-            })
+            // cy.get('[role="listbox"]'). within(() => {
+                cy.get('[role="listbox"] .ng-star-inserted').contains('5 minutes').click()
+            // })
             
             cy.wait(300)
-            cy.wait(5000)
-            
-            cy.wait(300)
-            cy.get('.sub-header').within(() => {
-                cy.get('[mattooltip="Save"]').click()
-            })
+            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
-//
-    it("Logbook Activities creation", () => {
-        cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-        cy.get('.dashboard-modify__header-input').clear();
-        cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
+//works 27.10
+xit("Logbook Activities creation", () => {
+        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+            cy.wait(1000)
+            cy.get('.drawer__header').children('.drawer__header__add-button').click();
+            cy.wait(1000)
+            cy.get('.dashboard-modify__header-input').clear();
+            //timestamp dashboard name               
+                    var stamp=Date.now();
+                    const dashname = `OLS_lb_act${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
+    
+            cy.get('.dashboard-modify__add-dashlet').click();
         cy.get('.dashlet-selector-item__title').contains('Logbook Activities').parent()
         .within (() =>{
             cy.get('.dashlet-selector-item__button').wait(2000).click()
         })
         cy.get('[placeholder="Logbook Activities"]').clear().type("Logbook_ols")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
         cy.wait(600)
-        cy.get('.dashlet-add__stepper').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+    cy.wait(800)
+cy.get('.sub-header').within(() => {
+    cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+})
+cy.wait(800)
+cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.log(dashname)
+        .then(() => {
+            dashboardName = dashname;
         })
-        cy.get('#input-dashboard-name-id').type("Logbook_act_dash_test")
-        cy.wait(300)
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.wait(300)
+        cy.wait(1000)
     })
-    it("Logbook Activities editing", () => {
-        cy.wait(600)
-        cy.get('.sidebar-list-item').contains('a', "Logbook_act_dash_test")
-            .click()
-        cy.get('.header__edit-block')
-            .get('[mattooltip="Edit Dashboard"]')
-                .wait(2000)
-                .click() 
-                cy.wait(2000)
-        cy.get('.avantra-drawer__content').within (() =>{
-                cy.get('.avantra-dashlet__header')
-            .within (() =>{
+    // works 27.10
+xit("Logbook Activities editing", () => {
+        cy.get('.navigation-list-item').contains('a', dashboardName)
+        .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+            
+        cy.wait(1000)
+        cy.get('.mat-menu-panel').within(() => {
+            cy.get('.mat-menu-item').contains('Edit').click();
+        })
+        //Findind and clicking Dashlet Setting button on dashlet
+        cy.get('.ng-star-inserted').contains('Logbook_ols').parents('.avantra-dashlet__header')
+        .within (() =>{
             cy.get('[mattooltip="Dashlet Settings"]')
-            .click()
-            })
+                .wait(2000)
+                .click()
+                cy.wait(5000)
         })
            
             cy.get('[placeholder="Logbook Activities"]').clear().type("Logbook_ols_edited")
-            cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest1")
+            cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest1")
             cy.wait(600)
             cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
             cy.get('[role="listbox"]'). within(() => {
@@ -154,109 +213,130 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
             })
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-    })
-    it("Check For Updates creation", () => {
 
-        cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-        cy.get('.dashboard-modify__header-input').clear()
+    })
+    // works: 28.10
+xit("Check For Updates creation", () => {
+        // adding to Logbook activities dashboard
+        cy.get('.navigation-list-item').contains('a', dashboardName)
+        .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+            
+        cy.wait(1000)
+        cy.get('.mat-menu-panel').within(() => {
+            cy.get('.mat-menu-item').contains('Edit').click();
+        })
         cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
         cy.get('.dashlet-selector-item__title').contains('Check For Updates').parent()
         .within (() =>{
             cy.get('.dashlet-selector-item__button').wait(2000).click()
         })
         cy.get('[placeholder="Check For Updates"]').clear().type("Check_For_Updates_ols")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
-        cy.wait(600)
-        cy.get('.dashlet-add__stepper').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-        })
-        cy.get('#input-dashboard-name-id').type("Check_For_Updates_test")
-        cy.wait(300)
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.wait(5000)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
+    cy.wait(600)
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        cy.wait(800)
+    cy.get('.sub-header').within(() => {
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+    })
+    cy.wait(800)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.log(dashname)
+            .then(() => {
+                dashboardName = dashname;
+            })
 
 })
-    it("Check For Updates editing created", () => {
-        cy.wait(600)
-        cy.get('.sidebar-list-item').contains('a', "Check_For_Updates_test")
-        .wait(2000).click()
-        cy.get('.header__edit-block')
-            .get('[mattooltip="Edit Dashboard"]')
-                .wait(5000)
-                .click() 
-            cy.wait(2000)
-        cy.get('.avantra-drawer__content').within (() =>{
-                cy.get('.avantra-dashlet__header')
-            .within (() =>{
+// works: 28.10
+ xit("Check For Updates editing", () => {
+                //Finding the dashboard in the list
+                cy.get('.navigation-list-item').contains('a', dashboardName)
+                .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+                    
+                cy.wait(1000)
+                cy.get('.mat-menu-panel').within(() => {
+                    cy.get('.mat-menu-item').contains('Edit').click();
+                })
+
+        //Findind and clicking Dashlet Setting button on dashlet
+        cy.get('.ng-star-inserted').contains('Check_For_Updates_ols').parents('.avantra-dashlet__header')
+        .within (() =>{
             cy.get('[mattooltip="Dashlet Settings"]')
-            .click()
-            })
+                .wait(2000)
+                .click()
+                cy.wait(5000)
         })
            
-            cy.get('[placeholder="Check For Updates"]').clear().type("Check_For_Updates_ols_edited")
-            cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest_edited")
+            cy.get('[placeholder="Check For Updates"]').clear().type(dashboardName + '_edited chfup')
+            cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest_edited")
             cy.wait(600)
             cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
             cy.get('[role="listbox"]'). within(() => {
                 cy.get('.ng-star-inserted').contains('1 hour').click()
             })
             
-            cy.wait(300)
+            cy.wait(5000)
             cy.get('.sub-header').within(() => {
                 cy.get('[mattooltip="Save"]').click()
             })
             cy.wait(300)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
-    
-    it("Signed in Users creation", () => {
+ 
+    // works:28.10
+xit("Signed in Users creation", () => {
 
-        cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-        cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-        cy.get('.dashboard-modify__header-input').clear()
-        cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
+        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+            cy.wait(2000)
+            cy.get('.drawer__header').children('.drawer__header__add-button').click();
+            cy.wait(1000)
+            cy.get('.dashboard-modify__header-input').clear();
+            //timestamp dashboard name               
+                    var stamp=Date.now();
+                    const dashname = `OLS_sign_in${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
+    
+            cy.get('.dashboard-modify__add-dashlet').click();
         cy.get('.dashlet-selector-item__title').contains('Signed in Users').parent()
         .within (() =>{
             cy.get('.dashlet-selector-item__button').wait(2000).click()
         })
         cy.get('[placeholder="Signed in Users"]').clear().type("Signed_in_Users_ols")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
-        cy.wait(600)
-        cy.get('.dashlet-add__stepper').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
+    cy.wait(600)
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        cy.wait(800)
+    cy.get('.sub-header').within(() => {
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+    })
+    cy.wait(800)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.log(dashname)
+        .then(() => {
+            dashboardName = dashname;
         })
-        cy.get('#input-dashboard-name-id').type("Signed_in_Users_test")
-        cy.wait(300)
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.wait(300)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.wait(1000)
 
 })
-    it("Signed in Users editing created", () => {
+//works: 31.10
+xit("Signed in Users editing created", () => {
         cy.wait(600)
-        cy.get('.sidebar-list-item').contains('a', "Signed_in_Users_test")
+        cy.get('.navigation-list-item').contains('a', dashboardName)
         .wait(2000).click()
         cy.get('.header__edit-block')
             .get('[mattooltip="Edit Dashboard"]')
                 .wait(5000)
                 .click() 
             cy.wait(2000)
-        cy.get('.avantra-drawer__content').within (() =>{
-                cy.get('.avantra-dashlet__header')
-            .within (() =>{
-                cy.get('[mattooltip="Save"]').click()
-            .click()
-            })
-        })
+            cy.get('.ng-star-inserted').contains('Signed_in_Users_ols').parents('.avantra-dashlet__header')
+                    .within (() =>{
+                        cy.get('[mattooltip="Dashlet Settings"]')
+                            .wait(2000)
+                            .click()
+                            cy.wait(5000)
+                    })
            
             cy.get('[placeholder="Signed in Users"]').clear().type("Signed_in_Users_ols_edited")
-            cy.get('[formcontrolname="subtitle"]').children('input').type("Autotest_edited")
+            cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest_edited")
             cy.wait(600)
             cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
             cy.get('[role="listbox"]'). within(() => {
@@ -267,38 +347,52 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
             cy.get('.sub-header').within(() => {
                 cy.get('[mattooltip="Save"]').click()
             })
-            cy.wait(300)
+            cy.wait(600)
             cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
 //CHECKS
-it("Multi RTM Status creation", () => {
-
-    cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-    cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-    cy.get('.dashboard-modify__header-input').clear()
-    cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
+works:31.10
+xit("Multi RTM Status creation", () => {
+    cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+    cy.wait(2000)
+    cy.get('.drawer__header').children('.drawer__header__add-button').click();
+    cy.wait(1000)
+    cy.get('.dashboard-modify__header-input').clear();
+    //timestamp dashboard name               
+            var stamp=Date.now();
+            const dashname = `Ols_multi_rtm${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
+    cy.get('.dashboard-modify__add-dashlet').click();
     cy.get('.dashlet-selector-item__title').contains('Multi RTM Status').parent()
     .within (() =>{
         cy.get('.dashlet-selector-item__button').wait(2000).click()
     })
     cy.get('[placeholder="Multi RTM Status"]').type("Multi_RTM_Status_ols")
-    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+    cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
     cy.wait(600)
-    cy.get('.dashlet-add__stepper').within(() => {
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-    })
-    cy.get('#input-dashboard-name-id').type("Multi_RTM_Status_test")
-    cy.wait(300)
-    cy.get('.sub-header').within(() => {
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-    })
-    cy.wait(300)
-    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+    cy.get('[placeholder="Select Check Selector"]').click(). within(() => 
+{
+    cy.get('[role="listbox"]').contains('ols_all_new').click()
+})
+cy.wait(600)
+cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+cy.wait(800)
+cy.get('.sub-header').within(() => {
+cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+})
+cy.wait(800)
+cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+            cy.log(dashname)
+            .then(() => {
+                dashboardName = dashname;
+            })
+            cy.wait(1000)
 
 })
-it("Multi RTM Status editing created", () => {
+//works: 31.10
+xit("Multi RTM Status editing", () => {
     cy.wait(600)
-    cy.get('.sidebar-list-item').contains('a', "Multi_RTM_Status_test")
+    cy.get('.navigation-list-item').contains('a', dashboardName)
     .wait(2000).click()
     cy.get('.header__edit-block')
         .get('[mattooltip="Edit Dashboard"]')
@@ -314,7 +408,7 @@ it("Multi RTM Status editing created", () => {
     })
        
         cy.get('[placeholder="Multi RTM Status"]').clear().type("Multi_RTM_Status_ols_edited")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited")
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited")
         cy.wait(600)
         cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
         cy.get('[role="listbox"]'). within(() => {
@@ -329,7 +423,7 @@ it("Multi RTM Status editing created", () => {
     })
         cy.get('avantra-dashlet-settings-system-predefined').click()
         cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-            cy.get('.ng-star-inserted').contains('All Servers').click()
+            cy.get('.ng-star-inserted').contains('ABAP Systems').click()
         })
         //radiobuttons
         cy.get('.radio-button__label').contains('Predefined').siblings('.radio-button__input').should('be.checked')
@@ -359,39 +453,45 @@ it("Multi RTM Status editing created", () => {
         cy.wait(300)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
-it("RTM Check creation", () => {
+xit("RTM Check creation", () => {
 
-    cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-    cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-    cy.get('.dashboard-modify__header-input').clear()
+    cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+    cy.wait(2000)
+    cy.get('.drawer__header').children('.drawer__header__add-button').click();
+    cy.wait(1000)
+    cy.get('.dashboard-modify__header-input').clear();
+    //timestamp dashboard name               
+            var stamp=Date.now();
+            const dashname = `Ols_rtm_check${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
     cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
     cy.get('.dashlet-selector-item__title').contains('RTM Check').parent()
     .within (() =>{
         cy.get('.dashlet-selector-item__button').wait(2000).click()
     })
     cy.get('[placeholder="RTM Check"]').type("RTM _check_ols")
-    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+    cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
     cy.wait(600)
     cy.get('.dashlet-settings__param--title').contains('System').siblings('.dashlet-settings__param--content').click()
         cy.get('.dashlet-settings__param--title').contains('System').parent('.dashlet-settings__param').within(() =>{
             cy.get('ng-dropdown-panel').contains('ggbvrd-sybsa1_SA1_00').click()
         })
-    cy.wait(600)
-    cy.get('.dashlet-add__stepper').within(() => {
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-    })
-    cy.get('#input-dashboard-name-id').type("RTM_Check_test")
-    cy.wait(300)
-    cy.get('.sub-header').within(() => {
-        cy.get('[mattooltip="Save"]').click()
-    })
-    cy.wait(300)
-    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-
+   cy.wait(600)
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+    cy.wait(800)
+cy.get('.sub-header').within(() => {
+    cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
 })
-it("RTM Check editing created", () => {
+cy.wait(800)
+cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+cy.log(dashname)
+            .then(() => {
+                dashboardName = dashname;
+            })
+})
+xit("RTM Check editing created", () => {
     cy.wait(600)
-    cy.get('.sidebar-list-item').contains('a', "RTM_Check_test")
+    cy.get('.navigation-list-item').contains('a', dashboardName)
     .wait(2000).click()
     cy.get('.header__edit-block')
         .get('[mattooltip="Edit Dashboard"]')
@@ -407,7 +507,7 @@ it("RTM Check editing created", () => {
     })
        
         cy.get('[placeholder="RTM Check"]').clear().type("RTM_Check_ols_edited")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited")
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited")
         cy.wait(600)
         cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
         cy.get('[role="listbox"]'). within(() => {
@@ -434,41 +534,49 @@ it("RTM Check editing created", () => {
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
 // Multiple System Overview
+// test works: 01.11
 it("Multiple System Overview creation", () => {
 
-    cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-    cy.wait(5000)
-    cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-    cy.get('.dashboard-modify__header-input').clear()
-    cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
+    cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+    cy.wait(2000)
+    cy.get('.drawer__header').children('.drawer__header__add-button').click();
+    cy.wait(1000)
+    cy.get('.dashboard-modify__header-input').clear();
+    //timestamp dashboard name               
+            var stamp=Math.round(+new Date()/1000);
+            const dashname = `Ols_multisys_ovw${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
+    cy.get('.dashboard-modify__add-dashlet').click();
     cy.get('.dashlet-selector-item__title').contains('Multiple System Overview').parent()
     .within (() =>{
         cy.get('.dashlet-selector-item__button').wait(2000).click()
     })
     cy.get('[placeholder="Multiple System Overview"]').type("Multiple_System_Overview_ols")
-    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+    cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
     cy.wait(600)
     cy.get('avantra-dashlet-settings-system-predefined').click()
     cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-        cy.get('.ng-star-inserted').contains('All Servers').click()
+        cy.get('.ng-star-inserted').contains('ABAP Systems').click()
     })
     cy.wait(600)
-    cy.get('.dashlet-add__stepper').within(() => {
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-    })
-    cy.get('#input-dashboard-name-id').type("Multiple_System_Overview_test")
-    cy.wait(300)
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        cy.wait(800)
     cy.get('.sub-header').within(() => {
-        cy.get('[mattooltip="Save"]').click()
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
     })
-    cy.wait(300)
+    cy.wait(800)
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-
+    cy.log(dashname)
+                .then(() => {
+                    dashboardName = dashname;
+                })
 })
+//  works: 03.11
 it("Multiple System Overview editing created - 1- Category", () => {
+    cy.reload()
     cy.wait(600)
-    cy.get('.sidebar-list-item').contains('a', "Multiple_System_Overview_test")
-    .wait(5000).click()
+    cy.get('.navigation-list-item').contains('a', dashboardName)
+    .wait(2000).click()
     cy.get('.header__edit-block')
         .get('[mattooltip="Edit Dashboard"]')
             .wait(5000)
@@ -481,9 +589,8 @@ it("Multiple System Overview editing created - 1- Category", () => {
         .click()
         })
     })
-       
         cy.get('[placeholder="Multiple System Overview"]').clear().type("Multiple_System_Overview_ols_edited_Category")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited_Category")
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited_Category")
         cy.wait(600)
         cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
         cy.get('[role="listbox"]'). within(() => {
@@ -492,7 +599,7 @@ it("Multiple System Overview editing created - 1- Category", () => {
         cy.wait(600)
         cy.get('avantra-dashlet-settings-system-predefined').click()
     cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-        cy.get('.ng-star-inserted').contains('All DB Servers').click()
+        cy.get('.ng-star-inserted').contains('All Active Servers').click()
     })
         
         cy.get('#showInstallationInfo').siblings('.custom-checkbox__checkmark').click()
@@ -519,16 +626,19 @@ it("Multiple System Overview editing created - 1- Category", () => {
         cy.wait(300)
         cy.get('#Server').should('be.checked')
 
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.wait(300)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.wait(800)
+    cy.get('.sub-header').within(() => {
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+    })
+    cy.wait(2000)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
+// works: 03.11
 it("Multiple System Overview editing created - 2 - Individual", () => {
+    cy.reload()
     cy.wait(600)
-    cy.get('.sidebar-list-item').contains('a', "Multiple_System_Overview_test")
-    .wait(5000).click()
+    cy.get('.navigation-list-item').contains('a', dashboardName)
+    .wait(2000).click()
     cy.get('.header__edit-block')
         .get('[mattooltip="Edit Dashboard"]')
             .wait(5000)
@@ -543,12 +653,13 @@ it("Multiple System Overview editing created - 2 - Individual", () => {
     })
        
         cy.get('[placeholder="Multiple System Overview"]').clear().type("Multiple_System_Overview_ols_edited_individual")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited_individual")
+        cy.wait(600)
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited_individual")
 
         cy.wait(600)
         cy.get('avantra-dashlet-settings-system-predefined').click()
         cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-        cy.get('.ng-star-inserted').contains('All DB Servers').click()
+        cy.get('.ng-star-inserted').contains('ABAP Systems').click()
     })
         cy.get('#individualCheck').siblings('.radio-button__checkmark').click()
         cy.wait(300)
@@ -569,40 +680,59 @@ it("Multiple System Overview editing created - 2 - Individual", () => {
         })
 
         
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.wait(300)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.wait(800)
+    cy.get('.sub-header').within(() => {
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+    })
+    cy.wait(2000)
+    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
+// works: 03.11
 it("Multiple System Overview editing created - 3 - Check Selectors", () => {
+    cy.reload()
     cy.wait(600)
-    cy.get('.sidebar-list-item').contains('a', "Multiple_System_Overview_test")
-    .wait(5000).click()
+    cy.get('.navigation-list-item').contains('a', dashboardName)
+    .wait(1000).click()
     cy.get('.header__edit-block')
         .get('[mattooltip="Edit Dashboard"]')
-            .wait(5000)
+            .wait(1000)
             .click() 
-        cy.wait(2000)
-    cy.get('.avantra-drawer__content').within (() =>{
-            cy.get('.avantra-dashlet__header')
-        .within (() =>{
-        cy.get('[mattooltip="Dashlet Settings"]')
+        cy.wait(1000)
+        cy.get('.avantra-drawer__content').within (() =>{
+            cy.get('.avantra-dashlet__header').wait(600)
+                .within (() =>{
+                cy.get('[mattooltip="Dashlet Settings"]')
         .click()
         })
     })
-       
+    cy.get('.sub-header').within(() => {
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+    })
+    cy.get('.header__edit-block')
+    .get('[mattooltip="Edit Dashboard"]')
+        .wait(1000)
+        .click() 
+    cy.wait(1000)
+    cy.get('.avantra-drawer__content').within (() =>{
+        cy.get('.avantra-dashlet__header').wait(600)
+            .within (() =>{
+            cy.get('[mattooltip="Dashlet Settings"]')
+    .click()
+    })
+}) 
         cy.get('[placeholder="Multiple System Overview"]').clear().type("Multiple_System_Overview_ols_edited_checksel")
-        cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited_checksel")
+        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited_checksel")
         cy.wait(600)
-        cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
-        cy.get('[role="listbox"]'). within(() => {
-            cy.get('.ng-star-inserted').contains('5 minutes').click()
-        })
-        cy.wait(600)
-        cy.get('avantra-dashlet-settings-system-predefined').click()
+        
+        
+        cy.wait(800)
+    cy.get('avantra-dashlet-settings-system-predefined').click()
         cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
-        cy.get('.ng-star-inserted').contains('All DB Servers').click()
+        cy.get('.ng-star-inserted').contains('Avantra Servers').click()
+    })
+    cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
+    cy.get('[role="listbox"]'). within(() => {
+        cy.get('.ng-star-inserted').contains('10 seconds').click()
     })
         cy.get('#checkSelectorId').siblings('.radio-button__checkmark').click()
         cy.wait(300)
@@ -610,22 +740,29 @@ it("Multiple System Overview editing created - 3 - Check Selectors", () => {
 
         cy.get('.ng-placeholder').contains('Select check').parents('.ng-select-container').click()
         cy.get('[placeholder="Select check"]').within(() =>{
-            cy.get('.ng-star-inserted').contains('Olha-one-check').click()
+            cy.get('.ng-star-inserted').contains('ols-rtm').click()
         })
                 
+        cy.wait(800)
         cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
+            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
         })
-        cy.wait(300)
+        cy.wait(800)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-})
+})/
 //SAP HotNews. Not encountered: changing the SAP notes priority, pages number 1<...<4
-it.only("SAP HotNews creation", () => {
+// gotham: SAP backbone to configure
+xit("SAP HotNews creation", () => {
 
     cy.get('.drawer__header__title').should('have.text', 'Dashboards')
-    cy.wait(5000)
-    cy.get('.drawer__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-    cy.get('.dashboard-modify__header-input').clear()
+    cy.wait(2000)
+    cy.get('.drawer__header').children('.drawer__header__add-button').click();
+    cy.wait(1000)
+    cy.get('.dashboard-modify__header-input').clear();
+    //timestamp dashboard name               
+            var stamp=Math.round(+new Date()/1000);
+            const dashname = `Ols_hotnews${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
     cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
     cy.get('[placeholder="Search Dashlet"]').within(() => {
        cy.get('input').type('sap')
@@ -722,30 +859,39 @@ it.only("SAP HotNews creation", () => {
     cy.get('.dashlet-add__stepper').within(() => {
         cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
     })
-    cy.get('#input-dashboard-name-id').type("SAP HotNews")
-    cy.wait(300)
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        cy.wait(800)
     cy.get('.sub-header').within(() => {
-        cy.get('[mattooltip="Save"]').click()
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
     })
-    cy.wait(300)
+    cy.wait(800)
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+    cy.log(dashname)
+                .then(() => {
+                    dashboardName = dashname;
+                })
 
 })
 
-//Predictive Resource Planning
-it("Predictive Resource Planning creation", () => {
+// //Predictive Resource Planning
+xit("Predictive Resource Planning creation", () => {
 
-    cy.get('*[class="sidebar-list__title ng-star-inserted"]').should('have.text', 'Dashboards')
-    cy.wait(5000)
-    cy.get('.sidebar-list__header > .mat-tooltip-trigger > .icon-button > .background-undefined').click();
-    cy.get('.dashboard-modify__header-input').clear()
+    cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+    cy.wait(2000)
+    cy.get('.drawer__header').children('.drawer__header__add-button').click();
+    cy.wait(1000)
+    cy.get('.dashboard-modify__header-input').clear();
+    //timestamp dashboard name               
+            var stamp=Math.round(+new Date()/1000);
+            const dashname = `Ols_prp${stamp}`
+            cy.get('.dashboard-modify__header-input').type(dashname)
     cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
     cy.get('.dashlet-selector-item__title').contains('Predictive Resource Planning').parent()
     .within (() =>{
         cy.get('.dashlet-selector-item__button').wait(2000).click()
     })
     cy.get('[placeholder="Predictive Resource Planning"]').type("Predictive_Resource_Planning_ols")
-    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
+    cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
     cy.wait(600)
     cy.get('avantra-dashlet-settings-system-predefined').click()
     cy.get('avantra-dashlet-settings-system-predefined').within(() =>{
@@ -761,7 +907,20 @@ it("Predictive Resource Planning creation", () => {
         cy.get('[mattooltip="Save"]').click()
     })
     cy.wait(300)
+    cy.get('.dashlet-add__stepper').within(() => {
+        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+    })
+    cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        cy.wait(800)
+    cy.get('.sub-header').within(() => {
+        cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+    })
+    cy.wait(800)
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+    cy.log(dashname)
+                .then(() => {
+                    dashboardName = dashname;
+                })
 
 })
 

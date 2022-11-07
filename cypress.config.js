@@ -7,11 +7,7 @@ module.exports = defineConfig({
   videosFolder: 'cypress/videos/testExecutionVideos',
   viewportHeight: 1080,
   viewportWidth: 1920,
-  env: {
-    RETRIES: 2,
-    first_name: 'sarah',
-    webdriveruni_homepage: 'http://www.webdriveruniversity.com',
-  },
+  
   projectId: 'xhef6e',
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
