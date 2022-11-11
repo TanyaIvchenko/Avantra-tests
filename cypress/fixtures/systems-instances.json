@@ -1,0 +1,63 @@
+[
+    {
+        "asm": {
+            "name": "gdevrl-asm",
+            "instances": [
+                "gdevrl-asm_ASM_00",
+                "gdevrl-asm_ASM_01"
+            ]
+        }
+    },
+    {
+        "cha": {
+            "name": "gdevrl-cha",
+            "instances": [
+                "gdevrl-cha_CHA_00",
+                "gdevrl-cha_CHA_01",
+                "gdevrl-cha_CHA_02"
+            ]
+        }
+    },
+    {
+        "dev": {
+            "name": "gdevrl-dev",
+            "instances": [
+                "gdevrl-dev_DEV_01",
+                "gdevrl-dev_DEV_00"
+            ]
+        }
+    },
+    {
+        "hf": {
+            "name": "gdevrl-hf",
+            "instances": []
+        }
+    },
+    {
+        "golf": {
+            "name": "golf",
+            "instances": [
+                "golf_SMA_00",
+                "golf_WD1_03",
+                "golf_SMA_01"
+            ]
+        }
+    },
+    {
+        "gotham": {
+            "name": "gotham",
+            "instances": []
+        }
+    },
+    {
+        "hotel": {
+            "name": "hotel",
+            "instances": [
+                "hotel_T95_02",
+                "hotel_WDM_03",
+                "hotel_SMJ_01",
+                "hotel_SMJ_00"
+            ]
+        }
+    }
+]

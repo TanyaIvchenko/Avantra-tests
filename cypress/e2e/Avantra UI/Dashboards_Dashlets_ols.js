@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
+describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
     beforeEach(() => {
         cy.fixture("List_dashlets").as("admDashJson")
         cy.fixture("Credentials").as("creds")
@@ -22,16 +22,16 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         cy.wait(1000)
         cy.get('.dashboard-modify__header-input').clear();
         //timestamp dashboard name               
-                var stamp=Date.now();
-                const dashname = `OLS_bs_node${stamp}`
+        var stamp = Date.now();
+        const dashname = `OLS_bs_node${stamp}`
         cy.get('.dashboard-modify__header-input').type(dashname)
 
         cy.get('.dashboard-modify__add-dashlet').click();
         cy.get(':nth-child(2) > :nth-child(1) > avantra-dashlet-selector-item > .dashlet-selector-item > .dashlet-selector-item__button').click();
         cy.get('.dropdown-group > :nth-child(1) > .mat-tooltip-trigger > .select > #undefined > .ng-select-container > .ng-arrow-wrapper').click();
         cy.get('.ng-dropdown-panel').within(() => {
-            
-            cy.get('.ng-dropdown-panel-items').contains('BS_RELEASE').click({ force:true })
+
+            cy.get('.ng-dropdown-panel-items').contains('BS_RELEASE').click({ force: true })
         })
         cy.wait(3000)
         //get element within another element
@@ -39,7 +39,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('[mattooltip="Save"]')
                 .within(() => {
                     cy.get('.icon-button__text')
-                        .click({ force:true })
+                        .click({ force: true })
                 })
         })
         cy.wait(5000)
@@ -47,7 +47,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('[mattooltip="Save"]')
                 .within(() => {
                     cy.get('.icon-button__text')
-                        .click({ force:true })
+                        .click({ force: true })
                 })
 
         })
@@ -67,7 +67,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
             cy.get('.dashboard-modify__add-dashlet').wait(2000).click();
             cy.wait(600)
             for (let i = 0; i < admDashJson.length; i++) {
-                
+
                 //Verify the names of Categories
                 cy.get('.dashlet-selector-categories').invoke('text').then
                 cy.get('.dashlet-selector-categories__wrapper').within(() => {
@@ -75,7 +75,7 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
                         if (txt = admDashJson[i].type) {
                             cy.log('Category name verified:', txt)
                         }
-                        else { 
+                        else {
                         }
                     })
                 })
@@ -99,23 +99,23 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
 
 
                 //Go back to Dashboards
-                
+
             }
             cy.get('.header__edit-block > .mat-tooltip-trigger > .icon-button > .background-secondary > svg').click({ force: true })
-                cy.wait(500)
-                cy.get('.background-secondary > svg').click()
-            })
+            cy.wait(500)
+            cy.get('.background-secondary > svg').click()
         })
-        //TEST WORKS:26.10
+    })
+    //TEST WORKS:26.10
     it("ALL Dashlets Categories", () => {
         cy.get("@admDashJson").then((admDashJson) => {
             cy.get('.drawer__header__title').should('have.text', 'Dashboards')
             cy.get('.drawer__header').children('.drawer__header__add-button').wait(600).click();
-            
+
             cy.get('.dashboard-modify__header-input').clear();
             const dashid = () => Cypress._.random(0, 1e6)
-                const did = dashid()
-                const alldashname = `OLS_bs_node${did}`
+            const did = dashid()
+            const alldashname = `OLS_bs_node${did}`
             cy.get('.dashboard-modify__header-input').type(alldashname);
             cy.get('.dashboard-modify__add-dashlet').click();
             cy.wait(600)
@@ -165,10 +165,10 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
     it.only('Deleting cancel and ok', function () {
         cy.wait(5000)
         cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377').invoke('show')
-        .trigger('mouseenter')
+            .trigger('mouseenter')
         cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377')
             .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
-            
+
         cy.wait(1000)
         cy.get('.mat-menu-panel').within(() => {
             cy.get('.mat-menu-item').contains('Delete').click();
@@ -176,16 +176,16 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 },() => {
         //cancelling
         cy.get('.confirmation-modal__btn-group').children('[type="button"]').contains('Cancel').click();
         cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377').invoke('show')
-        .trigger('mouseenter')
+            .trigger('mouseenter')
         cy.get('.navigation-list-item').contains('copy-OLS_bs_node774377')
             .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
-            
+
         cy.wait(1000)
         cy.get('.mat-menu-panel').within(() => {
             cy.get('.mat-menu-item').contains('Delete').click();
         })
         cy.get('.confirmation-modal__btn-group').children('[type="submit"]').contains('Delete').click();
-        cy.get('.mat-simple-snack-bar-content').should("have.text",'Successfully deleted')
+        cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
         cy.contains('a', 'copy-OLS_bs_node774377').should('not.exist')
     });
 })

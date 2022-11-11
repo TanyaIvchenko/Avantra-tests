@@ -749,7 +749,7 @@ it("Multiple System Overview editing created - 3 - Check Selectors", () => {
         })
         cy.wait(800)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-})/
+})
 //SAP HotNews. Not encountered: changing the SAP notes priority, pages number 1<...<4
 // gotham: SAP backbone to configure
 xit("SAP HotNews creation", () => {
