@@ -144,7 +144,7 @@ describe("BS node create, assert, edit, assert, delete", { defaultCommandTimeout
                             cy.log('status is: ' + status);
                             cy.get('.highcharts-series rect')
                                 .then(() => {
-                                    //  Verify the bars' colors are correct and visible (visisbility is not verified yet)
+                                    //  Verify the bars' colors are correct and visible 
                                     if (status == "Ok") {
                                         cy.log('OK is present')
                                         cy.get('.highcharts-bar-series .highcharts-color-0').should('have.class', 'highcharts-color-0').and('be.visible')
@@ -175,7 +175,7 @@ describe("BS node create, assert, edit, assert, delete", { defaultCommandTimeout
                                     } else if (status == "Critical") {
                                         cy.log('CRITICAL is present')
                                         cy.get('.highcharts-bar-series .highcharts-color-2').should('have.class', 'highcharts-color-2').and('be.visible')
-                                        cy.get('.highcharts-bar-series .highcharts-color-0').realHover()
+                                        cy.get('.highcharts-bar-series .highcharts-color-2').realHover()
 
                                         cy.log('tooltip is visible')
                                         cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-2').should('be.visible')
@@ -198,7 +198,7 @@ describe("BS node create, assert, edit, assert, delete", { defaultCommandTimeout
                             cy.log('status is: ' + status);
                             cy.get('.highcharts-series rect')
                                 .then(() => {
-                                    //  Verify the bars' colors are correct and visible (visisbility is not verified yet)
+                                    //  Verify the bars' colors are correct and invisible 
                                     if (status == "Ok") {
                                         cy.log('OK is NOT present')
                                         // cy.get('.highcharts-bar-series .highcharts-color-0').should('have.css', 'height', '0')

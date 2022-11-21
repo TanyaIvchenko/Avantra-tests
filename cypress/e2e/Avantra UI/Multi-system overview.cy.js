@@ -85,12 +85,12 @@ describe("Multiple systems overview create, assert, edit, delete", { defaultComm
         cy.reload()
         cy.wait(600)
         cy.get('.navigation-list-item').contains('a', dashboardName)
-            .wait(2000).click()
+            .wait(200).click()
         cy.get('.header__edit-block')
             .get('[mattooltip="Edit Dashboard"]')
-            .wait(5000)
+            .wait(500)
             .click()
-        cy.wait(2000)
+        cy.wait(200)
         cy.get('.avantra-drawer__content').within(() => {
             cy.get('.avantra-dashlet__header')
                 .within(() => {
@@ -144,39 +144,62 @@ describe("Multiple systems overview create, assert, edit, delete", { defaultComm
         //     cy.wait(600)
         // cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
     })
-    it("Assertions for instances", () => {
+    xit("Assertions for instances", function() {
 
         cy.reload()
         cy.wait(600)
         cy.get('.navigation-list-item').contains('a', dashboardName)
             .wait(2000).click()
         cy.get('@inventory').then((inventory) => {
-            //     }
-            //Names of the systems listed
-            // creating object
-            const json = JSON.parse(inventory);
-            cy.log(json.asm.name)
-
+           
+            // Finding system name
             let systemsList = []
-            let sysListJson = []
-            for (let i = 0; i < inventory.length; i++) {
-                sysListJson = [].concat(sysListJson, inventory[i].name)
-                cy.log(inventory[i].name)
-            }
-            cy.log(sysListJson)
+            let instancesJson = []
+            let instancesList
             cy.get('.system-title__name.avantra-dashlet__headline').each(($el) => {
                 cy.get($el).invoke('text').then((txt) => {
                     txt = txt.trim()
                     systemsList.push(txt)
-                    for (let i = 0; i < systemsList.length; i++) {
-                        let name = sysListJson[i]
-
-                        expect(txt).to.contain(name)
-                    }
+                    // finding instances in JSON for the name from UI
+                instancesList = inventory.find(el => el.name === txt);
+                instancesJson = instancesList.instances
+                cy.wrap(instancesList)
+                cy.log('from JSON:  ' + instancesList.instances)
                 })
-            }).then((array) => cy.get(systemsList.sort()))
-            cy.wrap(systemsList)
-                .then((array) => cy.log('List of systems', JSON.stringify(array)))
+                //create an arrays with instances on UI
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                let instancesUi = []
+                cy.get($el).parents('.system-element').within(() => {
+                    cy.get('.system-element-database__instances-list').then(($name) => {
+                        if($name.length > 0) {
+                            for(let i = 0; i < $name.length; i++ ) {
+                                cy.get($name). invoke('text'). then((txtName) => {
+                                txtName = txtName[i].trim()
+                                instancesUi.push(txtName)
+                                cy.log("From UI: " + instancesUi)
+                                })
+                            }
+                        } else cy.log("No instances")
+                        // cy.log(JSON.stringify(instancesJson.sort()) + " - from JSON and " + JSON.stringify(instancesUi.sort()) + " - from UI")
+                    })
+                    // cy.get('.system-element-database__instances-list')
+                    // cy.get('div.database-instance__name').each(($name) => {    
+                    //     instancesUi.length = 0
+                    //     cy.get($name).invoke('text').then((txtName) => {
+                    //             txtName = txtName.trim()
+                    //             instancesUi.push(txtName)                                
+                    //     })
+                    // cy.log(JSON.stringify(instancesJson.sort()) + " - from JSON and " + JSON.stringify(instancesUi.sort()) + " - from UI")
+                    // if (JSON.stringify(instancesJson.sort()) === JSON.stringify(instancesUi.sort())) {
+                    //     cy.log("Instances present: " + instancesUi + " (UI) " + instancesJson + " (JSON) ")
+                    // }
+                    // })    
+                        
+                })
+            })
+            // .then((array) => cy.get(systemsList.sort()))
+            // cy.wrap(systemsList)
+            //     .then((array) => cy.log('List of systems', JSON.stringify(array)))
 
             // here comes creating and adding the instances to the array
             // here comes checking the consistency of system and instances list
@@ -184,7 +207,7 @@ describe("Multiple systems overview create, assert, edit, delete", { defaultComm
         })
     })
     // works: 03.11
-    xit("Multiple System Overview editing created - 2 - Individual", () => {
+    it("Multiple System Overview editing created - 2 - Individual", () => {
         cy.reload()
         cy.wait(600)
         cy.get('.navigation-list-item').contains('a', dashboardName)
@@ -236,6 +259,8 @@ describe("Multiple systems overview create, assert, edit, delete", { defaultComm
         })
         cy.wait(2000)
         cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        cy.reload()
+        cy.wait(2000)
     })
     // works: 03.11
     xit("Multiple System Overview editing created - 3 - Check Selectors", () => {
