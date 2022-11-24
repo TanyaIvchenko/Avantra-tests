@@ -9,12 +9,16 @@ describe("BS node create, assert, edit, assert, delete", { defaultCommandTimeout
         cy.get("@creds").then((creds) => {
             cy.visit(creds.env)
             cy.wait(600)
-            cy.get('#input-login-id').type(creds.login)
-            cy.get('#input-password-id').type(creds.password)
-            cy.get('.background-primary').contains("Login to Avantra").click()
-            cy.wait(600)
-            cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-            cy.wait(600)
+            cy.get('body').then((body) => {
+                if (body.find('#input-login-id').length > 0) {
+                    cy.get('#input-login-id').type(creds.login)
+                    cy.get('#input-password-id').type(creds.password)
+                    cy.get('.background-primary').contains("Login to Avantra").click()
+                    cy.wait(600)
+                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
+                    cy.wait(600)
+                }
+            })
         })
     })
     beforeEach(() => {

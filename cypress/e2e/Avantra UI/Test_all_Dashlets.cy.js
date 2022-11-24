@@ -8,12 +8,17 @@ describe("Dashlets and dashboards", { defaultCommandTimeout: 5000 }, () => {
         cy.get("@creds").then((creds) => {
             cy.visit(creds.env)
             cy.wait(600)
-            cy.get('#input-login-id').type(creds.login)
-            cy.get('#input-password-id').type(creds.password)
-            cy.get('.background-primary').contains("Login to Avantra").click()
-            cy.wait(600)
-            cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-            cy.wait(600)
+            cy.get('body').then((body) => {
+                if (body.find('#input-login-id').length > 0) {
+                    cy.get('#input-login-id').type(creds.login)
+                    cy.get('#input-password-id').type(creds.password)
+                    cy.get('.background-primary').contains("Login to Avantra").click()
+                    cy.wait(600)
+                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
+                    cy.wait(600)
+                }
+            })
+            
         })
     })
     beforeEach(() => {
@@ -535,7 +540,7 @@ xit("RTM Check editing created", () => {
 })
 // Multiple System Overview
 // test works: 01.11
-it("Multiple System Overview creation", () => {
+xit("Multiple System Overview creation", () => {
 
     cy.get('.drawer__header__title').should('have.text', 'Dashboards')
     cy.wait(2000)
@@ -572,7 +577,7 @@ it("Multiple System Overview creation", () => {
                 })
 })
 //  works: 03.11
-it("Multiple System Overview editing created - 1- Category", () => {
+xit("Multiple System Overview editing created - 1- Category", () => {
     cy.reload()
     cy.wait(600)
     cy.get('.navigation-list-item').contains('a', dashboardName)
@@ -634,7 +639,7 @@ it("Multiple System Overview editing created - 1- Category", () => {
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
 // works: 03.11
-it("Multiple System Overview editing created - 2 - Individual", () => {
+xit("Multiple System Overview editing created - 2 - Individual", () => {
     cy.reload()
     cy.wait(600)
     cy.get('.navigation-list-item').contains('a', dashboardName)
@@ -688,7 +693,7 @@ it("Multiple System Overview editing created - 2 - Individual", () => {
     cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
 })
 // works: 03.11
-it("Multiple System Overview editing created - 3 - Check Selectors", () => {
+xit("Multiple System Overview editing created - 3 - Check Selectors", () => {
     cy.reload()
     cy.wait(600)
     cy.get('.navigation-list-item').contains('a', dashboardName)
@@ -752,7 +757,7 @@ it("Multiple System Overview editing created - 3 - Check Selectors", () => {
 })
 //SAP HotNews. Not encountered: changing the SAP notes priority, pages number 1<...<4
 // gotham: SAP backbone to configure
-xit("SAP HotNews creation", () => {
+it("SAP HotNews creation", function() {
 
     cy.get('.drawer__header__title').should('have.text', 'Dashboards')
     cy.wait(2000)
@@ -767,6 +772,7 @@ xit("SAP HotNews creation", () => {
     cy.get('[placeholder="Search Dashlet"]').within(() => {
        cy.get('input').type('sap')
     })
+    cy.wait(200)
     cy.get('.dashlet-selector-item__title').should('have.length', 1)
     cy.get('.dashlet-selector-item__title').should('contain', 'SAP HotNews')
     cy.get('.dashlet-selector-item__button').wait(2000).click()
@@ -785,10 +791,11 @@ xit("SAP HotNews creation", () => {
     cy.get('[aria-label="First page"]').should('have.class', 'mat-button-disabled')
     cy.get('[aria-label="Previous page"]').should('have.class', 'mat-button-disabled')
     //Length=26, because of tr for table header
-    cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 26)
+    cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 4)
     //For pages more than 1
     cy.get('@pageNum').then((pageNum) => {
         if(pageNum>1){
+            cy.log("Pages MORE than one!!Number: ", pageNum)
     //click once Next page
     cy.get('[aria-label="Next page"]').click()
     cy.get('.mat-paginator-range-label').wait(600).should('contain', 'Page 2 of')
@@ -836,7 +843,7 @@ xit("SAP HotNews creation", () => {
             hundredMinusPageNum = 'Page '+ ((pageNum/4)-1);
             cy.get('.mat-paginator-range-label').wait(600).invoke('text').then((text) =>{
                 if(text.includes(hundredPageNum)) {
-                    cy.log('Number for 100 peк page:', hundredPageNum)
+                    cy.log('Number for 100 per page:', hundredPageNum)
                 }
                 else if (text.includes(hundredMinusPageNum)) {
                     cy.log('Number for 100 per page:', hundredMinusPageNum)
@@ -849,18 +856,16 @@ xit("SAP HotNews creation", () => {
         }
     //For ONE page
         else{
-            cy.get('[aria-label="Next page"]').should('not.have.class', 'mat-button-disabled')
-            cy.get('[aria-label="Last page"]').should('not.have.class', 'mat-button-disabled')
+            cy.log("ONE page assertion!!!")
+            cy.get('[aria-label="Next page"]').should('have.class', 'mat-button-disabled')
+            cy.get('[aria-label="Last page"]').should('have.class', 'mat-button-disabled')
             
         }
         })
     
     cy.wait(600)
-    cy.get('.dashlet-add__stepper').within(() => {
-        cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-    })
     cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
-        cy.wait(800)
+    cy.wait(800)
     cy.get('.sub-header').within(() => {
         cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
     })
