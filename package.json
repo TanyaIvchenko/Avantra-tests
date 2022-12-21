@@ -21,7 +21,7 @@
   "author": "Olha",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^11.0.1",
+    "cypress": "^12.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^1.5.0",
     "cypress-plugin-retries": "^1.5.2",
