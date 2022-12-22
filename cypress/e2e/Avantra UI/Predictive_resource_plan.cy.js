@@ -2,36 +2,18 @@
 
 
 describe("Predictive resource planning: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
-  before(() => {
-
-    
-    cy.fixture("Credentials").as("creds")
-       
-            cy.session('ols', () => {
-            cy.get("@creds").then((creds) => {
-            // DO NOT FORGET TO USE YOUR CREDS!!!!!!
-            
-                cy.visit(creds.env)
-                cy.wait(600)
-                cy.get('body').then((body) => {
-                    if (body.find('#input-login-id').length > 0) {
-                        cy.get('#input-login-id').type(creds.login)
-                        cy.get('#input-password-id').type(creds.password)
-                        cy.get('.background-primary').contains("Login to Avantra").click()
-                        cy.wait(800)
-                        cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-                        cy.wait(600)
-                    }
-                    cy.visit('/xn/ui/main/dashboards')
-                })
-            })
-         })
-
- })    
-    beforeEach( function() {
-
-        login('user')
-
+    before(function () {
+        cy.fixture("Credentials").as("creds")
+    })
+    beforeEach(function () {
+        // DO NOT FORGET TO USE YOUR CREDS!!!!!!
+        cy.fixture("Credentials").as("creds")
+        cy.get("@creds").then((creds) => {
+            let envServer = creds.env;
+            let localUser = creds.login;
+            let passwd = creds.password;
+            cy.Login_Session(localUser, envServer, passwd)
+        })
         // Preserve the Cookies
 
         // Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
@@ -53,13 +35,15 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
             cy.get('.mat-menu-item').contains('Delete').click({ force: true });
         })
         cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete').click({ force: true });
-        cy.wait(600)
+        cy.wait(800)
         cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
         cy.contains('a', dashboardName).should('not.exist')
 
     })
     it("Predictive resource planning creation", function () {
-
+        cy.get("@creds").then((creds) => {
+            cy.visit(creds.env)
+        })
         cy.get('.drawer__header__title').should('have.text', 'Dashboards')
         cy.wait(2000)
         cy.get('.drawer__header').children('.drawer__header__add-button').click();
@@ -86,7 +70,7 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
         cy.get('[title="Server: Total Disk Size"]')
             .click().wait(200)
         cy.wait(600)
-       cy.wait(300)
+        cy.wait(300)
         cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
         cy.wait(800)
         cy.get('.sub-header').within(() => {
@@ -100,6 +84,16 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
             })
     })
     it("Predictive resource planning assertions created", function () {
+        cy.get("@creds").then((creds) => {
+            cy.visit(creds.env)
+        })
+        cy.wait(600)
+        cy.get('.navigation-list-item').contains('a', dashboardName)
+            .wait(2000).click()
+        cy.get('.server-info__server-title span').should('have.text', 'All Active Servers')
+        cy.get('.server-info__server-subtitle').should(($div) => {
+            expect($div.text().trim()).equal("Total Disk Space");
+        })
         labels = ['Last 2 months', 'Today', 'Next 6 months']
         let labelsNames = []
         cy.get('.highcharts-xaxis-labels span').each(($el) => {
@@ -109,13 +103,16 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
             })
         })
         cy.wrap(labelsNames).then(() => {
-            if(JSON.stringify(labelsNames.sort()) === JSON.stringify(labels.sort())) {
+            if (JSON.stringify(labelsNames.sort()) === JSON.stringify(labels.sort())) {
                 cy.log('Labels verified!')
             }
         })
 
     })
     it("Predictive resource planning editing", function () {
+        cy.get("@creds").then((creds) => {
+            cy.visit(creds.env)
+        })
         cy.wait(600)
         cy.get('.navigation-list-item').contains('a', dashboardName)
             .wait(2000).click()
@@ -132,7 +129,7 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
                 })
         })
 
-        cy.get('[placeholder="Multi RTM Status"]').clear().type(dashboardName + "_edited")
+        cy.get('[placeholder="Predictive Resource Planning"]').clear().type(dashboardName + "_edited")
         cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited")
         cy.wait(600)
         cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
@@ -143,6 +140,48 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
         cy.get('avantra-dashlet-settings-system-predefined').click()
         cy.get('avantra-dashlet-settings-system-predefined').within(() => {
             cy.get('.ng-star-inserted').contains('ols_mii').click()
+        })
+        cy.get('span.dashlet-settings__param--title').contains('Resource Type').siblings('div.dashlet-settings__param--content')
+            .click().wait(200)
+        cy.get('[title="Server: Used Disk Space"]')
+            .click().wait(200)
+        cy.wait(600)
+        cy.get('.dashlet-settings__param--title').contains('Use historical data to predict usage')
+            .siblings('.dashlet-settings__param--content').click()
+        cy.get('.ng-dropdown-panel-items .ng-option span').contains('3 years').click()
+        cy.get('.dashlet-settings__param--title').contains('Predict usage for months')
+            .siblings('.dashlet-settings__param--content').type('10')
+        cy.wait(300)
+        cy.get('.sub-header').within(() => {
+            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
+        })
+        cy.wait(800)
+        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+
+    })
+    it("Predictive resource planning edited assertions", function () {
+        cy.get("@creds").then((creds) => {
+            cy.visit(creds.env)
+        })
+        cy.wait(600)
+        cy.get('.navigation-list-item').contains('a', dashboardName)
+            .wait(2000).click()
+        cy.get('.server-info__server-title span').should('have.text', 'ols_mii')
+        cy.get('.server-info__server-subtitle').should(($div) => {
+            expect($div.text().trim()).equal("Used Disk Space");
+        })
+        labels = ['Last 33 months', 'Today', 'Next 10 months']
+        let labelsNames = []
+        cy.get('.highcharts-xaxis-labels span').each(($el) => {
+            cy.get($el).invoke('text').then((text) => {
+                let txtLabels = text.trim()
+                labelsNames.push(txtLabels)
+            })
+        })
+        cy.wrap(labelsNames).then(() => {
+            if (JSON.stringify(labelsNames.sort()) === JSON.stringify(labels.sort())) {
+                cy.log('Labels verified!')
+            }
         })
     })
 })

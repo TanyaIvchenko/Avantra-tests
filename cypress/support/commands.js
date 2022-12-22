@@ -74,3 +74,21 @@ if (COMMAND_DELAY > 0) {
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add('Login_Session', (localUser, envServer, passwd) => {
+    cy.session([localUser, envServer, passwd], () => {
+        cy.visit(envServer)
+        cy.wait(600)
+            cy.get('body').then((body) => {
+                if (body.find('#input-login-id').length > 0) {
+                    cy.get('#input-login-id').type(localUser)
+                    cy.get('#input-password-id').type(passwd)
+                    cy.get('.background-primary').contains("Login to Avantra").click()
+                    cy.wait(800)
+                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
+                    cy.wait(600)
+                }
+                
+            })
+ 
+    })
+})
