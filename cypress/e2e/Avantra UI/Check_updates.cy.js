@@ -15,20 +15,15 @@ describe("Check for updates: create, assert, edit, delete", { defaultCommandTime
             cy.Login_Session(localUser, envServer, passwd)
             cy.visit(creds.env)
         })
-        // Preserve the Cookies
-
-        // Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
         
-
-
     })
     let dashboardName;
     let table = []
-    // let rowNames = ['Note', 'Version', 'Title', 'Status', 'Date', 'Component', 'Cat.', 'Secur. Cat.', 'Relevant For']
+  
     after(() => {
         // delete dashboard
         cy.wait(10000)
-        // cy.get('.navigation-list-item')
+
         cy.contains(dashboardName).realHover()
         cy.get('.navigation-list-item').contains(dashboardName)
             .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
@@ -44,9 +39,7 @@ describe("Check for updates: create, assert, edit, delete", { defaultCommandTime
 
     })
     it("Check for updates creation", function () {
-        // cy.get("@creds").then((creds) => {
-        //     cy.visit(creds.env)
-        // })
+
         cy.get('.drawer__header__title').should('have.text', 'Dashboards')
         cy.wait(2000)
         cy.get('.drawer__header').children('.drawer__header__add-button').click();
@@ -58,10 +51,7 @@ describe("Check for updates: create, assert, edit, delete", { defaultCommandTime
         cy.get('.dashboard-modify__header-input').type(dashname)
         cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
         cy.get('.dashlet-selector-item__title').contains('Check For Updates').siblings('.dashlet-selector-item__button').click()
-        // .parent()
-        //     .within(() => {
-        //         cy.get('.dashlet-selector-item__button').wait(2000).click()
-        //     })
+
         cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest")
         cy.wait(600)
         cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
@@ -77,9 +67,7 @@ describe("Check for updates: create, assert, edit, delete", { defaultCommandTime
             })
         })
     it("Check for updates assertions created", function () {
-        // cy.get("@creds").then((creds) => {
-        //     cy.visit(creds.env)
-        // })
+
         cy.wait(800)
         cy.get('.navigation-list-item').contains('a', dashboardName)
             .wait(2000).click()
