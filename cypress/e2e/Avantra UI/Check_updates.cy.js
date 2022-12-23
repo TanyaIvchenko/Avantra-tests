@@ -65,6 +65,11 @@ describe("Check for updates: create, assert, edit, delete", { defaultCommandTime
             .then(() => {
                 dashboardName = dashname;
             })
+        cy.get('.mat-table tr.mat-row').each(($el) => {
+            cy.get($el).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+            cy.get($el).realHover()
+            cy.get($el).should('have.css', 'background-color', 'rgba(0, 133, 173, 0.05)')
+        })
         })
     it("Check for updates assertions created", function () {
 
