@@ -74,7 +74,7 @@ if (COMMAND_DELAY > 0) {
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-Cypress.Commands.add('Login_Session', (localUser, envServer, passwd) => {
+Cypress.Commands.add('loginSession', (localUser, envServer, passwd) => {
     cy.session([localUser, envServer, passwd], () => {
         cy.visit(envServer)
         cy.wait(600)
@@ -92,3 +92,4 @@ Cypress.Commands.add('Login_Session', (localUser, envServer, passwd) => {
  
     })
 })
+

@@ -2,8 +2,8 @@ const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
-  defaultCommandTimeout: 10000,
-  pageLoadTimeout: 50000,
+  defaultCommandTimeout: 2000,
+  pageLoadTimeout: 100000,
   videosFolder: 'cypress/videos/testExecutionVideos',
   viewportHeight: 1080,
   viewportWidth: 1920,
