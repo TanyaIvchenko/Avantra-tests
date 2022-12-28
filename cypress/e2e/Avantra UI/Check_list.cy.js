@@ -29,14 +29,18 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         })
         cy.fixture("Checklist").then((checklistData) => {
             this.checklistData = checklistData
-        })              
+        }) 
+        cy.fixture("Dashlets").then((dashletsData) => {
+            this.dashletsData = dashletsData
+        })        
+                     
     })
     let dashboardName;
     let table = []
   
     after(function() {
         // delete dashboard
-        cy.wait(10000)
+        cy.wait(5000)
 
         cy.contains(dashboardName).realHover()
         dashboards.elements.getDashboardNameAtNavmenu()
@@ -54,7 +58,7 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
         
     })
-    
+
     it("Check List creation", function () {
 
         dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
@@ -72,7 +76,7 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         })
         
         dashboards.clickAddDashletButton()
-        checklist.addCheckListDashlet()
+        dashlets.addDashlet(this.checklistData.dashletDefTitle)
         cy.wait(2000)
 
         dashlets.elements.getSubtitle().type(this.checklistData.subtitle)
@@ -93,9 +97,9 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         // dashboards.elements.getDashboardNameAtNavmenu().contains('a', dashname)
         //         .wait(200).click()
         dashlets.elements.getTableRow().each(($el) => {
-            cy.get($el).should('have.css', this.checklistData.colorCss, this.checklistData.notHoverCss)
+            cy.get($el).should('have.css', this.dashletsData.colorCss, this.dashletsData.notHoverCss)
             cy.get($el).realHover().wait(200)
-            cy.get($el).should('have.css', this.checklistData.colorCss, this.checklistData.hoverCss)
+            cy.get($el).should('have.css', this.dashletsData.colorCss, this.dashletsData.hoverCss)
         })
         })
     it("Check list assertions created", function () {
