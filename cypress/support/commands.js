@@ -93,3 +93,10 @@ Cypress.Commands.add('loginSession', (localUser, envServer, passwd) => {
     })
 })
 
+Cypress.Commands.add('stampDashName', (dashname) => {
+    var stamp = Math.round(+new Date() / 1000);
+    dashname = `${dashname}${stamp}`;
+    console.log(dashname)
+    return dashname;
+})
+

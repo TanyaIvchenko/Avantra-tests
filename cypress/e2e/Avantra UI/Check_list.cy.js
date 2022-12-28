@@ -7,6 +7,7 @@ import Dashlets from "../../pageObjects/Dashlets.js";
 const dashboards = new Dashboards();
 const dashlets = new Dashlets();
 const checklist = new Checklist();
+let dashName
 
 describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
     // before(function () {
@@ -53,19 +54,23 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
         
     })
+    
     it("Check List creation", function () {
 
         dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
         dashboards.clickCreateDashboard()
-        cy.wait(10000)
+        cy.wait(5000)
         dashboards.clearDashboardHeader()
         
         //timestamp dashboard name               
-        var stamp = Math.round(+new Date() / 1000);
-        let dashname = this.checklistData.dashboardName+stamp
-        cy.log(dashname)
-        dashboards.elements.getDashboardHeader().type(dashname)
+              
+        cy.stampDashName(this.checklistData.dashboardName).then(($el) => {
+            dashName = $el.toString()
+            cy.log(dashName)
+            dashboards.elements.getDashboardHeader().type(dashName)
+        })
+        
         dashboards.clickAddDashletButton()
         checklist.addCheckListDashlet()
         cy.wait(2000)
@@ -79,9 +84,9 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         dashboards.saveDashboard()
         cy.wait(8000)
         dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
-        cy.log(dashname)
+        cy.log(dashName)
             .then(() => {
-                dashboardName = dashname;
+                dashboardName = dashName;
             })
         // cy.reload()
         // cy.wait(600)
