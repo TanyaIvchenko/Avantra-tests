@@ -54,6 +54,7 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
         
     })
+    
     it("Check List creation", function () {
 
         dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
