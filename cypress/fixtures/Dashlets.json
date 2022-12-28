@@ -1,0 +1,8 @@
+{
+    "colorCss": "background-color",
+    "hoverCss": "rgba(0, 133, 173, 0.05)",
+    "notHoverCss": "rgba(0, 0, 0, 0)",
+    "warningStatus": "assets/media/icons/checks/check-warning.svg",
+    "okStatus": "assets/media/icons/checks/check-ok.svg",
+    "critStatus": "assets/media/icons/checks/check-critical.svg"
+}

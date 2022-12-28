@@ -1,85 +1,106 @@
 /// <reference types="cypress" />
 
+import CheckUpd from "../../pageObjects/Check_updates.js";
+import Dashboards from "../../pageObjects/Dashboards.js";
+import Dashlets from "../../pageObjects/Dashlets.js";
 
-describe("Check for updates: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
-    before(function () {
-        cy.fixture("Credentials").as("creds")
-    })
+const dashboards = new Dashboards()
+const dashlets = new Dashlets()
+const checkUpd = new CheckUpd()
+let dashName
+
+describe("Check for updates: create, assert, edit, delete", { defaultCommandTimeout: 7000 }, () => {
     beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
-        cy.fixture("Credentials").as("creds")
-        cy.get("@creds").then((creds) => {
-            let envServer = creds.env;
-            let localUser = creds.login;
-            let passwd = creds.password;
-            cy.Login_Session(localUser, envServer, passwd)
+        cy.fixture("Credentials")
+        .then((creds) => {
+            this.creds = creds
+            let envServer = this.creds.env;
+            let localUser = this.creds.login;
+            let passwd = this.creds.password;
+            cy.loginSession(localUser, envServer, passwd)
             cy.visit(creds.env)
         })
-        
+        cy.fixture("Dashboards").then((dashboardsData) => {
+            this.dashboardsData = dashboardsData
+        })
+        cy.fixture("Check_updates").then((checkUpdData) => {
+            this.checkUpdData = checkUpdData
+        })      
+        cy.fixture("Dashlets").then((dashletsData) => {
+            this.dashletsData = dashletsData
+        })         
     })
     let dashboardName;
     let table = []
   
-    after(() => {
+    after(function() {
         // delete dashboard
-        cy.wait(10000)
+        cy.wait(5000)
 
         cy.contains(dashboardName).realHover()
-        cy.get('.navigation-list-item').contains(dashboardName)
-            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains(dashboardName)
+            .siblings('.navigation-list-item__menu-button')
+            .invoke('show')
+            .click({ force: true })
 
         cy.wait(1000)
-        cy.get('.mat-menu-panel').within(() => {
-            cy.get('.mat-menu-item').contains('Delete').click({ force: true });
+        dashboards.elements.getQuickActionsMenu().within(() => {
+            dashboards.clickQuickDeleteDashboard()
         })
-        cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete').click({ force: true });
+        dashboards.submitModalDashboardDelete()
         cy.wait(800)
-        cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
-        cy.contains('a', dashboardName).should('not.exist')
-
+        dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
+        
     })
     it("Check for updates creation", function () {
 
-        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+        dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
-        cy.get('.drawer__header').children('.drawer__header__add-button').click();
-        cy.wait(1000)
-        cy.get('.dashboard-modify__header-input').clear();
+        dashboards.clickCreateDashboard()
+        cy.wait(5000)
+        dashboards.clearDashboardHeader()
+        
         //timestamp dashboard name               
-        var stamp = Math.round(+new Date() / 1000);
-        const dashname = `Ols_cfu${stamp}`
-        cy.get('.dashboard-modify__header-input').type(dashname)
-        cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
-        cy.get('.dashlet-selector-item__title').contains('Check For Updates').siblings('.dashlet-selector-item__button').click()
+              
+        cy.stampDashName(this.checkUpdData.dashboardName).then(($el) => {
+            dashName = $el.toString()
+            cy.log(dashName)
+            dashboards.elements.getDashboardHeader().type(dashName)
+        })
+        
+        dashboards.clickAddDashletButton()
+        dashlets.addDashlet(this.checkUpdData.dashletDefTitle)
+        cy.wait(2000)
 
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest")
+        dashlets.elements.getSubtitle().type(this.checkUpdData.subtitle)
         cy.wait(600)
-        cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        dashlets.saveDashlet()
         cy.wait(800)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
+        dashboards.saveDashboard()
         cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-        cy.log(dashname)
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+        cy.log(dashName)
             .then(() => {
-                dashboardName = dashname;
+                dashboardName = dashName;
             })
-        cy.get('.mat-table tr.mat-row').each(($el) => {
-            cy.get($el).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-            cy.get($el).realHover()
-            cy.get($el).should('have.css', 'background-color', 'rgba(0, 133, 173, 0.05)')
-        })
+            dashlets.elements.getTableRow().each(($el) => {
+                cy.get($el).should('have.css', this.dashletsData.colorCss, this.dashletsData.notHoverCss)
+                cy.get($el).realHover().wait(200)
+                cy.get($el).should('have.css', this.dashletsData.colorCss, this.dashletsData.hoverCss)
+            })
         })
     it("Check for updates assertions created", function () {
 
         cy.wait(800)
-        cy.get('.navigation-list-item').contains('a', dashboardName)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
             .wait(2000).click()
-        cy.get('.mat-card-title').should('have.text', 'Check For Updates')
-        table = ['Avantra Server', '23.0.4', '23.0.3', 'Avantra Agent', '23.0.4.1117', '23.0.3']
+            dashboards.elements.getDashletCardTitle().should('have.text', this.checkUpdData.dashletDefTitle)
+        table = this.checkUpdData.tableData
         let tableValues = []
-        cy.get('.mat-row avantra-string-cell .mat-tooltip-trigger').each(($el) => {
+        checkUpd.elements.getTableCell().each(($el) => {
             cy.get($el).invoke('text').then((text) => {
                 let txtValues = text.trim()
                 tableValues.push(txtValues)
