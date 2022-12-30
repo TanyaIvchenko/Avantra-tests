@@ -12,8 +12,6 @@ class Checklist {
     addCheckListDashlet() {
         this.elements.getCheckListTile().siblings('.dashlet-selector-item__button').click()
     }
-    openCheckSelectorDropdown() {
-        this.elements.getCheckSelectorDropdown().click()
-    }
+    
 }
 export default Checklist

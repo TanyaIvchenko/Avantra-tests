@@ -2,6 +2,7 @@ class Dashboards {
 
     elements = {
         getDashboardsTitle: () => cy.get('.drawer__header__title'),
+        getDashboardName: () => cy.get('.avantra-page__header-title'),
         getDashboardNameAtNavmenu : () => cy.get('.navigation-list-item'),
         getPlusSign: () => cy.get('.drawer__header').children('.drawer__header__add-button'),
         getDashboardHeader: () => cy.get('.dashboard-modify__header-input'),
@@ -12,18 +13,20 @@ class Dashboards {
         getQuickActionsMenu: () => cy.get('.mat-menu-panel'),
         getQuickActionItem: () => cy.get('.mat-menu-item'),
         getModalDeleteSubmit: () => cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete'),
-        getHeaderMessage: () => cy.get('.mat-simple-snack-bar-content')
+        getHeaderMessage: () => cy.get('.mat-simple-snack-bar-content'),
+        getEditDashboardButton: () => cy.get('.header__edit-block [mattooltip="Edit Dashboard"]')
     }
+
     clickCreateDashboard() {
         this.elements.getPlusSign().click();
     }
     clearDashboardHeader() {
         this.elements.getDashboardHeader().clear()
     }
-    clickAddDashletButton(){
+    clickAddDashletButton() {
         this.elements.getAddDashletButton().wait(200).click()
     }
-    saveDashboard(){
+    saveDashboard() {
         cy.get('.sub-header').within(() => {
             this.elements.getSaveDashboardButton().click()
         })
@@ -34,5 +37,10 @@ class Dashboards {
     submitModalDashboardDelete() {
         this.elements.getModalDeleteSubmit().click({ force: true })
     }
+    clickEditDashboard() {
+        this.elements.getEditDashboardButton().click()
+    }
+    
+    
 }
 export default Dashboards

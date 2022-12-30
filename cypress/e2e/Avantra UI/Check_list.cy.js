@@ -67,10 +67,10 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         cy.wait(5000)
         dashboards.clearDashboardHeader()
         
-        //timestamp dashboard name               
+        //timestamp dashboard name and typing it to dashboard name              
               
         cy.stampDashName(this.checklistData.dashboardName).then(($el) => {
-            dashName = $el.toString()
+            dashName = $el.toString().trim()
             cy.log(dashName)
             dashboards.elements.getDashboardHeader().type(dashName)
         })
@@ -80,8 +80,8 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         cy.wait(2000)
 
         dashlets.elements.getSubtitle().type(this.checklistData.subtitle)
-        checklist.openCheckSelectorDropdown()
-        checklist.elements.getCheckSelectorItem().contains(this.checklistData.checkSelector).click()
+        dashlets.openSettingDropdownByTitle(this.checklistData.paramCheckSelector)
+        dashlets.elements.getCheckSelectorItem().contains(this.checklistData.checkSelector).click()
         cy.wait(600)
         dashlets.saveDashlet()
         cy.wait(800)
@@ -92,10 +92,7 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
             .then(() => {
                 dashboardName = dashName;
             })
-        // cy.reload()
-        // cy.wait(600)
-        // dashboards.elements.getDashboardNameAtNavmenu().contains('a', dashname)
-        //         .wait(200).click()
+        
         dashlets.elements.getTableRow().each(($el) => {
             cy.get($el).should('have.css', this.dashletsData.colorCss, this.dashletsData.notHoverCss)
             cy.get($el).realHover().wait(200)
@@ -107,7 +104,8 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         cy.wait(800)
         dashboards.elements.getDashboardNameAtNavmenu().contains('a', dashboardName)
             .wait(2000).click()
-       dashboards.elements.getDashletCardTitle().should('have.text', this.checklistData.dashletDefTitle)
+        dashboards.elements.getDashletCardTitle().should('have.text', this.checklistData.dashletDefTitle)
+
         checklist.elements.getStatusIconAndName()
             .contains(this.checklistData.warningCheck)
             .siblings('img')
