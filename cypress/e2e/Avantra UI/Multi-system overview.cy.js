@@ -1,88 +1,92 @@
 /// <reference types="cypress" />
 
+import Dashboards from "../../pageObjects/Dashboards.js";
+import Dashlets from "../../pageObjects/Dashlets.js";
+
+const dashboards = new Dashboards();
+const dashlets = new Dashlets();
 
 
 describe("Multiple systems overview create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
-    before(() => {
-        cy.fixture("Credentials").as("creds")
+    beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
-        cy.get("@creds").then((creds) => {
+        cy.fixture("Credentials")
+        .then((creds) => {
+            this.creds = creds
+            let envServer = this.creds.env;
+            let localUser = this.creds.login;
+            let passwd = this.creds.password;
+            cy.loginSession(localUser, envServer, passwd)
             cy.visit(creds.env)
-            cy.wait(600)
-            cy.get('body').then((body) => {
-                if (body.find('#input-login-id').length > 0) {
-                    cy.get('#input-login-id').type(creds.login)
-                    cy.get('#input-password-id').type(creds.password)
-                    cy.get('.background-primary').contains("Login to Avantra").click()
-                    cy.wait(600)
-                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-                    cy.wait(600)
-                }
-            })
         })
-    })
-    beforeEach(() => {
-        cy.fixture("systems-instances").as("inventory")
-        // Preserve the Cookies
-
-        Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
-
+        cy.fixture("Dashboards").then((dashboardsData) => {
+            this.dashboardsData = dashboardsData
+        })
+        cy.fixture("MultiSys").then((multiSysData) => {
+            this.multiSysData = multiSysData
+        }) 
+        cy.fixture("Dashlets").then((dashletsData) => {
+            this.dashletsData = dashletsData
+        })        
+                     
     })
     let dashboardName;
-    after(() => {
+    let table = []
+  
+    after(function() {
         // delete dashboard
         cy.wait(5000)
-        // cy.get('.navigation-list-item')
+
         cy.contains(dashboardName).realHover()
-        cy.get('.navigation-list-item').contains(dashboardName)
-            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains(dashboardName)
+            .siblings('.navigation-list-item__menu-button')
+            .invoke('show')
+            .click({ force: true })
 
         cy.wait(1000)
-        cy.get('.mat-menu-panel').within(() => {
-            cy.get('.mat-menu-item').contains('Delete').click({ force: true });
+        dashboards.elements.getQuickActionsMenu().within(() => {
+            dashboards.clickQuickDeleteDashboard()
         })
-        cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete').click({ force: true });
-        cy.wait(600)
-        cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
-        cy.contains('a', dashboardName).should('not.exist')
-
+        dashboards.submitModalDashboardDelete()
+        cy.wait(800)
+        dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
+        
     })
 
     it("Multiple System Overview creation", () => {
 
-        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+        dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
-        cy.get('.drawer__header').children('.drawer__header__add-button').click();
-        cy.wait(1000)
-        cy.get('.dashboard-modify__header-input').clear();
-        //timestamp dashboard name               
-        var stamp = Math.round(+new Date() / 1000);
-        const dashname = `Ols_multisys_ovw${stamp}`
-        cy.get('.dashboard-modify__header-input').type(dashname)
-        cy.get('.dashboard-modify__add-dashlet').click();
-        cy.get('.dashlet-selector-item__title').contains('Multiple System Overview').parent()
-            .within(() => {
-                cy.get('.dashlet-selector-item__button').wait(2000).click()
-            })
-        cy.get('[placeholder="Multiple System Overview"]').type("Multiple_System_Overview_ols")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
-        cy.wait(600)
-        cy.get('avantra-dashlet-settings-system-predefined').click()
-        cy.get('avantra-dashlet-settings-system-predefined').within(() => {
-            cy.get('.ng-star-inserted').contains('ABAP Systems').click()
+        dashboards.clickCreateDashboard()
+        cy.wait(5000)
+        dashboards.clearDashboardHeader()
+        
+        //timestamp dashboard name and typing it to dashboard name         
+              
+        cy.stampDashName(this.multiSysData.dashboardName).then(($el) => {
+            dashboardName = $el.toString().trim()
+            cy.log(dashboardName)
+            dashboards.elements.getDashboardHeader().type(dashboardName)
         })
+               
+        dashboards.clickAddDashletButton()
+        dashlets.addDashlet(this.multiSysData.dashletDefTitle)
+        cy.wait(2000)
+
+        dashlets.elements.getSubtitle().type(this.multiSysData.subtitle)
         cy.wait(600)
-        cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        dashlets.elements.getSystemPredefinedDropdown()
+        dashlets.elements.getSystemPredefinedValue(this.multiSysData.systemPredefined)
+        
+        cy.wait(600)
+        dashlets.saveDashlet()
         cy.wait(800)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
+        dashboards.saveDashboard()
         cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-        cy.log(dashname)
-            .then(() => {
-                dashboardName = dashname;
-            })
+        dashboards.elements.getUpdatedData().should('have.text', 'less than a minute ago')
+        cy.log(dashboardName)
+        
     })
     //  works: 03.11
     it("Multiple System Overview editing created - 1- Category", () => {
