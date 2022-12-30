@@ -9,5 +9,7 @@
     "warningCheck":"ols_runjs_auto",
     "okCheck":"AGENTALIVE",
     "critCheck": "ols_auto",
-    "agentaliveOkResult": "Agent is known to be active since"
+    "agentaliveOkResult": "Agent is known to be active since",
+    "paramCheckSelector": "Check Selector"
+
 }

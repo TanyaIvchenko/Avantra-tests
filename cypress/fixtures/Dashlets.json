@@ -4,5 +4,10 @@
     "notHoverCss": "rgba(0, 0, 0, 0)",
     "warningStatus": "assets/media/icons/checks/check-warning.svg",
     "okStatus": "assets/media/icons/checks/check-ok.svg",
-    "critStatus": "assets/media/icons/checks/check-critical.svg"
+    "critStatus": "assets/media/icons/checks/check-critical.svg",
+    "OkBarClass": "highcharts-color-0",
+    "WarnBarClass": "highcharts-color-1",
+    "CritBarClass": "highcharts-color-2",
+    "subtitleEdited": "Autotest_edited",
+    "titleEdited": "Title_updated"
 }

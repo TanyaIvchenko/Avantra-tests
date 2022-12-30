@@ -1,107 +1,113 @@
 /// <reference types="cypress" />
 
+import Dashboards from "../../pageObjects/Dashboards.js";
+import Dashlets from "../../pageObjects/Dashlets.js";
+import MultiRtmStat from "../../pageObjects/MultiRtmStat.js";
 
-describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
-    before(() => {
-        cy.fixture("Credentials").as("creds")
+const dashboards = new Dashboards();
+const dashlets = new Dashlets();
+// const multiRtmStat = new MultiRtmStat();
+// let dashName
+
+describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeout: 7000 }, () => {
+    beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
-        cy.get("@creds").then((creds) => {
+        cy.fixture("Credentials")
+        .then((creds) => {
+            this.creds = creds
+            let envServer = this.creds.env;
+            let localUser = this.creds.login;
+            let passwd = this.creds.password;
+            cy.loginSession(localUser, envServer, passwd)
             cy.visit(creds.env)
-            cy.wait(600)
-            cy.get('body').then((body) => {
-                if (body.find('#input-login-id').length > 0) {
-                    cy.get('#input-login-id').type(creds.login)
-                    cy.get('#input-password-id').type(creds.password)
-                    cy.get('.background-primary').contains("Login to Avantra").click()
-                    cy.wait(600)
-                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-                    cy.wait(600)
-                }
-            })
         })
-    })
-    beforeEach(() => {
-        cy.fixture("systems-instances").as("inventory")
-        // Preserve the Cookies
-
-        Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
-        
+        cy.fixture("Dashboards").then((dashboardsData) => {
+            this.dashboardsData = dashboardsData
+        })
+        cy.fixture("MultiRtmStat").then((multiRtmStatData) => {
+            this.multiRtmStatData = multiRtmStatData
+        }) 
+        cy.fixture("Dashlets").then((dashletsData) => {
+            this.dashletsData = dashletsData
+        })        
+                     
     })
     let dashboardName;
-    let checkSelector
-    after(() => {
+    let table = []
+  
+    after(function() {
         // delete dashboard
         cy.wait(5000)
-        // cy.get('.navigation-list-item')
+
         cy.contains(dashboardName).realHover()
-        cy.get('.navigation-list-item').contains(dashboardName)
-            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains(dashboardName)
+            .siblings('.navigation-list-item__menu-button')
+            .invoke('show')
+            .click({ force: true })
 
         cy.wait(1000)
-        cy.get('.mat-menu-panel').within(() => {
-            cy.get('.mat-menu-item').contains('Delete').click({ force: true });
+        dashboards.elements.getQuickActionsMenu().within(() => {
+            dashboards.clickQuickDeleteDashboard()
         })
-        cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete').click({ force: true });
-        cy.wait(600)
-        cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
-        cy.contains('a', dashboardName).should('not.exist')
-
+        dashboards.submitModalDashboardDelete()
+        cy.wait(800)
+        dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
+        
     })
-    it("Multi RTM Status creation", () => {
-        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+
+    it("Multi RTM Status creation", function () {
+        dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
-        cy.get('.drawer__header').children('.drawer__header__add-button').click();
-        cy.wait(1000)
-        cy.get('.dashboard-modify__header-input').clear();
-        //timestamp dashboard name               
-        var stamp = Date.now();
-        const dashname = `Ols_multi_rtm${stamp}`
-        cy.get('.dashboard-modify__header-input').type(dashname)
-        cy.get('.dashboard-modify__add-dashlet').click();
-        cy.get('.dashlet-selector-item__title').contains('Multi RTM Status').parent()
-            .within(() => {
-                cy.get('.dashlet-selector-item__button').wait(2000).click()
-            })
-        cy.get('[placeholder="Multi RTM Status"]').type("Multi_RTM_Status_ols")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
-        cy.wait(600)
-        checkSelector = "ols_all_new"
-        cy.get('[placeholder="Select Check Selector"]').click().within(() => {
-            cy.get('[role="listbox"]').contains(checkSelector).click()
+        dashboards.clickCreateDashboard()
+        cy.wait(5000)
+        dashboards.clearDashboardHeader()
+        
+        //timestamp dashboard name and typing it to dashboard name         
+              
+        cy.stampDashName(this.multiRtmStatData.dashboardName).then(($el) => {
+            dashboardName = $el.toString().trim()
+            cy.log(dashboardName)
+            dashboards.elements.getDashboardHeader().type(dashboardName)
         })
+               
+        dashboards.clickAddDashletButton()
+        dashlets.addDashlet(this.multiRtmStatData.dashletDefTitle)
+        cy.wait(2000)
+
+        dashlets.elements.getSubtitle().type(this.multiRtmStatData.subtitle)
         cy.wait(600)
-        cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramCheckSelector)
+        dashlets.elements.getCheckSelectorItem().contains(this.multiRtmStatData.checkSelector).click()
+        cy.wait(600)
+        dashlets.saveDashlet()
         cy.wait(800)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
-        cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-        cy.log(dashname)
-            .then(() => {
-                dashboardName = dashname;
-            })
+        dashboards.saveDashboard()
+        cy.wait(8000)
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+        cy.log(dashboardName)
+          
         cy.wait(1000)
 
     })
-    //works: 31.10
-    it("Created dashboard assertions", () => {
-        cy.get('mat-card-title').should('contain', 'Multi_RTM_Status')
-        cy.get(".avantra-dashlet__headline").invoke('text')
+    
+    it("Created dashboard assertions", function() {
+        cy.wait(800)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(2000)
+            .click()
+        dashboards.elements.getDashletCardTitle().should('have.text', this.multiRtmStatData.dashletDefTitle)
+        dashlets.elements.getCheckSelectorHeadline().invoke('text')
             .then(txt => {
                 cy.log(txt);
-                expect(txt).to.include(checkSelector);
+                expect(txt).to.include(this.multiRtmStatData.checkSelector);
             })
-            
+        cy.log('Check selector headline is present')
 
+        dashlets.elements.getChartTitle().should('have.text', this.multiRtmStatData.graphTitle)
 
-
-        cy.log('Check selector is present')
-        cy.get(".avantra-dashlet__headline").should('include.text', checkSelector)
-        cy.log('Checks title is present')
-        cy.get('.avantra-dashlet__info').should('have.text', 'Checks')
-
-        cy.get('.status-card__content .status-card__content-names-status-count').each(($el) => {
+        dashlets.elements.getCheckCountByStatus().each(($el) => {
             cy.get($el).invoke('text').then(() => {
                 let txtCount = $el.text()
                 txtCount = parseInt(txtCount)
@@ -111,46 +117,52 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                         .invoke('text').then(text => {
                             let status = text.trim();
                             cy.log('status is: ' + status);
-                            cy.get('.highcharts-series rect')
+                            dashlets.elements.getChartBar()
                                 .then(() => {
                                     //  Verify the bars' colors are correct and visible (visisbility is not verified yet)
                                     if (status == "Ok") {
                                         cy.log('OK is present')
-                                        cy.get('.highcharts-bar-series .highcharts-color-0').should('have.class', 'highcharts-color-0').and('be.visible')
-                                        cy.get('.highcharts-bar-series .highcharts-color-0').realHover()
+                                        dashlets.elements.getBarStatusOk()
+                                            .should('have.class', this.dashletsData.OkBarClass)
+                                            .and('be.visible')
 
+                                        dashlets.elements.getBarStatusOk().realHover()
                                         // tooltip is visible
-                                        cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-0').should('be.visible')
+                                        dashlets.elements.getBarTooltip().should('be.visible')
                                         cy.log(txtCount)
                                         // tooltip number is the same as for checks
-                                        cy.get('div.highcharts-label.highcharts-tooltip.highcharts-color-0 b')
+                                        dashlets.elements.getBarTooltipCount()
                                             .should(($tooltipCount) => {
                                                 expect(parseInt($tooltipCount.text())).to.be.equal(txtCount)
                                             })
 
                                     } else if (status == "Warning") {
                                         cy.log('WARNING is present')
-                                        cy.get('.highcharts-bar-series .highcharts-color-1').should('have.class', 'highcharts-color-1').and('be.visible')
-                                        cy.get('.highcharts-bar-series .highcharts-color-1').realHover()
+                                        dashlets.elements.getBarStatusWarn()
+                                            .should('have.class', this.dashletsData.WarnBarClass)
+                                            .and('be.visible')
+                                        dashlets.elements.getBarStatusWarn().realHover()
 
                                         // tooltip is visible
-                                        cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-1').should('be.visible')
+                                        dashlets.elements.getBarTooltip().should('be.visible')
                                         cy.log(txtCount)
                                         // tooltip number is the same as for checks
-                                        cy.get('div.highcharts-label.highcharts-tooltip.highcharts-color-1 b')
+                                        dashlets.elements.getBarTooltipCount()
                                             .should(($tooltipCount) => {
                                                 expect(parseInt($tooltipCount.text())).to.be.equal(txtCount)
                                             })
                                     } else if (status == "Critical") {
                                         cy.log('CRITICAL is present')
-                                        cy.get('.highcharts-bar-series .highcharts-color-2').should('have.class', 'highcharts-color-2').and('be.visible')
-                                        cy.get('.highcharts-bar-series .highcharts-color-2').realHover()
+                                        dashlets.elements.getBarStatusCrit()
+                                            .should('have.class', this.dashletsData.CritBarClass)
+                                            .and('be.visible')
+                                            dashlets.elements.getBarStatusCrit().realHover()
 
-                                        cy.log('tooltip is visible')
-                                        cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-2').should('be.visible')
+                                        // tooltip is visible
+                                        dashlets.elements.getBarTooltip().should('be.visible')
                                         cy.log(txtCount)
-                                        cy.log('tooltip number is the same as for checks')
-                                        cy.get('div.highcharts-label.highcharts-tooltip.highcharts-color-2 b')
+                                        // tooltip number is the same as for checks
+                                        dashlets.elements.getBarTooltipCount()
                                             .should(($tooltipCount) => {
                                                 expect(parseInt($tooltipCount.text())).to.be.equal(txtCount)
                                             })
@@ -160,28 +172,28 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                         });
                 } else {
                     // other numbers are greyed out
-                    cy.get($el).should('have.class', 'grayscale')
+                    cy.get($el).should('have.class', this.multiRtmStatData.greyedNumbersClass)
                     cy.get($el).siblings('.status-card__content-names-status-type')
                         .invoke('text').then(text => {
                             let status = text.trim();
                             cy.log('status is: ' + status);
-                            cy.get('.highcharts-series rect')
+                            dashlets.elements.getChartBar()
                                 .then(() => {
                                     //  Verify the bars' colors are correct and visible (visisbility is not verified yet)
                                     if (status == "Ok") {
                                         cy.log('OK is NOT present')
                                         // cy.get('.highcharts-bar-series .highcharts-color-0').should('have.css', 'height', '0')
                                         // cy.log('css')
-                                        cy.get('.highcharts-bar-series .highcharts-color-0').should('have.attr', 'height', '0')
+                                        dashlets.elements.getBarStatusOk().should('have.attr', 'height', '0')
                                         cy.log('attr')
 
                                     } else if (status == "Warning") {
                                         cy.log('WARNING is NOT present')
-                                        cy.get('.highcharts-bar-series .highcharts-color-1').should('have.attr', 'height', '0')
+                                        dashlets.elements.getBarStatusWarn().should('have.attr', 'height', '0')
 
                                     } else if (status == "Critical") {
                                         cy.log('CRITICAL is NOT present')
-                                        cy.get('.highcharts-bar-series .highcharts-color-2').should('have.attr', 'height', '0')
+                                        dashlets.elements.getBarStatusCrit().should('have.attr', 'height', '0')
 
                                     } else cy.log('Other status is found NOT visible ' + status)
                                 });
@@ -192,90 +204,84 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
 
         })
     })
-    it("Multi RTM Status editing", () => {
-        cy.wait(600)
-        cy.get('.navigation-list-item').contains('a', dashboardName)
-            .wait(2000).click()
-        cy.get('.header__edit-block')
-            .get('[mattooltip="Edit Dashboard"]')
-            .wait(5000)
+    it("Multi RTM Status editing", function() {
+        cy.wait(800)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(2000)
             .click()
-        cy.wait(2000)
-        cy.get('.avantra-drawer__content').within(() => {
-            cy.get('.avantra-dashlet__header')
-                .within(() => {
-                    cy.get('[mattooltip="Dashlet Settings"]')
-                        .click()
-                })
-        })
-
-        cy.get('[placeholder="Multi RTM Status"]').clear().type(dashboardName + "_edited")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited")
+        cy.wait(1000)
+        dashboards.clickEditDashboard()
+        cy.wait(7000)
+        dashlets.openDashletSettings()
         cy.wait(600)
-        cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
-        cy.get('[role="listbox"]').within(() => {
-            cy.get('.ng-star-inserted').contains('1 minute').click()
-        })
+
+        dashlets.elements.getTitle().clear().type(this.dashletsData.titleEdited)
+        dashlets.elements.getSubtitle().clear().type(this.dashletsData.subtitleEdited)
+        cy.wait(600)
+        dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramRefreshInterval)
+        dashlets.elements.getRefreshIntervalValue().contains('1 minute').click()
         cy.wait(300)
 
 
-        cy.get('avantra-dashlet-settings-check-selector').click()
-        checkSelector = 'ols-all'
-        cy.get('avantra-dashlet-settings-check-selector').within(() => {
-            cy.get('.ng-star-inserted').contains(checkSelector).click()
-        })
-        cy.get('avantra-dashlet-settings-system-predefined').click()
-        cy.get('avantra-dashlet-settings-system-predefined').within(() => {
-            cy.get('.ng-star-inserted').contains('ABAP Systems').click()
-        })
+        dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramCheckSelector)
+        dashlets.elements.getCheckSelectorItem().contains(this.multiRtmStatData.checkSelectorEdited).click()
+
+        dashlets.openSystemPredefinedDropdown()
+        dashlets.elements.getSystemPredefinedValue().contains(this.multiRtmStatData.systemPredefinedEdited).click()
         //radiobuttons
-        cy.get('.radio-button__label').contains('Predefined').siblings('.radio-button__input').should('be.checked')
-        cy.get('.radio-button__label').contains('Ad-Hoc (Classic UI)').siblings('.radio-button__input').should('not.be.checked')
+        dashlets.elements.getRadioButton(this.multiRtmStatData.radioButtonPredefinedTitle).should('be.checked')
+        dashlets.elements.getRadioButton(this.multiRtmStatData.radioButtonAdhocTitle).should('not.be.checked')
 
-        cy.get('.dashlet-settings__param--title').contains('No Data Status').siblings('.dashlet-settings__param--content').click()
-        cy.get('.dashlet-settings__param--title').contains('No Data Status').parent('.dashlet-settings__param').within(() => {
-            cy.get('ng-dropdown-panel').contains('CRITICAL').click()
+        dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramNoDataStatusTitle)
+        dashlets.elements.getSettingDropdownByTitle(this.multiRtmStatData.paramNoDataStatusTitle).then(($el) => {
+            cy.wrap($el).contains(this.multiRtmStatData.noDataStatusValue).click()
         })
+           
+            
         //checkbox
-        cy.get('label').contains('Include Unknown Checks').siblings('.custom-checkbox__checkmark').click()
+        dashlets.elements.getCheckboxByLabel(this.multiRtmStatData.checkboxIncludeUnknown).click()
 
-        cy.get('label').contains('Include Unknown Checks').siblings('input').should('be.checked')
+        dashlets.elements.getCheckmarkByLabel(this.multiRtmStatData.checkboxIncludeUnknown).should('be.checked')
 
-        cy.get('.dashlet-settings__param--title').contains('Chart Type').siblings('.dashlet-settings__param--content').click()
-        cy.get('.dashlet-settings__param--title').contains('Chart Type').parent('.dashlet-settings__param').within(() => {
-            cy.get('ng-dropdown-panel').contains('Pie Chart').click()
-        })
-        cy.get('.dashlet-settings__param--title').contains('Check Confirmation').siblings('.dashlet-settings__param--content').click()
-        cy.get('.dashlet-settings__param--title').contains('Check Confirmation').parent('.dashlet-settings__param').within(() => {
-            cy.get('ng-dropdown-panel').contains('Not Confirmed').click()
-        })
+        dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramChartType)
+        dashlets.elements.getSettingDropdownByTitle(this.multiRtmStatData.paramChartType)
+            .contains(this.multiRtmStatData.chartTypeValue)
+            .click()
+        
+            dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramCheckConfirm)
+            dashlets.elements.getSettingDropdownByTitle(this.multiRtmStatData.paramCheckConfirm)
+                .contains(this.multiRtmStatData.paramCheckConfirmValue)
+                .click()
 
         cy.wait(600)
-        // cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"] button').click({ force: true })
-        // cy.wait(800)
-        cy.get('[elementid="dashboards.dashboard.action-buttons.save"] button').click({ force: true })
+        
+        dashboards.saveDashboard()
         cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
         cy.log(dashboardName)
             
     })
-    it("Edited dashboard assertions", () => {
-        cy.get('mat-card-title').should('contain', dashboardName)
-        cy.get(".avantra-dashlet__headline").invoke('text')
-            .then(txt => {
-                cy.log(txt);
-                expect(txt).to.include(checkSelector);
-            })
-            
+    it("Edited dashboard assertions", function() {
+        cy.wait(800)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(2000)
+            .click()
+        cy.wait(1000)
+        
+        dashboards.elements.getDashboardName().should('contain', dashboardName)
 
+        dashlets.elements.getDashletCardTitle().should('have.text', this.dashletsData.titleEdited)
 
-
+        dashlets.elements.getCheckSelectorHeadline().should('contain',this.multiRtmStatData.checkSelectorEdited);
         cy.log('Check selector is present')
-        cy.get(".avantra-dashlet__headline").should('include.text', checkSelector)
-        cy.log('Checks title is present')
-        cy.get('.avantra-dashlet__info').should('have.text', 'Checks')
 
-        cy.get('.status-card__content .status-card__content-names-status-count').each(($el) => {
+        dashlets.elements.getChartTitle().should('have.text', this.multiRtmStatData.graphTitle)
+        cy.log('Checks title is present')
+
+       
+        dashlets.elements.getCheckCountByStatus().each(($el) => {
             cy.get($el).invoke('text').then(() => {
                 let txtCount = $el.text()
                 txtCount = parseInt(txtCount)
@@ -285,46 +291,52 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                         .invoke('text').then(text => {
                             let status = text.trim();
                             cy.log('status is: ' + status);
-                            cy.get('.highcharts-pie-series')
+                            dashlets.elements.getPiePiece()
                                 .then(() => {
                                     //  Verify the bars' colors are correct and visible (visisbility is not verified yet)
                                     if (status == "Ok") {
                                         cy.log('OK is present')
-                                        cy.get('.highcharts-pie-series .highcharts-color-0').should('have.class', 'highcharts-color-0').and('be.visible')
-                                        cy.get('.highcharts-pie-series .highcharts-color-0').realHover()
+                                        dashlets.elements.getPieStatusOk()
+                                            .should('have.class', this.dashletsData.OkBarClass)
+                                            .and('be.visible')
 
+                                        dashlets.elements.getPieStatusOk().realHover()
                                         // tooltip is visible
-                                        cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-0').should('be.visible')
+                                        dashlets.elements.getBarTooltip().should('be.visible')
                                         cy.log(txtCount)
                                         // tooltip number is the same as for checks
-                                        cy.get('div.highcharts-label.highcharts-tooltip.highcharts-color-0 b')
+                                        dashlets.elements.getBarTooltipCount()
                                             .should(($tooltipCount) => {
                                                 expect(parseInt($tooltipCount.text())).to.be.equal(txtCount)
                                             })
 
                                     } else if (status == "Warning") {
                                         cy.log('WARNING is present')
-                                        cy.get('.highcharts-pie-series .highcharts-color-1').should('have.class', 'highcharts-color-1').and('be.visible')
-                                        cy.get('.highcharts-pie-series .highcharts-color-1').realHover()
+                                        dashlets.elements.getPieStatusWarn()
+                                            .should('have.class', this.dashletsData.WarnBarClass)
+                                            .and('be.visible')
+                                        dashlets.elements.getPieStatusWarn().realHover()
 
                                         // tooltip is visible
-                                        cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-1').should('be.visible')
+                                        dashlets.elements.getBarTooltip().should('be.visible')
                                         cy.log(txtCount)
                                         // tooltip number is the same as for checks
-                                        cy.get('div.highcharts-label.highcharts-tooltip.highcharts-color-1 b')
+                                        dashlets.elements.getBarTooltipCount()
                                             .should(($tooltipCount) => {
                                                 expect(parseInt($tooltipCount.text())).to.be.equal(txtCount)
                                             })
                                     } else if (status == "Critical") {
                                         cy.log('CRITICAL is present')
-                                        cy.get('.highcharts-pie-series .highcharts-color-2').should('have.class', 'highcharts-color-2').and('be.visible')
-                                        cy.get('.highcharts-pie-series .highcharts-color-2').realHover()
+                                        dashlets.elements.getPieStatusCrit()
+                                            .should('have.class', this.dashletsData.CritBarClass)
+                                            .and('be.visible')
+                                            dashlets.elements.getPieStatusCrit().realHover()
 
-                                        cy.log('tooltip is visible')
-                                        cy.get('g.highcharts-label.highcharts-tooltip.highcharts-color-2').should('be.visible')
+                                        // tooltip is visible
+                                        dashlets.elements.getBarTooltip().should('be.visible')
                                         cy.log(txtCount)
-                                        cy.log('tooltip number is the same as for checks')
-                                        cy.get('div.highcharts-label.highcharts-tooltip.highcharts-color-2 b')
+                                        // tooltip number is the same as for checks
+                                        dashlets.elements.getBarTooltipCount()
                                             .should(($tooltipCount) => {
                                                 expect(parseInt($tooltipCount.text())).to.be.equal(txtCount)
                                             })
@@ -334,31 +346,12 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                         });
                 } else {
                     // other numbers are greyed out
-                    cy.get($el).should('have.class', 'grayscale')
+                    cy.get($el).should('have.class', this.multiRtmStatData.greyedNumbersClass)
                     cy.get($el).siblings('.status-card__content-names-status-type')
                         .invoke('text').then(text => {
                             let status = text.trim();
                             cy.log('status is: ' + status);
-                            cy.get('.highcharts-pie-series')
-                                .then(() => {
-                                    //  Verify the bars' colors are correct and invisible
-                                    if (status == "Ok") {
-                                        cy.log('OK is NOT present')
-                                        // cy.get('.highcharts-bar-series .highcharts-color-0').should('have.css', 'height', '0')
-                                        // cy.log('css')
-                                        cy.get('.highcharts-pie-series .highcharts-color-0').should('have.attr', 'height', '0')
-                                        cy.log('attr')
-
-                                    } else if (status == "Warning") {
-                                        cy.log('WARNING is NOT present')
-                                        cy.get('.highcharts-pie-series .highcharts-color-1').should('have.attr', 'height', '0')
-
-                                    } else if (status == "Critical") {
-                                        cy.log('CRITICAL is NOT present')
-                                        cy.get('.highcharts-pie-series .highcharts-color-2').should('have.attr', 'height', '0')
-
-                                    } else cy.log('Other status is found NOT visible ' + status)
-                                });
+                           
 
                         });
                 };
