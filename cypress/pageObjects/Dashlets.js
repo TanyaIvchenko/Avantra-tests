@@ -1,7 +1,8 @@
 class Dashlets {
 
     elements = {
-        getDashletTitleAtAdding: () => cy.get('.dashlet-selector-item__title'),
+        getDashletTitleAtAdding: () => cy.get('avantra-dashlet-selector-item'),
+        getDashletCategory: () => cy.get('.dashlet-selector-categories__wrapper'),
         getDashletCardTitle: () => cy.get('.avantra-dashlet-header .mat-card-title'),
         getTitle: () => cy.get('[formcontrolname="title"] input'),
         getSubtitle: () => cy.get('[formcontrolname="subtitle"] input'),
@@ -33,19 +34,34 @@ class Dashlets {
         getRefreshIntervalValue: () => cy.get('[role="listbox"] .ng-star-inserted'),
         getSystemPredefinedDropdown: () => cy.get('avantra-dashlet-settings-system-predefined'),
         getSystemPredefinedValue: () => cy.get('avantra-dashlet-settings-system-predefined .ng-star-inserted'),
-        getRadioButton: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('.radio-button__input'),
+
+        getRadioButton: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('span'),
+        getRadioButtonMark: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('.radio-button__input'),
+
         getSettingParamTitle: () => cy.get('.dashlet-settings__param--title'),
         getSettingDropdownByTitle: (titleParam) => cy.get('.dashlet-settings__param--title')
             .contains(titleParam)
-            .parent().within(() => { cy.get('avantra-dashlet-settings-combo .ng-dropdown-panel-items')}),
+            .parent()
+            .within(() => { cy.get('avantra-dashlet-settings-combo .ng-dropdown-panel-items')}),
+        getSettingDropdownItems: () => cy.get('avantra-dashlet-settings-combo .ng-dropdown-panel-items'),
+
         getCheckboxByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('.custom-checkbox__checkmark'),
-        getCheckmarkByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('input')
+        getCheckmarkByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('input'),
+
+        getMultiChoiceRadio: (radioLabel) => cy.get('.ng-placeholder').contains(radioLabel).parents('.ng-select-multiple'),
+        getMultiChoiceItem: () => cy.get('.ng-dropdown-panel .ng-option.ng-star-inserted'),
+        getDropdownArrow: (multiLabel) => cy.get('.ng-placeholder').contains(multiLabel).parents('.ng-select-container').within(() => {
+                 cy.get('.ng-arrow-wrapper')
+            })
     }
     saveDashlet() {
         this.elements.getSaveButton().click()
     }
+    selectDashletCategory(category) {
+        this.elements.getDashletCategory().contains(category).click()
+    }
     addDashlet(dashlet) {
-        this.elements.getDashletTitleAtAdding().contains(dashlet).siblings('.dashlet-selector-item__button').click()
+        this.elements.getDashletTitleAtAdding().contains(dashlet).parents('avantra-dashlet').siblings('.dashlet-selector-item__button').click()
     }
 
     // openCheckSelectorDropdown() {
@@ -63,6 +79,18 @@ class Dashlets {
 
     openSettingDropdownByTitle(paramTitle) {
         this.elements.getSettingParamTitle().contains(paramTitle).siblings('.dashlet-settings__param--content').click()
+    }
+    checkRadio() {
+        this.elements.getMultiChoiceRadio().click()
+    }
+    checkCheckboxByLabel() {
+        this.elements.getCheckboxByLabel().click()
+    }
+    selectMultiChoiceItem(multiItem) {
+        this.elements.getMultiChoiceItem().contains(multiItem).click()
+    }
+    selectDropdownItem(itemName) {
+        this.elements.getSettingDropdownItems().contains(itemName).click()
     }
 }
 export default Dashlets

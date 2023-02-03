@@ -1,10 +1,10 @@
 class Dashboards {
 
     elements = {
-        getDashboardsTitle: () => cy.get('.drawer__header__title'),
+        getDashboardsTitle: () => cy.get('.header__title-wrapper .title-wrapper__title'),
         getDashboardName: () => cy.get('.avantra-page__header-title'),
         getDashboardNameAtNavmenu : () => cy.get('.navigation-list-item'),
-        getPlusSign: () => cy.get('.drawer__header').children('.drawer__header__add-button'),
+        getPlusSign: () => cy.get('avantra-button.title-wrapper__add-button'),
         getDashboardHeader: () => cy.get('.dashboard-modify__header-input'),
         getAddDashletButton: () => cy.get('.dashboard-modify__add-dashlet'),
         getSaveDashboardButton: () => cy.get('[elementid="dashboards.dashboard.action-buttons.save"]'),

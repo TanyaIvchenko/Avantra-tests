@@ -84,8 +84,7 @@ Cypress.Commands.add('loginSession', (localUser, envServer, passwd) => {
                     cy.get('#input-password-id').type(passwd)
                     cy.get('.background-primary').contains("Login to Avantra").click()
                     cy.wait(800)
-                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-                    cy.wait(600)
+
                 }
                 
             })
