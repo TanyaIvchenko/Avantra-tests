@@ -1,23 +1,31 @@
 {
-    "dashletDefTitle": "Multiple System Overview",
-    "checkSelector": "ols_all_new",
-    "dashboardName": "Ols_multirtmstat",
     "subtitle": "Autotest",
-    "graphTitle": "Checks",
-    "checkSelectorEdited": "ols-edited",
-    "greyedNumbersClass": "grayscale",
-    "systemPredefined":"ABAP Systems",
-    "systemPredefinedEdited": "ABAP Systems",
-    "radioButtonPredefinedTitle": "Predefined",
-    "radioButtonAdhocTitle": "Ad-Hoc (Classic UI)",
-    "paramNoDataStatusTitle": "No Data Status",
-    "noDataStatusValue": "CRITICAL",
+    "dashletDefTitle": "Multiple System Overview", 
+    "dashboardName": "Ols_multiSysOverview",
     "paramRefreshInterval": "Refresh Interval",
-    "checkboxIncludeUnknown": "Include Unknown Checks",
-    "paramChartType": "Chart Type",
-    "chartTypeValue": "Pie Chart",
-    "paramCheckSelector": "Check Selector",
-    "paramCheckConfirm": "Check Confirmation",
-    "paramCheckConfirmValue":"Not Confirmed"
+    "itemRefreshInterval": "1 minute",
+    "systemPredefined":"ABAP Systems",
+    "radioCategory": "Select by Category",
+    "checkboxInstalInfo": "Show Installation Info",
+    "checkboxVersionInfo": "Show Version Info",
+    "checkboxInstanceDetails": "Show Details",
+    "checkboxRTM": "Show all RTM checks",
+    "checkboxDaily": "Show all Daily checks",
+    "checkboxServer": "Show Server checks",
+    "radioIndividualCheck": "Select individual Checks",
+    "individualCheckItem1": "FULLCHECK",
+    "individualCheckItem2": "CPULOAD",
+    "systemPredefinedEdited": "All Active Servers",
+    "itemRefreshIntervalEdited": "10 seconds",
+    "radioCheckSelector": "Select with check selector",
+    "placeholderCheckSelector": "Select check",
+    "selectIndividualLabel": "Select individual Checks",
+    "selectSelectorLabel": "Select with check selector",
+    "systemPredefinedEdited1": "ols_mii_gg",
+    "itemCheckSelector": "ols-rtm"
+
+
+    
+    
 
 }

@@ -230,8 +230,8 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
         dashlets.openSystemPredefinedDropdown()
         dashlets.elements.getSystemPredefinedValue().contains(this.multiRtmStatData.systemPredefinedEdited).click()
         //radiobuttons
-        dashlets.elements.getRadioButton(this.multiRtmStatData.radioButtonPredefinedTitle).should('be.checked')
-        dashlets.elements.getRadioButton(this.multiRtmStatData.radioButtonAdhocTitle).should('not.be.checked')
+        dashlets.elements.getRadioButtonMark(this.multiRtmStatData.radioButtonPredefinedTitle).should('be.checked')
+        dashlets.elements.getRadioButtonMark(this.multiRtmStatData.radioButtonAdhocTitle).should('not.be.checked')
 
         dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramNoDataStatusTitle)
         dashlets.elements.getSettingDropdownByTitle(this.multiRtmStatData.paramNoDataStatusTitle).then(($el) => {

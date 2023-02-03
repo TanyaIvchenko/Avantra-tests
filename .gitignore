@@ -17,3 +17,5 @@ package.json
 package.json
 WORKFILES
 /fixtures/Credentials.json
+/e2e/Avantra UI/examples/*
+/e2e/Avantra UI/old tests/*
