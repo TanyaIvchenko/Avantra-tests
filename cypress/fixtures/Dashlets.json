@@ -10,7 +10,11 @@
     "CritBarClass": "highcharts-color-2",
     "subtitleEdited": "Autotest_edited",
     "titleEdited": "Title_updated",
+<<<<<<< HEAD
     "categorySystems": "Systems",
     "categoryPerformance": "Performance",
     "categoryChecks": "Checks"
+=======
+    "categorySystems": "Systems"
+>>>>>>> a81a5ee4c2e07259513447cf5cb3c4a5d9686afe
 }
