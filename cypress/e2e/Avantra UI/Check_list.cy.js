@@ -76,6 +76,8 @@ describe("Check list: create, assert, edit, delete", { defaultCommandTimeout: 50
         })
         
         dashboards.clickAddDashletButton()
+        dashlets.selectDashletCategory(this.dashletsData.categoryChecks)
+        cy.wait(1000)
         dashlets.addDashlet(this.checklistData.dashletDefTitle)
         cy.wait(2000)
 
