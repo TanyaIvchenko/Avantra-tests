@@ -1,102 +1,116 @@
 /// <reference types="cypress" />
 
+import Dashboards from "../../pageObjects/Dashboards.js";
+import Dashlets from "../../pageObjects/Dashlets.js";
+
+const dashboards = new Dashboards();
+const dashlets = new Dashlets();
+
 
 describe("Predictive resource planning: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
-    before(function () {
-        cy.fixture("Credentials").as("creds")
-    })
     beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
-        cy.fixture("Credentials").as("creds")
-        cy.get("@creds").then((creds) => {
-            let envServer = creds.env;
-            let localUser = creds.login;
-            let passwd = creds.password;
-            cy.Login_Session(localUser, envServer, passwd)
-        })
-        // Preserve the Cookies
+        cy.fixture("Credentials")
+            .then((creds) => {
+                this.creds = creds
+                cy.loginSession(this.creds.login, this.creds.env, this.creds.password)
+                cy.visit(creds.env)
 
-        // Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
+            })
+        cy.fixture("Dashboards").then((dashboardsData) => {
+            this.dashboardsData = dashboardsData
+        })
+        cy.fixture("PredResPlan").then((predResData) => {
+            this.predResData = predResData
+        })
+        cy.fixture("Dashlets").then((dashletsData) => {
+            this.dashletsData = dashletsData
+        })
+        cy.fixture("systems-instances").then((inventory) => {
+            this.inventory = inventory
+        })
 
     })
     let dashboardName;
     let labels = []
     // let rowNames = ['Note', 'Version', 'Title', 'Status', 'Date', 'Component', 'Cat.', 'Secur. Cat.', 'Relevant For']
-    after(() => {
+    after(function () {
         // delete dashboard
         cy.wait(5000)
-        // cy.get('.navigation-list-item')
+
         cy.contains(dashboardName).realHover()
-        cy.get('.navigation-list-item').contains(dashboardName)
-            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains(dashboardName)
+            .siblings('.navigation-list-item__menu-button')
+            .invoke('show')
+            .click({ force: true })
 
         cy.wait(1000)
-        cy.get('.mat-menu-panel').within(() => {
-            cy.get('.mat-menu-item').contains('Delete').click({ force: true });
+        dashboards.elements.getQuickActionsMenu().within(() => {
+            dashboards.clickQuickDeleteDashboard()
         })
-        cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete').click({ force: true });
+        dashboards.submitModalDashboardDelete()
         cy.wait(800)
-        cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
-        cy.contains('a', dashboardName).should('not.exist')
+        dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
 
     })
     it("Predictive resource planning creation", function () {
-        cy.get("@creds").then((creds) => {
-            cy.visit(creds.env)
-        })
-        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+        dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
-        cy.get('.drawer__header').children('.drawer__header__add-button').click();
+        dashboards.clickCreateDashboard()
         cy.wait(1000)
-        cy.get('.dashboard-modify__header-input').clear();
-        //timestamp dashboard name               
-        var stamp = Math.round(+new Date() / 1000);
-        const dashname = `Ols_prp${stamp}`
-        cy.get('.dashboard-modify__header-input').type(dashname)
-        cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
-        cy.get('.dashlet-selector-item__title').contains('Predictive Resource Planning').parent()
-            .within(() => {
-                cy.get('.dashlet-selector-item__button').wait(2000).click()
-            })
-        // cy.get('[placeholder="Predictive Resource Planning"]').type("Predictive_Resource_Planning_ols")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest")
-        cy.wait(600)
-        cy.get('avantra-dashlet-settings-system-predefined').click()
-        cy.get('avantra-dashlet-settings-system-predefined').within(() => {
-            cy.get('.ng-star-inserted').contains('All Active Servers').click()
+        dashboards.clearDashboardHeader()
+
+        //timestamp dashboard name and typing it to dashboard name         
+
+        cy.stampDashName(this.predResData.dashboardName).then(($el) => {
+            dashboardName = $el.toString().trim()
+            cy.log(dashboardName)
+            dashboards.elements.getDashboardHeader().type(dashboardName)
         })
-        cy.get('span.dashlet-settings__param--title').contains('Resource Type').siblings('div.dashlet-settings__param--content')
-            .click().wait(200)
-        cy.get('[title="Server: Total Disk Size"]')
-            .click().wait(200)
+
+        dashboards.clickAddDashletButton()
+        dashlets.selectDashletCategory(this.dashletsData.categoryPerformance)
+        cy.wait(1000)
+        dashlets.addDashlet(this.predResData.dashletDefTitle)
+        cy.wait(2000)
+
+        
+        
+        dashlets.elements.getTitle().type(this.predResData.title)
+        //cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest")
         cy.wait(600)
-        cy.wait(300)
-        cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        dashlets.openSystemPredefinedDropdown()
+        
+        dashlets.elements.getSystemPredefinedValue().contains(this.dashletsData.systemPredefined).click()
+        dashlets.openSettingDropdownByTitle(this.predResData.settingResource).wait(200)
+        dashlets.selectDropdownItem(this.predResData.resourceDiskSize).wait(200)    
+       
+       
+        cy.wait(600)
+        dashlets.saveDashlet()
+        cy.wait(1000)
+        dashboards.saveDashboard()
         cy.wait(800)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
-        cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-        cy.log(dashname)
-            .then(() => {
-                dashboardName = dashname;
-            })
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+        cy.log(dashboardName)
     })
     it("Predictive resource planning assertions created", function () {
-        cy.get("@creds").then((creds) => {
-            cy.visit(creds.env)
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200)
+            .click()
+        cy.wait(5000)
+
+
+        dashlets.elements.getSysSelectorInfo().should('have.text', this.dashletsData.systemPredefined)
+        dashlets.elements.getResourceInfo().should(($div) => {
+            expect($div.text().trim()).equal(this.predResData.titleDiskSizeTotal);
         })
-        cy.wait(600)
-        cy.get('.navigation-list-item').contains('a', dashboardName)
-            .wait(2000).click()
-        cy.get('.server-info__server-title span').should('have.text', 'All Active Servers')
-        cy.get('.server-info__server-subtitle').should(($div) => {
-            expect($div.text().trim()).equal("Total Disk Space");
-        })
-        labels = ['Last 2 months', 'Today', 'Next 6 months']
+        labels = this.predResData.labels
         let labelsNames = []
-        cy.get('.highcharts-xaxis-labels span').each(($el) => {
+        dashlets.elements.getChartLabels().each(($el) => {
             cy.get($el).invoke('text').then((text) => {
                 let txtLabels = text.trim()
                 labelsNames.push(txtLabels)
@@ -110,69 +124,56 @@ describe("Predictive resource planning: create, assert, edit, delete", { default
 
     })
     it("Predictive resource planning editing", function () {
-        cy.get("@creds").then((creds) => {
-            cy.visit(creds.env)
-        })
-        cy.wait(600)
-        cy.get('.navigation-list-item').contains('a', dashboardName)
-            .wait(2000).click()
-        cy.get('.header__edit-block')
-            .get('[mattooltip="Edit Dashboard"]')
-            .wait(5000)
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200)
             .click()
+        cy.wait(5000)
+        dashboards.clickEditDashboard()
         cy.wait(2000)
-        cy.get('.avantra-drawer__content').within(() => {
-            cy.get('.avantra-dashlet__header')
-                .within(() => {
-                    cy.get('[mattooltip="Dashlet Settings"]')
-                        .click()
-                })
-        })
+        dashlets.openDashletSettings()
+        cy.wait(600)
 
-        cy.get('[placeholder="Predictive Resource Planning"]').clear().type(dashboardName + "_edited")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest_edited")
+        dashlets.elements.getTitle().clear().type(dashboardName + "_edited")
         cy.wait(600)
-        cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
-        cy.get('[role="listbox"]').within(() => {
-            cy.get('.ng-star-inserted').contains('1 minute').click()
-        })
+        dashlets.openSettingDropdownByTitle(this.predResData.paramRefreshInterval)
+        dashlets.selectDropdownItem(this.predResData.itemRefreshInterval)
         cy.wait(300)
-        cy.get('avantra-dashlet-settings-system-predefined').click()
-        cy.get('avantra-dashlet-settings-system-predefined').within(() => {
-            cy.get('.ng-star-inserted').contains('ols_mii').click()
-        })
-        cy.get('span.dashlet-settings__param--title').contains('Resource Type').siblings('div.dashlet-settings__param--content')
-            .click().wait(200)
-        cy.get('[title="Server: Used Disk Space"]')
-            .click().wait(200)
+        dashlets.openSystemPredefinedDropdown()
+        dashlets.selectDropdownItem(this.predResData.systemPredefinedEdited)
+        dashlets.openSettingDropdownByTitle(this.predResData.settingResource).wait(200)  
+        dashlets.selectDropdownItem(this.predResData.resourceDiskSizeUsed)
         cy.wait(600)
-        cy.get('.dashlet-settings__param--title').contains('Use historical data to predict usage')
-            .siblings('.dashlet-settings__param--content').click()
-        cy.get('.ng-dropdown-panel-items .ng-option span').contains('3 years').click()
-        cy.get('.dashlet-settings__param--title').contains('Predict usage for months')
-            .siblings('.dashlet-settings__param--content').type('10')
+    
+        dashlets.openSettingDropdownByTitle(this.predResData.settingHistoricalPredict)
+
+        
+        dashlets.selectDropdownItem(this.predResData.valueHistoricalPredict)
+
+     
+        dashlets.focusSettingByTitle(this.predResData.settingMonthlPredict)
+            .type(this.predResData.valueMonthlPredict)
         cy.wait(300)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
+        dashboards.saveDashboard()
         cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
 
     })
     it("Predictive resource planning edited assertions", function () {
-        cy.get("@creds").then((creds) => {
-            cy.visit(creds.env)
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200)
+            .click()
+        cy.wait(5000)
+        dashlets.elements.getSysSelectorInfo().should('have.text', this.predResData.systemPredefinedEdited)
+        dashlets.elements.getResourceInfo().should(($div) => {
+            expect($div.text().trim()).equal(this.predResData.titleDiskSizeUsed);
         })
-        cy.wait(600)
-        cy.get('.navigation-list-item').contains('a', dashboardName)
-            .wait(2000).click()
-        cy.get('.server-info__server-title span').should('have.text', 'ols_mii')
-        cy.get('.server-info__server-subtitle').should(($div) => {
-            expect($div.text().trim()).equal("Used Disk Space");
-        })
-        labels = ['Last 33 months', 'Today', 'Next 10 months']
+        labels = this.predResData.labelsEdited
         let labelsNames = []
-        cy.get('.highcharts-xaxis-labels span').each(($el) => {
+        dashlets.elements.getChartLabels().each(($el) => {
             cy.get($el).invoke('text').then((text) => {
                 let txtLabels = text.trim()
                 labelsNames.push(txtLabels)
