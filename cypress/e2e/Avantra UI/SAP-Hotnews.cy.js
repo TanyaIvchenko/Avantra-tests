@@ -1,100 +1,101 @@
 /// <reference types="cypress" />
+import Dashboards from "../../pageObjects/Dashboards.js";
+import Dashlets from "../../pageObjects/Dashlets.js";
 
+const dashboards = new Dashboards();
+const dashlets = new Dashlets();
 
-describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
-    before(() => {
-        cy.fixture("Credentials").as("creds")
+describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
+    beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
-        cy.get("@creds").then((creds) => {
-            cy.visit(creds.env)
-            cy.wait(600)
-            cy.get('body').then((body) => {
-                if (body.find('#input-login-id').length > 0) {
-                    cy.get('#input-login-id').type(creds.login)
-                    cy.get('#input-password-id').type(creds.password)
-                    cy.get('.background-primary').contains("Login to Avantra").click()
-                    cy.wait(600)
-                    cy.get('.drawer__header__title').wait(600).should('have.text', 'Dashboards')
-                    cy.wait(600)
-                }
-            })
-        })
-    })
-    beforeEach(() => {
-        cy.fixture("systems-instances").as("inventory")
-        // Preserve the Cookies
+        cy.fixture("Credentials")
+            .then((creds) => {
+                this.creds = creds
+                cy.loginSession(this.creds.login, this.creds.env, this.creds.password)
+                cy.visit(creds.env)
 
-        Cypress.Cookies.preserveOnce('token', 'JSESSIONID');
+            })
+        cy.fixture("Dashboards").then((dashboardsData) => {
+            this.dashboardsData = dashboardsData
+        })
+        cy.fixture("Dashlets").then((dashletsData) => {
+            this.dashletsData = dashletsData
+        })
+        cy.fixture("HotNews").then((hotNewsData) => {
+            this.hotNewsData = hotNewsData
+        })
 
     })
     let dashboardName;
-    let checkSelector
-    let rowNames = ['Note', 'Version', 'Title', 'Status', 'Date', 'Component', 'Cat.', 'Secur. Cat.', 'Relevant For']
-    after(() => {
+
+    after(function () {
         // delete dashboard
         cy.wait(5000)
-        // cy.get('.navigation-list-item')
+
         cy.contains(dashboardName).realHover()
-        cy.get('.navigation-list-item').contains(dashboardName)
-            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains(dashboardName)
+            .siblings('.navigation-list-item__menu-button')
+            .invoke('show')
+            .click({ force: true })
 
         cy.wait(1000)
-        cy.get('.mat-menu-panel').within(() => {
-            cy.get('.mat-menu-item').contains('Delete').click({ force: true });
+        dashboards.elements.getQuickActionsMenu().within(() => {
+            dashboards.clickQuickDeleteDashboard()
         })
-        cy.get('.confirmation-modal__btn-group [type="submit"]').contains('Delete').click({ force: true });
-        cy.wait(600)
-        cy.get('.mat-simple-snack-bar-content').should("have.text", 'Successfully deleted')
-        cy.contains('a', dashboardName).should('not.exist')
+        dashboards.submitModalDashboardDelete()
+        cy.wait(800)
+        dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
 
     })
     it("SAP HotNews creation", function () {
 
-        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+        dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
-        cy.get('.drawer__header').children('.drawer__header__add-button').click();
+        dashboards.clickCreateDashboard()
         cy.wait(1000)
-        cy.get('.dashboard-modify__header-input').clear();
-        //timestamp dashboard name               
-        var stamp = Math.round(+new Date() / 1000);
-        const dashname = `Ols_hotnews${stamp}`
-        cy.get('.dashboard-modify__header-input').type(dashname)
-        cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
-        cy.get('[placeholder="Search Dashlet"]').within(() => {
-            cy.get('input').type('sap')
-        })
-        cy.wait(200)
-        cy.get('.dashlet-selector-item__title').should('have.length', 1)
-        cy.get('.dashlet-selector-item__title').should('contain', 'SAP HotNews')
-        cy.get('.dashlet-selector-item__button').wait(2000).click()
+        dashboards.clearDashboardHeader()
 
-        cy.get('[placeholder="SAP HotNews"]').type("SAP HotNews ols")
-        cy.get('[formcontrolname="subtitle"]').clear().type("Autotest")
+        //timestamp dashboard name and typing it to dashboard name         
+
+        cy.stampDashName(this.hotNewsData.dashboardName).then(($el) => {
+            dashboardName = $el.toString().trim()
+            cy.log(dashboardName)
+            dashboards.elements.getDashboardHeader().type(dashboardName)
+        })
+
+        dashboards.clickAddDashletButton()
+        dashlets.selectDashletCategory(this.dashletsData.categorySystems)
+        cy.wait(1000)
+        dashlets.addDashlet(this.hotNewsData.dashletDefTitle)
         cy.wait(2000)
-        cy.get('.mat-paginator-range-label').should('contain', 'Page 1 of')
+        dashlets.elements.getDashletSearch().type(this.hotNewsData.searchKeyword)
+
+        cy.wait(200)
+
+        dashlets.addDashlet(this.hotNewsData.dashletDefTitle)
+
+        dashlets.elements.getTitle().type(this.hotNewsData.title)
+        cy.wait(2000)
+        dashlets.elements.getPaginatorRangeLabel().should('contain', this.hotNewsData.paginatorLabel)
         cy.wait(10000)
         //Get number of pages
 
 
         cy.wait(600)
-        cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]').click()
+        dashlets.saveDashlet()
+        cy.wait(1000)
+        dashboards.saveDashboard()
         cy.wait(800)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
-        cy.wait(800)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-        cy.log(dashname)
-            .then(() => {
-                dashboardName = dashname;
-            })
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+        cy.log(dashboardName)
 
     })
     it("SAP Hotnews assertions", function () {
-        cy.get('mat-card-title').should('contain', 'SAP HotNews')
+        dashlets.elements.getDashletCardTitle().should('contain', this.hotNewsData.title)
         cy.log('Row headers are present: ')
         let rowUINames = []
-        cy.get('.mat-header-row th.mat-header-cell').each(($el) => {
+        dashlets.elements.getTableHeaders().each(($el) => {
             cy.get($el).invoke('text').then((txt) => {
                 txt = txt.trim()
                 rowUINames.push(txt)
@@ -103,44 +104,44 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
             .then(() => {
                 cy.wrap(rowUINames)
             }).then(() => {
-                if (JSON.stringify(rowUINames.sort()) === JSON.stringify(rowNames.sort())) {
+                if (JSON.stringify(rowUINames.sort()) === JSON.stringify(this.hotNewsData.tableHeaders.sort())) {
                     cy.log("ALL headers are present!!")
-                } else cy.log("rows: " + rowUINames + "   " + "array: " + rowNames)
+                } else cy.log("rows: " + rowUINames + "   " + "array: " + this.hotNewsData.tableHeaders)
             })
-        cy.get('.mat-paginator-range-label').invoke('text')
-            .then(text => +text.replace('Page 1 of', '').trim()).then((text) => {
+        dashlets.elements.getPaginatorRangeLabel().invoke('text')
+            .then(text => +text.replace(this.hotNewsData.paginatorLabel, '').trim()).then((text) => {
                 cy.log('Number of pages is: ', text)
                 cy.wrap(text).as('pageNum')
             })
-        cy.get('[aria-label="First page"]').should('have.class', 'mat-button-disabled')
-        cy.get('[aria-label="Previous page"]').should('have.class', 'mat-button-disabled')
+        dashlets.elements.getFirstPageButton().should('have.class', this.hotNewsData.disabledButton)
+        dashlets.elements.getPreviousPageButton().should('have.class', this.hotNewsData.disabledButton)
         //Length=26, because of tr for table header
-        cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 4)
+        dashlets.elements.getTableRows().find('tr').should('have.length', 26)
         //For pages more than 1
         cy.get('@pageNum').then((pageNum) => {
             if (pageNum > 1) {
                 cy.log("Pages MORE than one!!Number: ", pageNum)
                 //click once Next page
-                cy.get('[aria-label="Next page"]').click()
-                cy.get('.mat-paginator-range-label').wait(600).should('contain', 'Page 2 of')
-                cy.get('[aria-label="First page"]').should('not.have.class', 'mat-button-disabled')
-                cy.get('[aria-label="Previous page"]').should('not.have.class', 'mat-button-disabled')
+                dashlets.elements.getNextPageButton().click()
+                dashlets.elements.getPaginatorRangeLabel().wait(600).should('contain', this.hotNewsData.paginatorLabelSecond)
+                dashlets.elements.getFirstPageButton().should('not.have.class', this.hotNewsData.disabledButton)
+                dashlets.elements.getPreviousPageButton().should('not.have.class', this.hotNewsData.disabledButton)
                 //click Last page
-                cy.get('[aria-label="Last page"]').click()
+                dashlets.elements.getLastPageButton().click()
                 cy.get('@pageNum').then((pageNum) => {
                     let newPageNum;
                     newPageNum = 'Page ' + pageNum;
-                    cy.get('.mat-paginator-range-label').wait(600).invoke('text').should('contain', newPageNum);
+                    dashlets.elements.getPaginatorRangeLabel().wait(600).invoke('text').should('contain', newPageNum);
                 })
                 //Counting pages for 50 per page
-                cy.get('.mat-paginator-page-size-select').wait(200).click()
-                cy.get('.mat-option-text').contains('50').parent('mat-option').click()
+                dashlets.elements.getPageNumberDropdown().wait(200).click()
+                dashlets.elements.getPaginatorValue(this.hotNewsData.pagesNumberFifty).click()
                 cy.then((pageNum) => {
                     let fiftyPageNum;
                     fiftyPageNum = 'Page ' + pageNum / 2;
                     let fiftyMinusPageNum;
                     fiftyMinusPageNum = 'Page ' + ((pageNum / 2) - 1);
-                    cy.get('.mat-paginator-range-label').wait(600).invoke('text').then((text) => {
+                    dashlets.elements.getPaginatorRangeLabel().wait(600).invoke('text').then((text) => {
                         if (text.includes(fiftyPageNum)) {
                             cy.log('Number for 50 per page:', fiftyPageNum)
                         }
@@ -153,19 +154,20 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                     })
                 })
                 //Length=51, because of tr for table header
-                cy.get('[aria-label="First page"]').click()
-                cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 51)
+                dashlets.elements.getFirstPageButton().click()
+                dashlets.elements.getTableRows().find('tr').should('have.length', 51)
+
                 //Counting pages for 100 per page
-                cy.get('.mat-paginator-page-size-select').wait(200).click()
-                cy.get('.mat-option-text').contains('100').parent('mat-option').click()
+                dashlets.elements.getPageNumberDropdown().wait(200).click()
+                dashlets.elements.getPaginatorValue(this.hotNewsData.pagesNumberHundred).click()
                 //Length=101, because of tr for table header
-                cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 101)
+                dashlets.elements.getTableRows().find('tr').should('have.length', 101)
                 cy.then((pageNum) => {
                     let hundredPageNum;
                     hundredPageNum = 'Page ' + pageNum / 4;
                     let hundredMinusPageNum;
                     hundredMinusPageNum = 'Page ' + ((pageNum / 4) - 1);
-                    cy.get('.mat-paginator-range-label').wait(600).invoke('text').then((text) => {
+                    dashlets.elements.getPaginatorRangeLabel().wait(600).invoke('text').then((text) => {
                         if (text.includes(hundredPageNum)) {
                             cy.log('Number for 100 per page:', hundredPageNum)
                         }
@@ -181,39 +183,31 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
             //For ONE page
             else {
                 cy.log("ONE page assertion!!!")
-                cy.get('[aria-label="Next page"]').should('have.class', 'mat-button-disabled')
-                cy.get('[aria-label="Last page"]').should('have.class', 'mat-button-disabled')
+                dashlets.elements.getNextPageButton().should('have.class', this.hotNewsData.disabledButton)
+                dashlets.elements.getLastPageButton().should('have.class', this.hotNewsData.disabledButton)
 
             }
         })
     })
     it("SAP HotNews editing", function () {
-        cy.get('.navigation-list-item').contains('a', dashboardName)
-            .click()
-        cy.wait(500)
-        cy.get('.header__edit-block')
-            .get('[mattooltip="Edit Dashboard"]')
-            .wait(200)
-            .click()
-        cy.wait(500)
-        //Findind and clicking Dashlet Setting button on dashlet
-        cy.get('.ng-star-inserted').contains('SAP HotNews').parents('.avantra-dashlet__header')
-            .within(() => {
-                cy.get('[mattooltip="Dashlet Settings"]')
-                    .wait(200)
-                    .click()
-                cy.wait(500)
-            })
-        cy.get('span.dashlet-settings__param--title').contains('Minimum priority').siblings('div.dashlet-settings__param--content')
-            .click().wait(200)
-        cy.get('[title="Low (CVSS 0.1 - 3.9)"]')
-            .click().wait(200)
-        cy.get('.sub-header').within(() => {
-            cy.get('[elementid="dashboards.dashboard.action-buttons.save"]').click()
-        })
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200).click()
+        cy.wait(5000)
+        dashboards.clickEditDashboard()
+        cy.wait(2000)
+        dashlets.openDashletSettings()
+        cy.wait(600)
+
+
+        dashlets.openSettingDropdownByTitle(this.hotNewsData.settingPriority)
+        dashlets.selectDropdownItem(this.hotNewsData.valuePriorityEdited).wait(200)
+        dashboards.saveDashboard()
         cy.wait(800)
+
         cy.reload()
-        cy.get('[aria-label="avantra-table"]').find('tr').should('have.length', 6)
+        dashlets.elements.getTableRows().find('tr').should('have.length', 26)
         // Check the titles, note numbers, statuses, components, relevant for
     })
 })

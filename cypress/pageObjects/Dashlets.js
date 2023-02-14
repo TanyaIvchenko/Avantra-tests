@@ -4,6 +4,7 @@ class Dashlets {
         getDashletTitleAtAdding: () => cy.get('avantra-dashlet-selector-item'),
         getDashletCategory: () => cy.get('.dashlet-selector-categories__wrapper'),
         getDashletCardTitle: () => cy.get('.avantra-dashlet-header .mat-card-title'),
+        getDashletSearch:() => cy.get('[formcontrolname="searchTerm"] input'),
         getTitle: () => cy.get('[formcontrolname="title"] input'),
         getSubtitle: () => cy.get('[formcontrolname="subtitle"] input'),
         getSaveButton: () => cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]'),
@@ -18,18 +19,6 @@ class Dashlets {
         getCheckSelectorItem: () => cy.get('avantra-dashlet-settings-check-selector .ng-dropdown-panel-items'),
         getCheckCountByStatus: () => cy.get('.status-card__content .status-card__content-names-status-count'),
 
-        getChartBar: () => cy.get('.highcharts-series rect'),
-        getPiePiece: () =>cy.get('.highcharts-pie-series'),
-
-        getBarStatusOk: () => cy.get('.highcharts-series-group rect:first-of-type'),
-        getBarStatusWarn: () => cy.get('.highcharts-series-group rect:nth-of-type(2)'),
-        getBarStatusCrit: () => cy.get('.highcharts-series-group rect:nth-of-type(3)'),
-        getPieStatusOk: () => cy.get('.highcharts-series-group path:first-of-type'),
-        getPieStatusWarn: () => cy.get('.highcharts-series-group path:nth-of-type(2)'),
-        getPieStatusCrit: () => cy.get('.highcharts-series-group path:nth-of-type(3)'),
-
-        getBarTooltip: () => cy.get('.highcharts-tooltip-container g'),
-        getBarTooltipCount: () => cy.get('div.highcharts-label.highcharts-tooltip b'),
         getDashletSettingsButton: () =>cy.get('.avantra-drawer__content .avantra-dashlet__header [mattooltip="Dashlet Settings"]'),
         getRefreshIntervalValue: () => cy.get('[role="listbox"] .ng-star-inserted'),
         getSystemPredefinedDropdown: () => cy.get('avantra-dashlet-settings-system-predefined'),
@@ -52,7 +41,32 @@ class Dashlets {
         getMultiChoiceItem: () => cy.get('.ng-dropdown-panel .ng-option.ng-star-inserted'),
         getDropdownArrow: (multiLabel) => cy.get('.ng-placeholder').contains(multiLabel).parents('.ng-select-container').within(() => {
                  cy.get('.ng-arrow-wrapper')
-            })
+            }),
+            getChartBar: () => cy.get('.highcharts-series rect'),
+            getPiePiece: () =>cy.get('.highcharts-pie-series'),
+    
+            getBarStatusOk: () => cy.get('.highcharts-series-group rect:first-of-type'),
+            getBarStatusWarn: () => cy.get('.highcharts-series-group rect:nth-of-type(2)'),
+            getBarStatusCrit: () => cy.get('.highcharts-series-group rect:nth-of-type(3)'),
+            getPieStatusOk: () => cy.get('.highcharts-series-group path:first-of-type'),
+            getPieStatusWarn: () => cy.get('.highcharts-series-group path:nth-of-type(2)'),
+            getPieStatusCrit: () => cy.get('.highcharts-series-group path:nth-of-type(3)'),
+            getBarTooltip: () => cy.get('.highcharts-tooltip-container g'),
+            getBarTooltipCount: () => cy.get('div.highcharts-label.highcharts-tooltip b'),
+
+        getSysSelectorInfo: () => cy.get('.server-info__server-name .server-info__server-title'),
+        getResourceInfo: () => cy.get('.server-info__server-name .server-info__server-subtitle'),
+        getChartLabels:() => cy.get('.highcharts-xaxis-labels span'),
+        getPaginatorRangeLabel: () => cy.get('.mat-paginator-range-actions .mat-paginator-range-label'),
+            getFirstPageButton: () => cy.get('[aria-label="First page"]'),
+            getPreviousPageButton: () => cy.get('[aria-label="Previous page"]'),
+            getNextPageButton: () => cy.get('[aria-label="Next page"]'),
+            getLastPageButton: () => cy.get('[aria-label="Last page"]'),
+        getPageNumberDropdown: () => cy.get('mat-form-field.mat-paginator-page-size-select'),
+            getPaginatorValue: (pageNum) => cy.get('.mat-option-text').contains(pageNum).parent('mat-option'),    
+
+            getTableHeaders: () => cy.get('.mat-header-row th.mat-header-cell'),
+            getTableRows: () => cy.get('[aria-label="avantra-table"]')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()
@@ -79,6 +93,9 @@ class Dashlets {
 
     openSettingDropdownByTitle(paramTitle) {
         this.elements.getSettingParamTitle().contains(paramTitle).siblings('.dashlet-settings__param--content').click()
+    }
+    focusSettingByTitle(paramTitle) {
+        this.elements.getSettingParamTitle().contains(paramTitle).siblings('.dashlet-settings__param--content')
     }
     checkRadio() {
         this.elements.getMultiChoiceRadio().click()
