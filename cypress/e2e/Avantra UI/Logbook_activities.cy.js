@@ -1,4 +1,11 @@
-describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
+/// <reference types="cypress" />
+import Dashboards from "../../pageObjects/Dashboards.js";
+import Dashlets from "../../pageObjects/Dashlets.js";
+
+const dashboards = new Dashboards();
+const dashlets = new Dashlets();
+
+describe("Logbook activities: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
     beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.fixture("Credentials")
@@ -14,8 +21,8 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
         cy.fixture("Dashlets").then((dashletsData) => {
             this.dashletsData = dashletsData
         })
-        cy.fixture("HotNews").then((hotNewsData) => {
-            this.hotNewsData = hotNewsData
+        cy.fixture("Logbook").then((logbookData) => {
+            this.logbookData = logbookData
         })
 
     })
@@ -41,70 +48,67 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
         dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
 
     })
-    it("Logbook Activities creation", () => {
-        cy.get('.drawer__header__title').should('have.text', 'Dashboards')
+    it("Logbook Activities creation", function ()  {
+        dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
+        cy.wait(2000)
+        dashboards.clickCreateDashboard()
         cy.wait(1000)
-        cy.get('.drawer__header').children('.drawer__header__add-button').click();
-        cy.wait(1000)
-        cy.get('.dashboard-modify__header-input').clear();
-        //timestamp dashboard name               
-        var stamp = Date.now();
-        const dashname = `OLS_lb_act${stamp}`
-        cy.get('.dashboard-modify__header-input').type(dashname)
+        dashboards.clearDashboardHeader()
 
-        cy.get('.dashboard-modify__add-dashlet').click();
-        cy.get('.dashlet-selector-item__title').contains('Logbook Activities').parent()
-            .within(() => {
-                cy.get('.dashlet-selector-item__button').wait(2000).click()
-            })
-        cy.get('[placeholder="Logbook Activities"]').clear().type("Logbook_ols")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').clear().type("Autotest")
-        cy.wait(600)
-        cy.get('.dashlet-add__stepper').within(() => {
-            cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
+        //timestamp dashboard name and typing it to dashboard name         
+
+        cy.stampDashName(this.logbookData.dashboardName).then(($el) => {
+            dashboardName = $el.toString().trim()
+            cy.log(dashboardName)
+            dashboards.elements.getDashboardHeader().type(dashboardName)
         })
-        cy.wait(600)
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.log(dashname)
-            .then(() => {
-                dashboardName = dashname;
-            })
+
+        dashboards.clickAddDashletButton()
         cy.wait(1000)
+        dashlets.selectDashletCategory(this.dashletsData.categoryAdmin)
+        cy.wait(200)
+        dashlets.addDashlet(this.logbookData.dashletDefTitle)
+        cy.wait(200)
+        dashlets.elements.getTitle().clear().type(this.logbookData.title)
+
+        cy.wait(600)
+        dashlets.saveDashlet()
+        cy.wait(1000)
+        dashboards.saveDashboard()
+        cy.wait(800)
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+        cy.log(dashboardName)
     })
-    // works 27.10
-    it("Logbook Activities editing", () => {
-        cy.get('.navigation-list-item').contains('a', dashboardName)
-            .siblings('.navigation-list-item__menu-button').invoke('show').click({ force: true })
-
-        cy.wait(1000)
-        cy.get('.mat-menu-panel').within(() => {
-            cy.get('.mat-menu-item').contains('Edit').click();
-        })
-        //Findind and clicking Dashlet Setting button on dashlet
-        cy.get('.ng-star-inserted').contains('Logbook_ols').parents('.avantra-dashlet__header')
-            .within(() => {
-                cy.get('[mattooltip="Dashlet Settings"]')
-                    .wait(2000)
-                    .click()
-                cy.wait(5000)
-            })
-
-        cy.get('[placeholder="Logbook Activities"]').clear().type("Logbook_ols_edited")
-        cy.get('[formcontrolname="subtitle"]').children('avantra-input-field').type("Autotest1")
+    it("Logbook Activities assertions", function () {
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200).click()
+        cy.wait(5000)
+        dashlets.elements.getDashletCardTitle().should('contain.text', this.logbookData.dashletDefTitle)
+        dashlets.elements.getDashletHeadline().should('contain.text', this.logbookData.headlineToday)
+        dashlets.elements.getLogbookDate().first().should('contain.text', this.logbookData.dateYesterday)
+        dashlets.elements.getLogbookDate().last().should('contain.text', this.logbookData.dateWeekly)
+    })
+    it("Logbook Activities editing", function () {
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200).click()
+        cy.wait(5000)
+        dashboards.clickEditDashboard()
+        cy.wait(2000)
+        dashlets.openDashletSettings()
         cy.wait(600)
-        cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
-        cy.get('[role="listbox"]').within(() => {
-            cy.get('.ng-star-inserted').contains('10 minutes').click()
-        })
-
-        cy.wait(300)
-        cy.get('.sub-header').within(() => {
-            cy.get('[mattooltip="Save"]').click()
-        })
-        cy.wait(300)
-        cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
-
+        
+        dashlets.elements.getTitle().clear().type(this.logbookData.titleEdited)
+        cy.wait(600)
+        dashlets.openSettingDropdownByTitle(this.logbookData.paramRefreshInterval)
+        
+        dashlets.selectDropdownItem(this.logbookData.itemRefreshInterval)
+        cy.wait(1000)
+        dashboards.saveDashboard()
+        cy.wait(800)
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
     })
 })
