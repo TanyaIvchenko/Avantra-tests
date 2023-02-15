@@ -98,7 +98,7 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
             .wait(2000)
             .click()
         dashboards.elements.getDashletCardTitle().should('have.text', this.multiRtmStatData.dashletDefTitle)
-        dashlets.elements.getCheckSelectorHeadline().invoke('text')
+        dashlets.elements.getDashletHeadline().invoke('text')
             .then(txt => {
                 cy.log(txt);
                 expect(txt).to.include(this.multiRtmStatData.checkSelector);
@@ -274,7 +274,7 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
 
         dashlets.elements.getDashletCardTitle().should('have.text', this.dashletsData.titleEdited)
 
-        dashlets.elements.getCheckSelectorHeadline().should('contain',this.multiRtmStatData.checkSelectorEdited);
+        dashlets.elements.getDashletHeadline().should('contain',this.multiRtmStatData.checkSelectorEdited);
         cy.log('Check selector is present')
 
         dashlets.elements.getChartTitle().should('have.text', this.multiRtmStatData.graphTitle)
