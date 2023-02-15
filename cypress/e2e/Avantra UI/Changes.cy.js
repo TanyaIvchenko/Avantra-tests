@@ -1,12 +1,12 @@
 /// <reference types="cypress" />
 
-import Checklist from "../../pageObjects/Checklist.js";
+import Changes from "../../pageObjects/Changes.js";
 import Dashboards from "../../pageObjects/Dashboards.js";
 import Dashlets from "../../pageObjects/Dashlets.js";
 
 const dashboards = new Dashboards();
 const dashlets = new Dashlets();
-const checklist = new Checklist();
+const changes = new Changes();
 let dashName
 
 describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
@@ -27,7 +27,7 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
         cy.fixture("Dashboards").then((dashboardsData) => {
             this.dashboardsData = dashboardsData
         })
-        cy.fixture("Checklist").then((checklistData) => {
+        cy.fixture("Changes").then((checklistData) => {
             this.checklistData = checklistData
         }) 
         cy.fixture("Dashlets").then((dashletsData) => {

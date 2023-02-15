@@ -1,6 +1,6 @@
 class Changes {
     elements = {
-        getCheckListTile: () => cy.get('.dashlet-selector-item__title').contains('Check List'),
+        getCheckListTile: () => cy.get('.dashlet-selector-item__title').contains('Changes'),
         getCheckSelectorDropdown: () => cy.get('.dashlet-settings__param span')
                                         .contains('Check Selector') 
                                         .siblings('div.dashlet-settings__param--content'),
