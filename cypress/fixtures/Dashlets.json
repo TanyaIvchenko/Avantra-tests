@@ -12,5 +12,6 @@
     "titleEdited": "Title_updated",
     "categorySystems": "Systems",
     "categoryPerformance": "Performance",
-    "categoryChecks": "Checks"
+    "categoryChecks": "Checks",
+    "categoryAdmin":"Administrative"
 }

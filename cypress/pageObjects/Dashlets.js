@@ -14,7 +14,7 @@ class Dashlets {
                                         .contains('Check Selector') 
                                         .siblings('div.dashlet-settings__param--content'),
 
-        getCheckSelectorHeadline: () => cy.get(".avantra-dashlet__headline"),
+        getDashletHeadline: () => cy.get(".avantra-dashlet__headline"),
         getChartTitle: () => cy.get('.avantra-dashlet__info'),
         getCheckSelectorItem: () => cy.get('avantra-dashlet-settings-check-selector .ng-dropdown-panel-items'),
         getCheckCountByStatus: () => cy.get('.status-card__content .status-card__content-names-status-count'),
@@ -66,7 +66,10 @@ class Dashlets {
             getPaginatorValue: (pageNum) => cy.get('.mat-option-text').contains(pageNum).parent('mat-option'),    
 
             getTableHeaders: () => cy.get('.mat-header-row th.mat-header-cell'),
-            getTableRows: () => cy.get('[aria-label="avantra-table"]')
+            getTableRows: () => cy.get('[aria-label="avantra-table"]'),
+            getItemsPerPage: () => cy.get('.item-in-page'),
+            
+            getLogbookDate: () => cy.get('.logbook__days-name')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()

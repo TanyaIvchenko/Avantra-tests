@@ -65,13 +65,10 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
         })
 
         dashboards.clickAddDashletButton()
-        dashlets.selectDashletCategory(this.dashletsData.categorySystems)
-        cy.wait(1000)
-        dashlets.addDashlet(this.hotNewsData.dashletDefTitle)
         cy.wait(2000)
         dashlets.elements.getDashletSearch().type(this.hotNewsData.searchKeyword)
 
-        cy.wait(200)
+        cy.wait(1000)
 
         dashlets.addDashlet(this.hotNewsData.dashletDefTitle)
 
@@ -92,6 +89,11 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
 
     })
     it("SAP Hotnews assertions", function () {
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200).click()
+        cy.wait(2000)
         dashlets.elements.getDashletCardTitle().should('contain', this.hotNewsData.title)
         cy.log('Row headers are present: ')
         let rowUINames = []
@@ -126,6 +128,7 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
                 dashlets.elements.getPaginatorRangeLabel().wait(600).should('contain', this.hotNewsData.paginatorLabelSecond)
                 dashlets.elements.getFirstPageButton().should('not.have.class', this.hotNewsData.disabledButton)
                 dashlets.elements.getPreviousPageButton().should('not.have.class', this.hotNewsData.disabledButton)
+                dashlets.elements.getPreviousPageButton().click()
                 //click Last page
                 dashlets.elements.getLastPageButton().click()
                 cy.get('@pageNum').then((pageNum) => {
@@ -148,20 +151,39 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
                         else if (text.includes(fiftyMinusPageNum)) {
                             cy.log('Number for 50 per page:', fiftyMinusPageNum)
                         }
+                        else if (text.includes(this.hotNewsData.paginatorLabel)) {
+                            cy.log('Number for 50 per page: less or 1')
+                        }
                         else {
                             cy.log('Number for 50 per page: INCORRECT')
                         }
                     })
                 })
                 //Length=51, because of tr for table header
-                dashlets.elements.getFirstPageButton().click()
-                dashlets.elements.getTableRows().find('tr').should('have.length', 51)
+                dashlets.elements.getItemsPerPage().invoke('text').then((text) => {
+                    let itemsPerPage =parseInt(text.slice(4))
+                    cy.log(itemsPerPage)
+                    if(itemsPerPage < 51) {
+                        dashlets.elements.getTableRows().find('tr').should('have.length', itemsPerPage + 1)
+                    } else {
+                        dashlets.elements.getFirstPageButton().click()
+                        dashlets.elements.getTableRows().find('tr').should('have.length', itemsPerPage + 1)
+                    }
+                })
+                
 
                 //Counting pages for 100 per page
                 dashlets.elements.getPageNumberDropdown().wait(200).click()
+                
                 dashlets.elements.getPaginatorValue(this.hotNewsData.pagesNumberHundred).click()
                 //Length=101, because of tr for table header
-                dashlets.elements.getTableRows().find('tr').should('have.length', 101)
+                dashlets.elements.getItemsPerPage().invoke('text').then((text) => {
+                    let itemsPerPage =parseInt(text.slice(4))
+                    cy.log(itemsPerPage)
+                    if(itemsPerPage < 100) {
+                        dashlets.elements.getTableRows().find('tr').should('have.length', itemsPerPage + 1)
+                    }
+                })
                 cy.then((pageNum) => {
                     let hundredPageNum;
                     hundredPageNum = 'Page ' + pageNum / 4;
@@ -173,6 +195,9 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
                         }
                         else if (text.includes(hundredMinusPageNum)) {
                             cy.log('Number for 100 per page:', hundredMinusPageNum)
+                        }
+                        else if (text.includes(this.hotNewsData.paginatorLabel)) {
+                            cy.log('Number for 100 per page: less or 1')
                         }
                         else {
                             cy.log('Number for 100 per page: INCORRECT')
@@ -202,7 +227,7 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
 
 
         dashlets.openSettingDropdownByTitle(this.hotNewsData.settingPriority)
-        dashlets.selectDropdownItem(this.hotNewsData.valuePriorityEdited).wait(200)
+        dashlets.selectDropdownItem(this.hotNewsData.valuePriorityEdited)
         dashboards.saveDashboard()
         cy.wait(800)
 

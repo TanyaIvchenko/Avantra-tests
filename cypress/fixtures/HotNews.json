@@ -10,25 +10,9 @@
     "pagesNumberFifty": "50",
     "pagesNumberHundred": "100",
     "settingPriority": "Minimum priority",
-    "valuePriorityEdited": "Low (CVSS 0.1 - 3.9)",
+    "valuePriorityEdited": "Low (CVSS 0.1 - 3.9)"
     
-    "paramRefreshInterval": "Refresh Interval",
-    "itemRefreshInterval": "1 minute",
-    "systemPredefinedEdited":"ols_mii_gg",
-    "settingResource":"Resource Type",
-    "resourceDiskSize":"Server: Total Disk Size",
-    "titleDiskSizeTotal":"Total Disk Space",
-    "titleDiskSizeUsed":"Used Disk Space",
-    "resourceDiskSizeUsed":"Server: Used Disk Space",
-    "labels":["Last 33 months", "Today", "Next 6 months"],
-    "labelsEdited":["Last 2 months", "Today", "Next 10 months"],
-    "settingHistoricalPredict": "Use historical data to predict usage",
-    "settingMonthlPredict": "Predict Usage For Months",
-    "valueHistoricalPredict": "3 years",
-    "valueMonthlPredict": "10",
     
-    "systemPredefined": "All Active Servers",
-    "itemRefreshIntervalEdited": "10 seconds"   
 
 
     
