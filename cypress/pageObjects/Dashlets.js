@@ -31,8 +31,8 @@ class Dashlets {
         getSettingDropdownByTitle: (titleParam) => cy.get('.dashlet-settings__param--title')
             .contains(titleParam)
             .parent()
-            .within(() => { cy.get('avantra-dashlet-settings-combo .ng-dropdown-panel-items')}),
-        getSettingDropdownItems: () => cy.get('.ng-dropdown-panel-items'),
+            .within(() => { cy.get('avantra-dashlet-settings .ng-dropdown-panel-items')}),
+        getSettingDropdownItems: () => cy.get('avantra-dashlet-settings .ng-dropdown-panel-items'),
 
         getCheckboxByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('.custom-checkbox__checkmark'),
         getCheckmarkByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('input'),
