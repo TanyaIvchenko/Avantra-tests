@@ -1,5 +1,6 @@
 {
     "dashletDefTitle": "Logbook Activities", 
+    "dashboardName": "Ols_logbook",
     "title": "Logbook_ols",
     "titleEdited": "Logbook_ols_edited",
     "paramRefreshInterval": "Refresh Interval",

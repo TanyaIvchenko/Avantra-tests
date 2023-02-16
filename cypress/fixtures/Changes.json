@@ -1,6 +1,6 @@
 {
     "dashletDefTitle": "Changes",
-    "checkSelector": "ols_all_new",
+    "valuePredefined": "ABAP Systems",
     "dashboardName": "Tai_Changes",
     "subtitle": "Autotest",
     "warningStatus": "assets/media/icons/checks/check-warning.svg",
@@ -10,6 +10,6 @@
     "okCheck":"AGENTALIVE",
     "critCheck": "ols_auto",
     "agentaliveOkResult": "Agent is known to be active since",
-    "paramCheckSelector": "Check Selector"
-
+    "paramPredefined": "Predefined",
+    "tableData": ["February", "30", "January", "204"]
 }
