@@ -85,10 +85,11 @@ describe("Logbook activities: create, assert, edit, delete", { defaultCommandTim
             .contains('a', dashboardName)
             .wait(200).click()
         cy.wait(5000)
-        dashlets.elements.getDashletCardTitle().should('contain.text', this.logbookData.dashletDefTitle)
+        dashlets.elements.getDashletCardTitle().should('contain.text', this.logbookData.title)
         dashlets.elements.getDashletHeadline().should('contain.text', this.logbookData.headlineToday)
         dashlets.elements.getLogbookDate().first().should('contain.text', this.logbookData.dateYesterday)
         dashlets.elements.getLogbookDate().last().should('contain.text', this.logbookData.dateWeekly)
+    //add API to verify values
     })
     it("Logbook Activities editing", function () {
         cy.wait(6000)
