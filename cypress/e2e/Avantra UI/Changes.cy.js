@@ -16,29 +16,29 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
     beforeEach(function () {
         // DO NOT FORGET TO USE YOUR CREDS!!!!!!
         cy.fixture("Credentials")
-        .then((creds) => {
-            this.creds = creds
-            let envServer = this.creds.env;
-            let localUser = this.creds.login;
-            let passwd = this.creds.password;
-            cy.loginSession(localUser, envServer, passwd)
-            cy.visit(creds.env)
-        })
+            .then((creds) => {
+                this.creds = creds
+                let envServer = this.creds.env;
+                let localUser = this.creds.login;
+                let passwd = this.creds.password;
+                cy.loginSession(localUser, envServer, passwd)
+                cy.visit(creds.env)
+            })
         cy.fixture("Dashboards").then((dashboardsData) => {
             this.dashboardsData = dashboardsData
         })
         cy.fixture("Changes").then((changesData) => {
             this.changesData = changesData
-        }) 
+        })
         cy.fixture("Dashlets").then((dashletsData) => {
             this.dashletsData = dashletsData
-        })        
-                     
+        })
+
     })
     let dashboardName;
     let table = []
-  
-    after(function() {
+
+    after(function () {
         // delete dashboard
         cy.wait(5000)
 
@@ -56,7 +56,7 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
         dashboards.submitModalDashboardDelete()
         cy.wait(800)
         dashboards.elements.getHeaderMessage().should("have.text", this.dashboardsData.successfulDeletion)
-        
+
     })
 
     it("Changes creation", function () {
@@ -66,15 +66,15 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
         dashboards.clickCreateDashboard()
         cy.wait(5000)
         dashboards.clearDashboardHeader()
-        
+
         //timestamp dashboard name and typing it to dashboard name              
-              
+
         cy.stampDashName(this.changesData.dashboardName).then(($el) => {
             dashName = $el.toString().trim()
             cy.log(dashName)
             dashboards.elements.getDashboardHeader().type(dashName)
         })
-        
+
         dashboards.clickAddDashletButton()
         dashlets.selectDashletCategory(this.dashletsData.categoryChanges)
         cy.wait(1000)
@@ -95,8 +95,8 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             .then(() => {
                 dashboardName = dashName;
             })
-
-    it("Changes assertions", function () {
+        })
+        it("Changes assertions", function () {
             cy.wait(6000)
             dashboards.elements.getDashboardNameAtNavmenu()
                 .contains('a', dashboardName)
@@ -109,4 +109,3 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             dashlets.elements.getLogbookDate().last().should('contain.text', this.logbookData.previousMonth)
         })
     })
-})
