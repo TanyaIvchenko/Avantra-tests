@@ -95,8 +95,8 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             .then(() => {
                 dashboardName = dashName;
             })
-        })
-        it("Changes assertions", function () {
+
+    it("Changes assertions", function () {
             cy.wait(6000)
             dashboards.elements.getDashboardNameAtNavmenu()
                 .contains('a', dashboardName)
@@ -109,3 +109,4 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             dashlets.elements.getLogbookDate().last().should('contain.text', this.logbookData.previousMonth)
         })
     })
+})
