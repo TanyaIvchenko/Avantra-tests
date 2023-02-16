@@ -13,5 +13,6 @@
     "categorySystems": "Systems",
     "categoryPerformance": "Performance",
     "categoryChecks": "Checks",
-    "categoryAdmin":"Administrative"
+    "categoryAdmin":"Administrative",
+    "categoryChanges":"Changes"
 }

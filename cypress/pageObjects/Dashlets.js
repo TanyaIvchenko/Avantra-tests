@@ -21,8 +21,8 @@ class Dashlets {
 
         getDashletSettingsButton: () =>cy.get('.avantra-drawer__content .avantra-dashlet__header [mattooltip="Dashlet Settings"]'),
         getRefreshIntervalValue: () => cy.get('[role="listbox"] .ng-star-inserted'),
-        getSystemPredefinedDropdown: () => cy.get('avantra-dashlet-settings-system-predefined'),
-        getSystemPredefinedValue: () => cy.get('avantra-dashlet-settings-system-predefined .ng-star-inserted'),
+        getSystemPredefinedDropdown: () => cy.get('avantra-dashlet-settings-system-predefined ng-select'),
+        getSystemPredefinedValue: () => cy.get('.ng-dropdown-panel-items .ng-star-inserted'),
 
         getRadioButton: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('span'),
         getRadioButtonMark: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('.radio-button__input'),
@@ -32,7 +32,7 @@ class Dashlets {
             .contains(titleParam)
             .parent()
             .within(() => { cy.get('avantra-dashlet-settings-combo .ng-dropdown-panel-items')}),
-        getSettingDropdownItems: () => cy.get('avantra-dashlet-settings-combo .ng-dropdown-panel-items'),
+        getSettingDropdownItems: () => cy.get('avantra-dashlet-settings .ng-dropdown-panel-items'),
 
         getCheckboxByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('.custom-checkbox__checkmark'),
         getCheckmarkByLabel: (checkboxLabel) => cy.get('label').contains(checkboxLabel).siblings('input'),
