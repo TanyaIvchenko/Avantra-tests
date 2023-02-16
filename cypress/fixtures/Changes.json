@@ -1,0 +1,15 @@
+{
+    "dashletDefTitle": "Changes",
+    "checkSelector": "ols_all_new",
+    "dashboardName": "Tai_Changes",
+    "subtitle": "Autotest",
+    "warningStatus": "assets/media/icons/checks/check-warning.svg",
+    "okStatus": "assets/media/icons/checks/check-ok.svg",
+    "critStatus": "assets/media/icons/checks/check-critical.svg",
+    "warningCheck":"ols_runjs_auto",
+    "okCheck":"AGENTALIVE",
+    "critCheck": "ols_auto",
+    "agentaliveOkResult": "Agent is known to be active since",
+    "paramCheckSelector": "Check Selector"
+
+}
