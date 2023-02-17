@@ -95,18 +95,21 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             .then(() => {
                 dashboardName = dashName;
             })
-
-    it("Changes assertions", function () {
-            cy.wait(6000)
-            dashboards.elements.getDashboardNameAtNavmenu()
-                .contains('a', dashboardName)
-                .wait(200).click()
-            cy.wait(5000)
-            dashlets.elements.getDashletCardTitle().should('contain.text', this.logbookData.dashletDefTitle)
-            dashlets.elements.getDashletHeadline().should('contain.text', this.logbookData.dashletDefTitle)
-            dashlets.elements.getDashletHeadline().should('contain.text', this.logbookData.valuePredefined)
-            dashlets.elements.getLogbookDate().first().should('contain.text', this.logbookData.thisMonth)
-            dashlets.elements.getLogbookDate().last().should('contain.text', this.logbookData.previousMonth)
-        })
     })
+    it("Changes assertions", function () {
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200).click()
+        cy.wait(5000)
+        dashlets.elements.getDashletCardTitle().should('contain.text', this.changesData.dashletDefTitle)
+        // dashlets.elements.getDashletHeadline().should('contain.text', this.changesData.dashletDefTitle)
+        dashlets.elements.getDashletHeadline().should('contain.text', this.changesData.valuePredefined)
+
+        
+        // .changes__months-name -> class for changes dashlet
+        dashlets.elements.getLogbookDate().first().should('contain.text', this.changesData.thisMonth)
+        dashlets.elements.getLogbookDate().last().should('contain.text', this.changesData.previousMonth)
+    })
+
 })
