@@ -103,13 +103,13 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             .wait(200).click()
         cy.wait(5000)
         dashlets.elements.getDashletCardTitle().should('contain.text', this.changesData.dashletDefTitle)
-        // dashlets.elements.getDashletHeadline().should('contain.text', this.changesData.dashletDefTitle)
+        dashlets.elements.getDashletHeadline().should('contain.text', 'Changes')
         dashlets.elements.getDashletHeadline().should('contain.text', this.changesData.valuePredefined)
 
         
         // .changes__months-name -> class for changes dashlet
-        dashlets.elements.getLogbookDate().first().should('contain.text', this.changesData.thisMonth)
-        dashlets.elements.getLogbookDate().last().should('contain.text', this.changesData.previousMonth)
+        dashlets.elements.getChangesMonth().first().should('contain.text', this.changesData.currentMonth)
+        dashlets.elements.getChangesMonth().last().should('contain.text', this.changesData.previousMonth)
     })
 
 })

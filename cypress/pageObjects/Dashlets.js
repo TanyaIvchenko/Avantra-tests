@@ -69,7 +69,9 @@ class Dashlets {
             getTableRows: () => cy.get('[aria-label="avantra-table"]'),
             getItemsPerPage: () => cy.get('.item-in-page'),
             
-            getLogbookDate: () => cy.get('.logbook__days-name')
+            getLogbookDate: () => cy.get('.logbook__days-name'),
+
+            getChangesMonth: () => cy.get('.changes__months-name')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()

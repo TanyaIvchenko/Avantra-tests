@@ -11,5 +11,7 @@
     "critCheck": "ols_auto",
     "agentaliveOkResult": "Agent is known to be active since",
     "paramPredefined": "Predefined",
-    "tableData": ["February", "30", "January", "204"]
+    "tableData": ["February", "30", "January", "204"],
+    "currentMonth": "February",
+    "previousMonth": "January"
 }
