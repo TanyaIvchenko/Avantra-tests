@@ -21,8 +21,8 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
         cy.fixture("Dashlets").then((dashletsData) => {
             this.dashletsData = dashletsData
         })
-        cy.fixture("HotNews").then((hotNewsData) => {
-            this.hotNewsData = hotNewsData
+        cy.fixture("RTM_check").then((rtmCheckData) => {
+            this.rtmCheckData = rtmCheckData
         })
 
     })
@@ -49,83 +49,106 @@ describe("SAP HotNews: create, assert, edit, delete", { defaultCommandTimeout: 5
 
     })
 
-it("RTM Check creation", () => {
+it("RTM Check creation", function () {
     //Finding the dashboard in the list
-    cy.get('.sidebar-list-item').contains('a', "OLS_name_check")
-        .click()
-        cy.wait(5000)
-    cy.get('.header__edit-block')
-        .get('[mattooltip="Edit Dashboard"]')
-            .wait(2000)
-            .click() 
-            cy.wait(5000)
+    dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
+        cy.wait(2000)
+        dashboards.clickCreateDashboard()
+        cy.wait(1000)
+        dashboards.clearDashboardHeader()
 
-cy.get('.dashboard-modify__add-dashlet').wait(2000).click()
-cy.get('.dashlet-selector-item__title').contains('RTM Check').parent()
-.within (() =>{
-    cy.get('.dashlet-selector-item__button').wait(2000).click()
-})
-cy.get('[placeholder="RTM Check"]').type("RTM _check_ols")
-cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest")
-cy.wait(600)
-cy.get('.dashlet-settings__param--title').contains('System').siblings('.dashlet-settings__param--content').click()
-    cy.get('.dashlet-settings__param--title').contains('System').parent('.dashlet-settings__param').within(() =>{
-        cy.get('ng-dropdown-panel').contains('ggbvrd-sybsa1_SA1_00').click()
-    })
-cy.wait(600)
-cy.get('.dashlet-add__stepper').within(() => {
-    cy.get('[iconpath="assets/media/icons/shared/menu-ok.svg"]').click()
-})
-cy.wait(5000)
-cy.get('.sub-header').within(() => {
-    cy.get('[mattooltip="Save"]').click()
-})
-cy.wait(300)
-cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+        //timestamp dashboard name and typing it to dashboard name         
 
-})
-it("RTM Check editing", () => {
-cy.wait(600)
-cy.get('.sidebar-list-item').contains('a', "RTM_Check_test")
-.wait(2000).click()
-cy.get('.header__edit-block')
-    .get('[mattooltip="Edit Dashboard"]')
-        .wait(5000)
-        .click() 
-    cy.wait(2000)
-cy.get('.avantra-drawer__content').within (() =>{
-        cy.get('.avantra-dashlet__header')
-    .within (() =>{
-    cy.get('[mattooltip="Dashlet Settings"]')
-    .click()
-    })
-})
-   
-    cy.get('[placeholder="RTM Check"]').clear().type("RTM_Check_ols_edited")
-    cy.get('[formcontrolname="subtitle"]').children('input').clear().type("Autotest_edited")
-    cy.wait(600)
-    cy.get('.dashlet-settings__param').contains("Refresh Interval").siblings('.dashlet-settings__param--content').click()
-    cy.get('[role="listbox"]'). within(() => {
-        cy.get('.ng-star-inserted').contains('1 minute').click()
-    })
-    cy.wait(600)
-    cy.get('.dashlet-settings__param--title').contains('System').siblings('.dashlet-settings__param--content').click()
-        cy.get('.dashlet-settings__param--title').contains('System').parent('.dashlet-settings__param').within(() =>{
-            cy.get('ng-dropdown-panel').contains('golf').click()
+        cy.stampDashName(this.rtmCheckData.dashboardName).then(($el) => {
+            dashboardName = $el.toString().trim()
+            cy.log(dashboardName)
+            dashboards.elements.getDashboardHeader().type(dashboardName)
         })
+
+        dashboards.clickAddDashletButton()
+        dashlets.selectDashletCategory(this.dashletsData.categoryChecks)
+        cy.wait(3000)
+        dashlets.addDashlet(this.rtmCheckData.dashletDefTitle)
+        cy.wait(2000)
+
+    dashlets.openSettingDropdownByTitle(this.rtmCheckData.paramSystem)
+    cy.wait(200)
+    dashlets.selectDropdownItem(this.rtmCheckData.valueSystem)
+
+    dashlets.elements.getDropdownArrow(this.rtmCheckData.paramCheck).click()
+    cy.wait(200)
+    dashlets.selectDropdownItem(this.rtmCheckData.valueCheck)
+    cy.wait(2000)
+
+    dashlets.saveDashlet()
+    cy.wait(1000)
+    dashboards.saveDashboard()
+    cy.wait(800)
+    dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+    cy.log(dashboardName)
+
+})
+
+it("RTM Check assertions", function () {
+    cy.wait(6000)
+    dashboards.elements.getDashboardNameAtNavmenu()
+        .contains('a', dashboardName)
+        .wait(200).click()
+
+    dashlets.elements.getDashletCardTitle().should('contain', this.rtmCheckData.dashletDefTitle)
+    dashlets.elements.getRtmCheckSystem().should('contain', this.rtmCheckData.valueSystem)
+    dashlets.elements.getRtmCheckType().should('contain', this.rtmCheckData.valueCheck)
+})
+
+it("RTM Check editing", function() {
+    cy.wait(6000)
+    dashboards.elements.getDashboardNameAtNavmenu()
+        .contains('a', dashboardName)
+        .wait(200).click()
+    cy.wait(5000)
+    dashboards.clickEditDashboard()
+    cy.wait(2000)
+    dashlets.openDashletSettings()
+    cy.wait(600)
+
+    dashlets.elements.getTitle().clear().type(this.rtmCheckData.dashletTitleEdited)
+    cy.wait(600)
+
+
+    dashlets.openSettingDropdownByTitle(this.rtmCheckData.paramRefreshInterval)
+    cy.wait(200)
+    dashlets.selectDropdownItem(this.rtmCheckData.itemRefreshInterval)
+    cy.wait(600)
+
+
+    dashlets.openSettingDropdownByTitle(this.rtmCheckData.paramSystem)
+    cy.wait(200)
+    dashlets.selectDropdownItem(this.rtmCheckData.valueSystemEdited)
+
     
-    cy.get('.radio-button__label').contains('Custom Check').siblings('.radio-button__checkmark').click()
+    dashlets.elements.getRadioButton(this.rtmCheckData.radioCustomCheck).click()
+
+    dashlets.elements.getDropdownArrow(this.rtmCheckData.paramCheck).click({force:true})
+    cy.wait(200)
+    dashlets.selectDropdownItem(this.rtmCheckData.customCheck)
+    cy.wait(2000)
     
-    cy.get('.ng-placeholder').contains('Select Check').parents('.ng-select-container').click()
-    cy.get('.ng-placeholder').contains('Select Check').parents('.ng-select').children('.ng-dropdown-panel').within(() =>{
-        cy.get('.ng-star-inserted').contains('VS_MEMORY').click()
-    })
-    cy.get('.custom-checkbox__label').contains('Hide check result').siblings('.custom-checkbox__checkmark').click()
-    cy.get('.custom-checkbox__label').contains('Show background color in status color').siblings('.custom-checkbox__checkmark').click()
-    cy.get('.sub-header').within(() => {
-        cy.get('[mattooltip="Save"]').click()
-    })
-    cy.wait(300)
-    cy.get('.updated-at__time').should('have.text', 'less than a minute ago')
+    dashlets.elements.getCheckboxByLabel(this.rtmCheckData.checkboxHideResult).click()
+    dashlets.elements.getCheckboxByLabel(this.rtmCheckData.checkboxBgColor).click()
+    
+    cy.wait(1000)
+    dashboards.saveDashboard()
+    cy.wait(800)
+    dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+})
+it("RTM Check edited assertions", function () {
+    cy.wait(6000)
+    dashboards.elements.getDashboardNameAtNavmenu()
+        .contains('a', dashboardName)
+        .wait(200).click()
+
+    dashlets.elements.getDashletCardTitle().should('contain', this.rtmCheckData.dashletTitleEdited)
+    dashlets.elements.getRtmCheckSystem().should('contain', this.rtmCheckData.valueSystemEdited)
+    dashlets.elements.getRtmCheckType().should('contain', this.rtmCheckData.customCheck)
 })
 })

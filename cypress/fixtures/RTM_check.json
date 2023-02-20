@@ -1,0 +1,20 @@
+{
+    "dashletDefTitle": "RTM Check", 
+    "dashletTitleEdited": "RTM Check edited",
+    "dashboardName": "Ols_rtm_check",
+    "title": "RTM Check ols",
+    "paramSystem": "System",
+    "valueSystem":"hotel",
+    "valueSystemEdited":"golf",
+    "paramCheck":"Select Check",
+    "valueCheck":"CPULOAD",
+    "paramRefreshInterval": "Refresh Interval",
+    "itemRefreshInterval": "1 minute",
+    "customCheck": "ols_runjs",
+    "radioCustomCheck": "Custom Check",
+    "checkboxHideResult": "Hide check result",
+    "checkboxBgColor": "Show background color in status color"
+
+        
+
+}

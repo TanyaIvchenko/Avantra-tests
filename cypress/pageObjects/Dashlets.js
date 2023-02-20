@@ -69,7 +69,10 @@ class Dashlets {
             getTableRows: () => cy.get('[aria-label="avantra-table"]'),
             getItemsPerPage: () => cy.get('.item-in-page'),
             
-            getLogbookDate: () => cy.get('.logbook__days-name')
+            getLogbookDate: () => cy.get('.logbook__days-name'),
+
+            getRtmCheckType: () => cy.get('.rtm-check-info-block__check-type'),
+            getRtmCheckSystem: () => cy.get('.rtm-check-info-block__check-name')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()
