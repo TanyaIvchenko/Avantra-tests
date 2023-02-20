@@ -1,15 +1,15 @@
 /// <reference types="cypress" />
 
-import Changes from "../../pageObjects/Changes.js";
+import UnassignedChanges from "../../pageObjects/UnassignedChanges.js";
 import Dashboards from "../../pageObjects/Dashboards.js";
 import Dashlets from "../../pageObjects/Dashlets.js";
 
 const dashboards = new Dashboards();
 const dashlets = new Dashlets();
-const changes = new Changes();
+const unassignedchanges = new UnassignedChanges();
 let dashName
 
-describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
+describe("Unassigned Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 }, () => {
     // before(function () {
     //     cy.fixture("Credentials").as("creds")
     // })
@@ -27,8 +27,8 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
         cy.fixture("Dashboards").then((dashboardsData) => {
             this.dashboardsData = dashboardsData
         })
-        cy.fixture("Changes").then((changesData) => {
-            this.changesData = changesData
+        cy.fixture("UnassignedChanges").then((unassignedchangesData) => {
+            this.unassignedchangesData = unassignedchangesData
         })
         cy.fixture("Dashlets").then((dashletsData) => {
             this.dashletsData = dashletsData
@@ -59,7 +59,7 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
 
     })
 
-    it("Changes creation", function () {
+    it("Unassigned Changes creation", function () {
 
         dashboards.elements.getDashboardsTitle().should('have.text', this.dashboardsData.title)
         cy.wait(2000)
@@ -69,7 +69,7 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
 
         //timestamp dashboard name and typing it to dashboard name              
 
-        cy.stampDashName(this.changesData.dashboardName).then(($el) => {
+        cy.stampDashName(this.unassignedchangesData.dashboardName).then(($el) => {
             dashName = $el.toString().trim()
             cy.log(dashName)
             dashboards.elements.getDashboardHeader().type(dashName)
@@ -78,13 +78,8 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
         dashboards.clickAddDashletButton()
         dashlets.selectDashletCategory(this.dashletsData.categoryChanges)
         cy.wait(1000)
-        dashlets.addDashlet(this.changesData.dashletDefTitle)
-        cy.wait(2000)
-
-        //dashlets.elements.getSubtitle().type(this.checklistData.subtitle) (no subtitle in this dashlet)
-        dashlets.openSystemPredefinedDropdown()
-        dashlets.selectDropdownItem(this.changesData.valuePredefined)
-        //dashlets.elements.getCheckSelectorItem().contains(this.checklistData.checkSelector).click()
+        dashlets.addDashlet(this.unassignedchangesData.dashletDefTitle)
+       
         cy.wait(600)
         dashlets.saveDashlet()
         cy.wait(800)
@@ -102,14 +97,9 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
             .contains('a', dashboardName)
             .wait(200).click()
         cy.wait(5000)
-        dashlets.elements.getDashletCardTitle().should('contain.text', this.changesData.dashletDefTitle)
-        dashlets.elements.getDashletHeadline().should('contain.text', 'Changes')
-        dashlets.elements.getDashletHeadline().should('contain.text', this.changesData.valuePredefined)
+        dashlets.elements.getDashletCardTitle().should('contain.text', this.unassignedchangesData.dashletDefTitle)
+        dashlets.elements.getDashletHeadline().should('contain.text', 'Unassigned Changes')
 
-        
-        // .changes__months-name -> class for changes dashlet
-        dashlets.elements.getChangesMonth().first().should('contain.text', this.changesData.currentMonth)
-        dashlets.elements.getChangesMonth().last().should('contain.text', this.changesData.previousMonth)
     })
 
 })

@@ -1,7 +1,7 @@
 {
-    "dashletDefTitle": "Changes",
-    "valuePredefined": "ABAP Systems",
-    "dashboardName": "Tai_Changes",
+    "dashletDefTitle": "Unassigned Changes",
+    "checkSelector": "ols_all_new",
+    "dashboardName": "Tai_UnassignedChanges",
     "subtitle": "Autotest",
     "warningStatus": "assets/media/icons/checks/check-warning.svg",
     "okStatus": "assets/media/icons/checks/check-ok.svg",
@@ -10,8 +10,6 @@
     "okCheck":"AGENTALIVE",
     "critCheck": "ols_auto",
     "agentaliveOkResult": "Agent is known to be active since",
-    "paramPredefined": "Predefined",
-    "tableData": ["February", "30", "January", "204"],
-    "currentMonth": "February",
-    "previousMonth": "January"
+    "paramCheckSelector": "Check Selector"
+
 }
