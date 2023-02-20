@@ -1,17 +1,25 @@
 {
     "dashletDefTitle": "Changes",
     "valuePredefined": "ABAP Systems",
+    "valuePredefined2": "All123-Xandria7",
     "dashboardName": "Tai_Changes",
     "subtitle": "Autotest",
+    "paramRefreshInterval": "Refresh Interval",
+    "itemRefreshInterval": "1 minute",
     "warningStatus": "assets/media/icons/checks/check-warning.svg",
     "okStatus": "assets/media/icons/checks/check-ok.svg",
     "critStatus": "assets/media/icons/checks/check-critical.svg",
-    "warningCheck":"ols_runjs_auto",
-    "okCheck":"AGENTALIVE",
+    "warningCheck": "ols_runjs_auto",
+    "okCheck": "AGENTALIVE",
     "critCheck": "ols_auto",
     "agentaliveOkResult": "Agent is known to be active since",
     "paramPredefined": "Predefined",
-    "tableData": ["February", "30", "January", "204"],
+    "tableData": [
+        "February",
+        "30",
+        "January",
+        "204"
+    ],
     "currentMonth": "February",
     "previousMonth": "January"
 }
