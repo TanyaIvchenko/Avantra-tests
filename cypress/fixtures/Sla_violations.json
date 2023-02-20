@@ -1,0 +1,13 @@
+{
+    "dashletDefTitle": "SLA Violations", 
+    "dashletTitleEdited": "SLA Violations edited",
+    "dashboardName": "Ols_sla_violations",
+    "title": "SLA Violations ols",
+
+    "paramRefreshInterval": "Refresh Interval",
+    "itemRefreshInterval": "1 minute",
+    "valuePredefined": "All Active Servers",
+    "valuePredefinedEdited": "ABAP Systems"
+        
+
+}

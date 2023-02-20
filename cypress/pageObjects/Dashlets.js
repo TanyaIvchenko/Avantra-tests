@@ -74,7 +74,8 @@ class Dashlets {
             getRtmCheckType: () => cy.get('.rtm-check-info-block__check-type'),
             getRtmCheckSystem: () => cy.get('.rtm-check-info-block__check-name'),
             
-            getChangesMonth: () => cy.get('.changes__months-name')
+            getChangesMonth: () => cy.get('.changes__months-name'),
+            getSlaMonth: () => cy.get('.sla-violations__months-name')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()
