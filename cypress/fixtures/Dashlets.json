@@ -14,5 +14,6 @@
     "categoryPerformance": "Performance",
     "categoryChecks": "Checks",
     "categoryAdmin":"Administrative",
-    "categoryChanges":"Changes"
+    "categoryChanges":"Changes",
+    "categoryCompliance": "Compliance"
 }
