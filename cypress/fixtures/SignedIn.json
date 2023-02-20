@@ -1,0 +1,12 @@
+{
+    "dashletDefTitle": "Signed in Users", 
+    "dashletTitleEdited": "Signed In edited",
+    "dashboardName": "Ols_signed_in",
+    "title": "Signed In ols",
+
+    "paramRefreshInterval": "Refresh Interval",
+    "itemRefreshInterval": "1 minute"
+    
+        
+
+}
