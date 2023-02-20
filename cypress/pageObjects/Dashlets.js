@@ -71,6 +71,9 @@ class Dashlets {
             
             getLogbookDate: () => cy.get('.logbook__days-name'),
 
+            getRtmCheckType: () => cy.get('.rtm-check-info-block__check-type'),
+            getRtmCheckSystem: () => cy.get('.rtm-check-info-block__check-name'),
+            
             getChangesMonth: () => cy.get('.changes__months-name')
     }
     saveDashlet() {
