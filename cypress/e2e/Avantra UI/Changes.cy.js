@@ -157,7 +157,16 @@ describe("Changes: create, assert, edit, delete", { defaultCommandTimeout: 5000 
 
 
         // .changes__months-name -> class for changes dashlet
-        dashlets.elements.getChangesMonth().first().should('contain.text', this.changesData.currentMonth)
-        dashlets.elements.getChangesMonth().last().should('contain.text', this.changesData.previousMonth)
+        //dashlets.elements.getChangesMonth().first().should('contain.text', this.changesData.currentMonth)
+        //dashlets.elements.getChangesMonth().last().should('contain.text', this.changesData.previousMonth)
+    
+        let today = new Date();
+        let currentMonth = today.toLocaleString('default', { month: 'long' })
+        dashlets.elements.getChangesMonth().first().should('contain.text', currentMonth)
+
+        today.setMonth(today.getMonth()-1);
+        const previousMonth = today.toLocaleString('default', { month: 'long' });
+
+        dashlets.elements.getChangesMonth().last().should('contain.text', previousMonth)
     })
 })
