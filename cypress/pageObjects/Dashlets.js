@@ -75,7 +75,11 @@ class Dashlets {
             getRtmCheckSystem: () => cy.get('.rtm-check-info-block__check-name'),
             
             getChangesMonth: () => cy.get('.changes__months-name'),
-            getSlaMonth: () => cy.get('.sla-violations__months-name')
+            getSlaMonth: () => cy.get('.sla-violations__months-name'),
+        getTimezone: () => cy.get('.timezone__row span'),
+        getTimezoneTime: (timezone) => cy.get('.timezone__row').contains(timezone).siblings('.timezone__col--bold'),
+        getTimezoneName: () => cy.get('.timezone__row .timezone__col--bold'),
+        getErrormessage: () => cy.get('.error-message .mat-simple-snackbar')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()
@@ -117,6 +121,9 @@ class Dashlets {
     }
     selectDropdownItem(itemName) {
         this.elements.getSettingDropdownItems().contains(itemName).click()
+    }
+    findTimeByTimezone(timezone){
+        this.elements.getTimezone().contains(timezone).siblings('.timezone__col--bold')
     }
 }
 export default Dashlets

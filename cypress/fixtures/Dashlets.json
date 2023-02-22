@@ -15,5 +15,6 @@
     "categoryChecks": "Checks",
     "categoryAdmin":"Administrative",
     "categoryChanges":"Changes",
-    "categoryCompliance": "Compliance"
+    "categoryCompliance": "Compliance",
+    "categoryGeneral": "General"
 }
