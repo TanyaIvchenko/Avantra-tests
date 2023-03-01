@@ -81,6 +81,7 @@ class Dashlets {
             
             getChangesMonth: () => cy.get('.changes__months-name'),
             getSlaMonth: () => cy.get('.sla-violations__months-name'),
+            getUnplanDowntimeMonth: () => cy.get('.unplanned-downtime__months'),
         getTimezone: () => cy.get('.timezone__row span'),
         getTimezoneTime: (timezone) => cy.get('.timezone__row').contains(timezone).siblings('.timezone__col--bold'),
         getTimezoneName: () => cy.get('.timezone__row .timezone__col--bold'),
