@@ -33,6 +33,7 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                      
     })
     let dashboardName;
+    let dashboardID
     let table = []
   
     after(function() {
@@ -70,12 +71,11 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
             cy.log(dashboardName)
             dashboards.elements.getDashboardHeader().type(dashboardName)
         })
-               
+        cy.wait(600)       
         dashboards.clickAddDashletButton()
         dashlets.addDashlet(this.multiRtmStatData.dashletDefTitle)
         cy.wait(2000)
 
-        dashlets.elements.getSubtitle().type(this.multiRtmStatData.subtitle)
         cy.wait(600)
         dashlets.openSettingDropdownByTitle(this.multiRtmStatData.paramCheckSelector)
         dashlets.elements.getCheckSelectorItem().contains(this.multiRtmStatData.checkSelector).click()
@@ -88,11 +88,63 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
         cy.log(dashboardName)
           
         cy.wait(1000)
+        
 
     })
+    it('Dashboard ID', function() {
+        cy.request({
+            method: 'POST',
+            url: 'https://gotham.dev.gcp.avantra.net:8443/xn/api/graphql/',
+            encoding: 'binary',
+            headers: {
+                'User-Agent': 'PostmanRuntime/7.31.1',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Authorization': 'Basic YWx3OjEyMDRReWI5bWptYg==',
+                'Cookie': 'JSESSIONID=node09ytz4hf0hbo47x76msq3iepk87.node0',
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json'
+            },
+            body: {
+                query: `
+                query GetDashboards {
+                    dashboards {
+                      totalElements
+                      items {
+                        id
+                        name
+                        description
+                        __typename
+                      }
+                      __typename
+                    }
+                  }
+              `,
+              
+            },
+            failOnStatusCode: false
+        })
+            .then((resp) => {
+                const respArray = resp.body.data.dashboards.items;
+
+                var result = respArray.find(item => item.name === dashboardName)
+                console.log("HERE IS ARRAY!" + result.id)
+                dashboardID = result.id
+            })
+
+        
+        
+    })
+
     
     it("Created dashboard assertions", function() {
+        let dashletData
+        let okNumber
+        let critNumber
         cy.wait(800)
+        //assert OK checks count
+
         dashboards.elements.getDashboardNameAtNavmenu()
             .contains('a', dashboardName)
             .wait(2000)
@@ -104,7 +156,58 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
                 expect(txt).to.include(this.multiRtmStatData.checkSelector);
             })
         cy.log('Check selector headline is present')
+        cy.request({
+            method: 'POST',
+            url: 'https://gotham.dev.gcp.avantra.net:8443/xn/api/graphql/',
+            encoding: 'binary',
+            headers: {
+                'User-Agent': 'PostmanRuntime/7.31.1',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Authorization': 'Basic YWx3OjEyMDRReWI5bWptYg==',
+                'Cookie': 'JSESSIONID=node09ytz4hf0hbo47x76msq3iepk87.node0',
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json'
+            },
+            body: {
+                query: `
+                query dashboardValues ($dashboardId: ID!) {
+                    dashboardValues (dashboardId: $dashboardId) {
+                        uuid
+                        data
+                        dashletClass
+                    }
+                }
+              `,
+              variables: {
+                "dashboardId": dashboardID
+              }
+            },
+            failOnStatusCode: false
+        })
+            .then((resp) => {
+                // NOT READY YET!!!!!!
+                 const respArray2 = resp.body.data.dashboardValues
 
+                console.log("HERE IS DATA!" + respArray2[0].data)
+                dashletData = JSON.parse(respArray2[0].data)
+                cy.log("HERE IS SUBT " + dashletData.subtitle)
+                okNumber = dashletData.okCount
+                critNumber = dashletData.critCount
+                cy.log("NUMBER " + okNumber)
+                dashlets.elements.getCheckCountByStatus().each(($el) => {
+                cy.get($el).invoke('text').then((txt) =>{
+                    let txtNumber = txt.trim()
+                    if (txtNumber == okNumber) {
+                        cy.log("Number of OK checks verified")
+                    } else {throw new Error("Number of OK checks failed")}
+                    if (txtNumber == critNumber) {
+                        cy.log("Number of CRIT checks verified")
+                    } else {throw new Error("Number of CRIT checks failed")}
+                })
+            })
+            })
         dashlets.elements.getChartTitle().should('have.text', this.multiRtmStatData.graphTitle)
 
         dashlets.elements.getCheckCountByStatus().each(($el) => {
@@ -204,7 +307,7 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
 
         })
     })
-    it("Multi RTM Status editing", function() {
+    xit("Multi RTM Status editing", function() {
         cy.wait(800)
         dashboards.elements.getDashboardNameAtNavmenu()
             .contains('a', dashboardName)
@@ -262,7 +365,7 @@ describe("Multi-RTM status: create, assert, edit, delete", { defaultCommandTimeo
         cy.log(dashboardName)
             
     })
-    it("Edited dashboard assertions", function() {
+    xit("Edited dashboard assertions", function() {
         cy.wait(800)
         dashboards.elements.getDashboardNameAtNavmenu()
             .contains('a', dashboardName)

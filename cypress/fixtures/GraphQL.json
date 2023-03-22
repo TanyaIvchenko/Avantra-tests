@@ -1,0 +1,300 @@
+[
+  {
+    "data": {
+      "dashboards": {
+        "totalElements": 48,
+        "items": [
+          {
+            "id": "537",
+            "name": "_1ÐÑÑÐ½Ñ",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "540",
+            "name": "adsasd",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "24",
+            "name": "BS - BS_REL_7 1528790342701-copy",
+            "description": "1",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "539",
+            "name": "Gamma",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "29",
+            "name": "links",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "547",
+            "name": "Logbook_ols",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "543",
+            "name": "mis",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "127",
+            "name": "olr_dashboard",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "672",
+            "name": "Ols Chart1677169923",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "36",
+            "name": "ols2",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "536",
+            "name": "ols_auto",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "372",
+            "name": "ols_cfu",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "673",
+            "name": "Ols_Chart1677170591",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "674",
+            "name": "Ols_Chart1677171047",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "675",
+            "name": "Ols_Chart1677171141",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "664",
+            "name": "ols_charts",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "389",
+            "name": "Ols_checklist",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "415",
+            "name": "Ols_Checklist",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "381",
+            "name": "ols_checklist",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "661",
+            "name": "ols_checkUpdates",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "668",
+            "name": "ols_crit_warning",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "635",
+            "name": "ols_currentTime",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "33",
+            "name": "ols_dash",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "34",
+            "name": "ols_dash_new",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "535",
+            "name": "ols_dropdown_checkbox",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "569",
+            "name": "Ols_logbook",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "667",
+            "name": "ols_logo",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "308",
+            "name": "ols_Multi-RTM-status",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "716",
+            "name": "Ols_multirtmstat1678184519",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "717",
+            "name": "Ols_multirtmstat1678184630",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "718",
+            "name": "Ols_multirtmstat1678184755",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "719",
+            "name": "Ols_multirtmstat1678185038",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "121",
+            "name": "Ols_multisys_ovw!",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "35",
+            "name": "ols_new_checklist",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "336",
+            "name": "ols_prp",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "590",
+            "name": "ols_rtm",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "317",
+            "name": "ols_sap_hn",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "662",
+            "name": "ols_signedIn",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "620",
+            "name": "ols_slaViol",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "666",
+            "name": "ols_text",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "663",
+            "name": "ols_unplan_downtime",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "665",
+            "name": "ols_website",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "3",
+            "name": "RTM-copy",
+            "description": "RealTime Monitoring Â«Control CenterÂ»",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "103",
+            "name": "RTM_check_test",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "544",
+            "name": "SAP Hotnews ols",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "27",
+            "name": "Tanya test",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "31",
+            "name": "Test1",
+            "description": "",
+            "__typename": "Dashboard"
+          },
+          {
+            "id": "-1",
+            "name": "RTM Control Center",
+            "description": "RealTime Monitoring âControl Centerâ",
+            "__typename": "Dashboard"
+          }
+        ],
+        "__typename": "DashboardPage"
+      }
+    }
+  }
+]
