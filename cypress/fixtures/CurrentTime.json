@@ -1,0 +1,26 @@
+{
+    "dashletDefTitle": "Current Time", 
+    "dashletTitleEdited": "Current Time edited",
+    "dashboardName": "Ols_currentTime",
+    "title": "Current Time ols",
+
+    "paramRefreshInterval": "Refresh Interval",
+    "itemRefreshInterval": "1 minute",
+
+    "titleTimeZone1": "Timezone 1",
+    "valueTimeZone1": "Europe/Kiev",
+    "titleTimeZone2": "Timezone 2",
+    "valueTimeZone2": "Europe/Zurich",
+    "titleTimeZone3": "Timezone 3",
+    "valueTimeZone3": "Africa/Dakar",
+    "titleTimeZone4": "Timezone 4",
+    "valueTimeZone4": "America/Chicago",
+    "titleTimeZone5": "Timezone 5",
+    "valueTimeZone5": "Asia/Singapore",
+
+    "valueTimeZone1Edited": "Europe/London",
+    "valueTimeZone3Edited": "America/Detroit",
+    "valueTimeZone4Edited": "Canada/Pacific",
+    "valueTimeZone5Edited": "Australia/Sydney"
+
+}

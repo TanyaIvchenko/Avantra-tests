@@ -1,0 +1,14 @@
+{
+    "dashletDefTitle": "Unplanned Downtime", 
+    "dashboardName": "Ols_Unplanned",
+    "title": "Unplanned_ols",
+    "titleEdited": "Unplanned_ols_edited",
+    "paramRefreshInterval": "Refresh Interval",
+    "itemRefreshInterval": "10 minutes",
+    "valuePredefined": "ols_mii_gg",
+    "valuePredefinedEdited": "ABAP Systems",
+    "headlineToday": "Today",
+    "dateYesterday": "Yesterday",
+    "dateWeekly": "Weekly"
+ 
+}

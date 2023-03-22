@@ -8,7 +8,8 @@ class Dashlets {
         getTitle: () => cy.get('[formcontrolname="title"] input'),
         getSubtitle: () => cy.get('[formcontrolname="subtitle"] input'),
         getSaveButton: () => cy.get('[elementid="dashboards.add-dashlet-stepper.action-buttons.save"]'),
-        getTableRow: () => cy.get('.mat-table tr.mat-row'),
+        getTableRow: () => cy.get('tbody tr'),
+        getTableCell: () => cy.get('tbody td'),
 
         getCheckSelectorDropdown: () => cy.get('.dashlet-settings__param span')
                                         .contains('Check Selector') 
@@ -26,6 +27,9 @@ class Dashlets {
 
         getRadioButton: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('span'),
         getRadioButtonMark: (butTitle) => cy.get('.radio-button__label').contains(butTitle).siblings('.radio-button__input'),
+        getSettingInput: (inputTitle) => cy.get('.dashlet-settings__param').contains(inputTitle).siblings('.dashlet-settings__param--content').within(() => {
+            cy.get('input')
+       }),
 
         getSettingParamTitle: () => cy.get('.dashlet-settings__param--title'),
         getSettingDropdownByTitle: (titleParam) => cy.get('.dashlet-settings__param--title')
@@ -57,6 +61,7 @@ class Dashlets {
         getSysSelectorInfo: () => cy.get('.server-info__server-name .server-info__server-title'),
         getResourceInfo: () => cy.get('.server-info__server-name .server-info__server-subtitle'),
         getChartLabels:() => cy.get('.highcharts-xaxis-labels span'),
+        getChartLabelsY: () => cy.get('.highcharts-yaxis-labels span'),
         getPaginatorRangeLabel: () => cy.get('.mat-paginator-range-actions .mat-paginator-range-label'),
             getFirstPageButton: () => cy.get('[aria-label="First page"]'),
             getPreviousPageButton: () => cy.get('[aria-label="Previous page"]'),
@@ -75,7 +80,12 @@ class Dashlets {
             getRtmCheckSystem: () => cy.get('.rtm-check-info-block__check-name'),
             
             getChangesMonth: () => cy.get('.changes__months-name'),
-            getSlaMonth: () => cy.get('.sla-violations__months-name')
+            getSlaMonth: () => cy.get('.sla-violations__months-name'),
+            getUnplanDowntimeMonth: () => cy.get('.unplanned-downtime__months'),
+        getTimezone: () => cy.get('.timezone__row span'),
+        getTimezoneTime: (timezone) => cy.get('.timezone__row').contains(timezone).siblings('.timezone__col--bold'),
+        getTimezoneName: () => cy.get('.timezone__row .timezone__col--bold'),
+        getErrormessage: () => cy.get('.error-message .mat-simple-snackbar')
     }
     saveDashlet() {
         this.elements.getSaveButton().click()
@@ -105,6 +115,7 @@ class Dashlets {
     }
     focusSettingByTitle(paramTitle) {
         this.elements.getSettingParamTitle().contains(paramTitle).siblings('.dashlet-settings__param--content')
+
     }
     checkRadio() {
         this.elements.getMultiChoiceRadio().click()
@@ -117,6 +128,9 @@ class Dashlets {
     }
     selectDropdownItem(itemName) {
         this.elements.getSettingDropdownItems().contains(itemName).click()
+    }
+    findTimeByTimezone(timezone){
+        this.elements.getTimezone().contains(timezone).siblings('.timezone__col--bold')
     }
 }
 export default Dashlets

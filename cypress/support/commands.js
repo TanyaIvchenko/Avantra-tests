@@ -83,7 +83,7 @@ Cypress.Commands.add('loginSession', (localUser, envServer, passwd) => {
                     cy.get('#input-login-id').type(localUser)
                     cy.get('#input-password-id').type(passwd)
                     cy.get('.background-primary').contains("Login to Avantra").click()
-                    cy.wait(800)
+                    cy.wait(1000)
 
                 }
                 
