@@ -101,5 +101,61 @@ describe("Unassigned Changes: create, assert, edit, delete", { defaultCommandTim
         dashlets.elements.getDashletHeadline().should('contain.text', 'Unassigned Changes')
 
     })
+    it("Changes editing", function () {
+        cy.wait(2000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200)
+            .click()
+        cy.wait(2000)
+        dashboards.clickEditDashboard()
+        cy.wait(2000)
+        dashlets.openDashletSettings()
+        cy.wait(600)
 
+        dashlets.elements.getTitle().clear().type(dashboardName + "_edited")
+        cy.wait(600)
+        dashlets.openSettingDropdownByTitle(this.changesData.paramRefreshInterval)
+        dashlets.selectDropdownItem(this.changesData.itemRefreshInterval)
+        cy.wait(300)
+
+        //dashlets.openSystemPredefinedDropdown()
+        //dashlets.selectDropdownItem(this.changesData.valuePredefined2)
+        //cy.wait(600)
+
+        cy.wait(300)
+        dashboards.saveDashboard()
+        cy.wait(800)
+        dashboards.elements.getUpdatedData().should('have.text', this.dashboardsData.updatedTime)
+
+    })
+    it("Changes edited assertions", function () {
+        cy.wait(6000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200)
+            .click()
+        cy.wait(1000)
+        dashboards.elements.getDashboardNameAtNavmenu()
+            .contains('a', dashboardName)
+            .wait(200).click()
+        cy.wait(1000)
+        dashlets.elements.getDashletCardTitle().should('contain.text', this.changesData.dashletDefTitle)
+        dashlets.elements.getDashletHeadline().should('contain.text', 'Unassigned Changes')
+        dashlets.elements.getDashletHeadline().should('contain.text', this.changesData.valuePredefined2)
+
+
+        // .changes__months-name -> class for changes dashlet
+        //dashlets.elements.getChangesMonth().first().should('contain.text', this.changesData.currentMonth)
+        //dashlets.elements.getChangesMonth().last().should('contain.text', this.changesData.previousMonth)
+    
+        let today = new Date();
+        let currentMonth = today.toLocaleString('default', { month: 'long' })
+        dashlets.elements.getChangesMonth().first().should('contain.text', currentMonth)
+
+        today.setMonth(today.getMonth()-1);
+        const previousMonth = today.toLocaleString('default', { month: 'long' });
+
+        dashlets.elements.getChangesMonth().last().should('contain.text', previousMonth)
+    })
 })
